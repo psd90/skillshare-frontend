@@ -6,14 +6,14 @@ import {
   Link
 } from "react-router-dom";
 
-class Profile extends React.Component{
+class CreateProfile extends React.Component{
 
 
     render(){
         return(
-            <h1>in Profile page</h1>
+            <h1>in Create Profile page</h1>
         )
     }
 }
 
-export default Profile
+export default CreateProfile
