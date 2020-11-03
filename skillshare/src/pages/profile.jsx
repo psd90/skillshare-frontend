@@ -11,6 +11,7 @@ import '../App.css'
 
 class Profile extends React.Component{
     state= {
+        isLoading: true,
         user: {},
     }
 
@@ -23,15 +24,16 @@ class Profile extends React.Component{
             const teacherAverage = res.data.teacher_ratings.reduce((a, b) => a + b, 0) / res.data.teacher_ratings.length;
             const studentVoteCounts = res.data.student_ratings.length;
             const teacherVoteCounts = res.data.teacher_ratings.length; 
-            res.data.student_ratings = studentAverage;
-            res.data.teacher_ratings = teacherAverage;
+            res.data.student_ratings = {average: studentAverage, total: studentVoteCounts};
+            res.data.teacher_ratings = {average: teacherAverage, total: teacherVoteCounts};
             console.log(res.data)
-          this.setState({user: res.data});
+          this.setState({user: res.data, isLoading: false});
         });
     }
 
     render(){
         console.log(this.state)
+        if(this.state.isLoading) return (<p>loading...</p>)
         return(
             <div id="profile-page">
                 <div id="brief-user-data">
@@ -43,11 +45,13 @@ class Profile extends React.Component{
                 <div id="profile-ratings">
                     <div id="profile-teacher-ratings">
                         <h3>TEACHER</h3>
-                        <p>{this.state.user.teacher_ratings}</p>
+                        <p>{this.state.user.teacher_ratings.average}</p>
+                        ({this.state.user.teacher_ratings.total} reviews)
                     </div>
                     <div id="profile-student-ratings">
                         <h3>STUDENT</h3>
-                        <p>{this.state.user.student_ratings}</p>
+                        <p>{this.state.user.student_ratings.average}</p>
+                        <p>({this.state.user.student_ratings.total} reviews)</p>
                     </div>
                 </div>
             </div>
