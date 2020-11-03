@@ -37,9 +37,7 @@ function App() {
           <Route path="/:username/review">
             <Review/>
           </Route>
-          <Route path="/:username">
-            <Profile/>
-          </Route>
+          <Route path="/:username" component={Profile} hello='hello'/>
           <Route path="/">
             <Login/>
           </Route>

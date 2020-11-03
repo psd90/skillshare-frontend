@@ -1,3 +1,7 @@
+App {
+  max-width: 100%;
+}
+
 /* ------------------------header---------------------------------------- */
 
 header {
@@ -57,4 +61,27 @@ header {
 
 .singlebutton {
   margin: 5px;
+}
+
+/* ----------------------Profile page---------------------------------------- */
+
+#profile-image {
+  max-width: 50%;
+  border-radius: 100%;
+  border: 2px solid black;
+}
+
+#profile-page {
+  text-align: center;
+}
+
+#brief-user-data {
+  border-bottom: 2px dashed black;
+  max-width: 80%;
+  margin: auto;
+}
+
+#profile-ratings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
