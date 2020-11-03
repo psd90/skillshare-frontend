@@ -10,8 +10,22 @@ class Login extends React.Component{
 
 
     render(){
-        return(
-            <h1>in login page</h1>
+        return(<>
+            <p id='loginsignup'><span id='bold'>Log in </span> <span id='light'> &nbsp;or&nbsp; </span><span id='bold'>Sign Up</span></p>
+            <form className='loginform'>
+
+                <div id='inputboxs'>
+                <input className='inputbox' type='email' placeholder='Email:'></input>
+                <input className='inputbox' type='password' placeholder='password:'></input>
+            </div>
+
+                <div className='buttons'>
+                <button className='singlebutton'>Login</button>
+                <button className='singlebutton'>Sign Up</button>
+                </div>
+                    
+            </form>
+            </>
         )
     }
 }

@@ -11,6 +11,9 @@ import Signup from './pages/signup'
 import CreateProfile from './pages/create-profile'
 import Home from './pages/home'
 import Header from './components/header'
+import Messages from './pages/messages'
+import Review from './pages/review'
+import Profile from './pages/profile'
 
 function App() {
   return (
@@ -27,6 +30,15 @@ function App() {
           </Route>
           <Route path="/home">
             <Home/>
+          </Route>
+          <Route path="/:username/messages">
+            <Messages/>
+          </Route>
+          <Route path="/:username/review">
+            <Review/>
+          </Route>
+          <Route path="/:username">
+            <Profile/>
           </Route>
           <Route path="/">
             <Login/>
