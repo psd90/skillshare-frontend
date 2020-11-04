@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../App.css'
+import ReactStars from "react-rating-stars-component";
 
 class Profile extends React.Component{
     state= {
@@ -42,46 +43,37 @@ class Profile extends React.Component{
     }
 
     render(){
+        console.log(this.state);
         if(this.state.isLoading) return (<p>loading...</p>)
-        const teacherStars = [];
-        const studentStars = [];
-        let teacherRating = Math.round(this.state.user.teacher_ratings.average);
-        let studentRating = Math.round(this.state.user.student_ratings.average);
-        for (let i = 0; i < 5; i++) {
-            if(teacherRating > 0) {
-                teacherStars.push('★')
-                teacherRating--;
-            } else {
-                teacherStars.push('☆')
-            }
-            if(studentRating > 0) {
-                studentStars.push('★')
-                studentRating--;
-            } else {
-                studentStars.push('☆')
-            }
-        }
         return(
             <div id="profile-page">
                 <div id="profile-add-friend-button-div">
                     <button className="profile-add-friend-button">Add Friend</button>
                 </div>
                 <div id="brief-user-data">
+                    <div id="profile-image-div">
                     <img id='profile-image' src={this.state.user.photoUrl} alt={`${this.state.user.name}'s Profile Picture`}/>
-                    <p>@{this.props.match.params.username}</p>
-                    <p>{this.state.user.name}</p>
+                    </div>
+                    <h3>{this.state.user.name} (@{this.state.user.username}), {this.state.user.age}</h3>
+                    <div className="profile-user-location-div">
+                    <p id="profile-user-location">{this.state.user.location.nuts}</p>
+                    </div>
                     <h2>About Me</h2>
                 </div>
                 <div id="profile-ratings">
                     <div id="profile-teacher-ratings">
                         <h3>TEACHER</h3>
-                        <p className="profile-stars">{teacherStars}</p>
-                        {/* <p>{this.state.user.teacher_ratings.average}</p> */}
-                        ({this.state.user.teacher_ratings.total} reviews)
+                        <div id="profile-teacher-stars">
+                            <ReactStars count={5} value={this.state.user.teacher_ratings.average} edit={false} isHalf={true} color='lightgray' activeColor="orange" size={20}/>
+                        </div>
+                        <p>({this.state.user.teacher_ratings.total} reviews)</p>
+
                     </div>
                     <div id="profile-student-ratings">
                         <h3>STUDENT</h3>
-                        <p className="profile-stars">{studentStars}</p>
+                        <div id="profile-student-stars">
+                            <ReactStars count={5} value={this.state.user.student_ratings.average} edit={false} isHalf={true} color='lightgray' activeColor="orange" size={20}/>
+                        </div>
                         <p>({this.state.user.student_ratings.total} reviews)</p>
                     </div>  
                 </div>

@@ -78,10 +78,21 @@ header {
   width: 80px;
 }
 
-#profile-image {
-  max-width: 50%;
+#profile-image-div {
+  height: 150px;
+  width: 150px;
   border-radius: 100%;
   border: 2px solid black;
+  margin: auto;
+  object-fit: cover;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ffb498;
+}
+
+#profile-image {
+  max-height: 150px;
 }
 
 #profile-page {
@@ -94,13 +105,32 @@ header {
   margin: auto;
 }
 
+#brief-user-data h3 {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+#profile-user-location {
+  margin-top: 0;
+}
+
+.profile-user-location-div {
+  text-align: left;
+}
+
 #profile-ratings {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.profile-stars {
-  color: orange
+#profile-teacher-stars {
+  width: fit-content;
+  margin: auto;
+}
+
+#profile-student-stars {
+  width: fit-content;
+  margin: auto;
 }
 
 #skills-list {
@@ -121,7 +151,7 @@ header {
 }
 
 #profile-send-message-button-div {
-  margin-top: 50px;
+  margin-top: 15px;
 }
 
 .profile-send-message-button {
@@ -131,4 +161,5 @@ header {
   border: none;
   background-color: #ffb498;
   font-weight: bold ;
+  margin-bottom: 10px;
 }
