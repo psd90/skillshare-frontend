@@ -1,4 +1,5 @@
-.App {
+App {
+  max-width: 100%;
 }
 
 /* ---------------TEXT CONTROLS--------------- */
@@ -125,6 +126,106 @@ header {
   margin: 5px;
 }
 
+/* ----------------------Profile page---------------------------------------- */
+
+#profile-add-friend-button-div {
+  text-align: left;
+}
+
+.profile-add-friend-button {
+  margin-left: 10px;
+  border: none;
+  background-color: #ffb498;
+  border-radius: 5px;
+  height: 3vh;
+  width: 80px;
+}
+
+#profile-image-div {
+  height: 150px;
+  width: 150px;
+  border-radius: 100%;
+  border: 2px solid black;
+  margin: auto;
+  object-fit: cover;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ffb498;
+}
+
+#profile-image {
+  max-height: 150px;
+}
+
+#profile-page {
+  text-align: center;
+}
+
+#brief-user-data {
+  border-bottom: 2px dashed black;
+  max-width: 80%;
+  margin: auto;
+}
+
+#brief-user-data h3 {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+#profile-user-location {
+  margin-top: 0;
+}
+
+.profile-user-location-div {
+  text-align: left;
+}
+
+#profile-ratings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#profile-teacher-stars {
+  width: fit-content;
+  margin: auto;
+}
+
+#profile-student-stars {
+  width: fit-content;
+  margin: auto;
+}
+
+#skills-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#teaching-skills {
+  border-right: 1px solid black;
+}
+
+#teaching-skills-list {
+  padding: 0;
+}
+
+#desired-skills-list {
+  padding: 0;
+}
+
+#profile-send-message-button-div {
+  margin-top: 15px;
+}
+
+.profile-send-message-button {
+  width: 80%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold ;
+  margin-bottom: 10px;
+}
 .formcard {
   border: 2px solid black;
   height: 200px;
