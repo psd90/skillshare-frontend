@@ -65,6 +65,19 @@ header {
 
 /* ----------------------Profile page---------------------------------------- */
 
+#profile-add-friend-button-div {
+  text-align: left;
+}
+
+.profile-add-friend-button {
+  margin-left: 10px;
+  border: none;
+  background-color: #ffb498;
+  border-radius: 5px;
+  height: 3vh;
+  width: 80px;
+}
+
 #profile-image {
   max-width: 50%;
   border-radius: 100%;
@@ -84,4 +97,38 @@ header {
 #profile-ratings {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+.profile-stars {
+  color: orange
+}
+
+#skills-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#teaching-skills {
+  border-right: 1px solid black;
+}
+
+#teaching-skills-list {
+  padding: 0;
+}
+
+#desired-skills-list {
+  padding: 0;
+}
+
+#profile-send-message-button-div {
+  margin-top: 50px;
+}
+
+.profile-send-message-button {
+  width: 80%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold ;
 }
