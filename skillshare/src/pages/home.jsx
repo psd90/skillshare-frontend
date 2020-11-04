@@ -4,6 +4,7 @@ import axios from "axios";
 
 class Home extends React.Component {
   state = {
+    currentUser: "alex",
     showFilters: true,
     categories: [],
     wantsCategories: [],
@@ -80,15 +81,54 @@ class Home extends React.Component {
     axios
       .get("https://firebasing-testing.firebaseio.com/skills.json")
       .then((res) => {
-        this.setState({ categories: res.data });
+        this.setState({ categories: res.data }, () => {
+          console.log("the categores in state are:", this.state.categories);
+        });
       });
   }
 
-  renderResults = () => {
-    const { wantsCategories } = this.state;
-    const categoriesQuery = axios.get(
-      "https://firebasing-testing.firebaseio.com/skills.json"
-    );
+  renderResults = (e) => {
+    e.preventDefault();
+
+    const { wantsCategories, categories } = this.state;
+    const skillPromises = [];
+    /*Categories are saved in state - we need to access the skills in each category,
+        and then make individual calls to the desired_skills node to find everyone who wants to learn the skills in that category */
+    wantsCategories.forEach((category) => {
+      const skills = [...Object.keys(categories[category])];
+      skills.forEach((skill) => {
+        skillPromises.push(
+          axios.get(
+            `https://firebasing-testing.firebaseio.com/desired_skills.json?orderBy="$key"&equalTo="${skill}"`
+          )
+        );
+      });
+    });
+    Promise.all(skillPromises).then((resArr) => {
+      /*We now have the names of everyone who wants to learn the skills in the category selected in the search.
+      Now we need to take their names (or keys) and find matching users in the user table to get the rest of their information. Again an individual call for each name is required*/
+      const dataArr = resArr.map((res) => res.data);
+      const userPromises = [];
+      const names = [];
+      dataArr.forEach((skill) => {
+        for (const prop in skill) {
+          names.push(...Object.keys(skill[prop]));
+        }
+      });
+      var uniqueNames = names.filter((v, i, a) => a.indexOf(v) === i);
+      uniqueNames.forEach((name) => {
+        userPromises.push(
+          axios.get(
+            `https://firebasing-testing.firebaseio.com/users.json?orderBy="$key"&equalTo="${name}"`
+          )
+        );
+      });
+      // Now we have all of the users' data as an array, we need to render it on the page
+      Promise.all(userPromises).then((resArr) => {
+        const dataArr = resArr.map((res) => res.data);
+        console.log(dataArr);
+      });
+    });
   };
 
   render() {
