@@ -128,8 +128,9 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
-        const dataArr = resArr.map((res) => res.data);
-        console.log(dataArr);
+        this.setState({ results: resArr.map((res) => res.data) }, () => {
+          console.log(this.state.results);
+        });
       });
     });
   };
@@ -154,7 +155,6 @@ class Home extends React.Component {
 }
 
 export default Home;
-
 
 /* We want to start rendering these results with skill-cards. 
 So we need to develop those skill cards */
