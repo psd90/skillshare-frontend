@@ -26,28 +26,40 @@ const SignUp = ({ history }) => {
 
   return (
     <>
+      <h1 className="signUpHeading">Sign Up</h1>
       <div className="formcard">
-        <h1>Sign Up</h1>
-        <form onSubmit={handleSignUp}>
-          <label>
-            Username
-            <input name="username" type="text" placeholder="username" />
-          </label>
-          <label>
-            Email
-            <input name="email" type="call" placeholder="email" />
-          </label>
-          <label>
-            Password
-            <input name="password" type="password" placeholder="Password" />
-          </label>
-          <label>
+        <div className="innerForm">
+          <form className="signUpForm" onSubmit={handleSignUp}>
+            <input
+              className="signUpInput"
+              name="username"
+              type="text"
+              placeholder="Username"
+            />
+            <input
+              className="signUpInput"
+              name="email"
+              type="call"
+              placeholder="Email"
+            />
+            <input
+              className="signUpInput"
+              name="password"
+              type="password"
+              placeholder="Password"
+            />
             Date of Birth
-            <input name="date" type="date" id="date" />
-          </label>
-          <button type="submit">Sign Up</button>
-        </form>
-        <button onClick={redirectLogin}>Log in</button>
+            <input className="signUpInput" name="date" type="date" id="date" />
+            <div className="buttonGroup">
+              <button className="signUpButton" type="submit">
+                Sign Up
+              </button>
+              <button className="signUpButton" onClick={redirectLogin}>
+                Log in
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   );
