@@ -7,8 +7,8 @@ class Home extends React.Component {
     currentUser: "alex",
     showFilters: true,
     categories: [],
-    wantsCategories: [],
-    teachCategories: [],
+    selectedCategories: [],
+    selectedSearchType: "desired",
     results: [],
   };
 
@@ -25,10 +25,24 @@ class Home extends React.Component {
     if (this.state.showFilters) {
       return (
         <>
-          <h2>
-            Search for people by their &quot;wants to learn&quot; skills by
-            category
-          </h2>
+          <br />
+          <input
+            name="searchType"
+            type="radio"
+            value="desired"
+            defaultChecked
+            onClick={this.toggleSearchType}
+          ></input>
+          Search people by skills they want to learn
+          <br />
+          <input
+            name="searchType"
+            type="radio"
+            value="teach"
+            onClick={this.toggleSearchType}
+          ></input>
+          Search people by skills they want to teach
+          <h2>Categories</h2>
           {Object.keys(this.state.categories).map((category, index) => {
             return (
               <label key={index} htmlFor={category}>
@@ -36,23 +50,7 @@ class Home extends React.Component {
                 <input
                   type="checkbox"
                   name={category}
-                  className="wantsCategories"
-                  onClick={this.toggleCategories}
-                />
-              </label>
-            );
-          })}
-          <h2>
-            Search for people by their &quot;can teach&quot; skills by category
-          </h2>
-          {Object.keys(this.state.categories).map((category, index) => {
-            return (
-              <label key={index} htmlFor={category}>
-                {category}
-                <input
-                  type="checkbox"
-                  name={category}
-                  className="teachCategories"
+                  className="selectedCategories"
                   onClick={this.toggleCategories}
                 />
               </label>
@@ -61,6 +59,11 @@ class Home extends React.Component {
         </>
       );
     }
+  };
+
+  toggleSearchType = (e) => {
+    const selectedSearchType = e.target.value;
+    this.setState({ selectedSearchType });
   };
 
   toggleCategories = (e) => {
@@ -90,11 +93,11 @@ class Home extends React.Component {
   renderResults = (e) => {
     e.preventDefault();
 
-    const { wantsCategories, categories } = this.state;
+    const { selectedCategories, categories } = this.state;
     const skillPromises = [];
     /*Categories are saved in state - we need to access the skills in each category,
         and then make individual calls to the desired_skills node to find everyone who wants to learn the skills in that category */
-    wantsCategories.forEach((category) => {
+    selectedCategories.forEach((category) => {
       const skills = [...Object.keys(categories[category])];
       skills.forEach((skill) => {
         skillPromises.push(
