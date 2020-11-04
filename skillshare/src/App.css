@@ -1,6 +1,63 @@
 .App {
 }
 
+/* ---------------TEXT CONTROLS--------------- */
+
+button {
+  vertical-align: bottom;
+  margin: 0 0.3125em;
+  padding: 0 0.3125em;
+  border: 1px solid #000;
+  background-color: #fff;
+  font-weight: bold;
+}
+
+button#increasetext {
+  font-size: 1.5em;
+}
+
+button#resettext {
+  font-size: 1.25em;
+}
+
+button#decreasetext {
+  font-size: 1.125em;
+}
+
+.textcontrols {
+  padding: 0.625em 0;
+  background: #ccc;
+}
+/* content */
+
+#content {
+  margin: 3em 0;
+  text-align: left;
+}
+
+/* demo container */
+
+#container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 2%;
+}
+
+#description {
+  margin-bottom: 1.25em;
+  text-align: left;
+}
+
+@media all and (min-width: 700px) {
+  #container {
+    width: 700px;
+  }
+  button {
+    margin: 0 0.625em;
+    padding: 0 0.625em;
+  }
+}
+
 body {
   background-color: rgba(0, 0, 255, 0.5);
   height: 100%;
