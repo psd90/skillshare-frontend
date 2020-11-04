@@ -38,7 +38,7 @@ class Home extends React.Component {
           <input
             name="searchType"
             type="radio"
-            value="teach"
+            value="teaching"
             onClick={this.toggleSearchType}
           ></input>
           Search people by skills they want to teach
@@ -102,7 +102,7 @@ class Home extends React.Component {
       skills.forEach((skill) => {
         skillPromises.push(
           axios.get(
-            `https://firebasing-testing.firebaseio.com/desired_skills.json?orderBy="$key"&equalTo="${skill}"`
+            `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchType}_skills.json?orderBy="$key"&equalTo="${skill}"`
           )
         );
       });
@@ -154,3 +154,7 @@ class Home extends React.Component {
 }
 
 export default Home;
+
+
+/* We want to start rendering these results with skill-cards. 
+So we need to develop those skill cards */
