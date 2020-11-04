@@ -60,7 +60,6 @@ button#decreasetext {
 }
 
 body {
-  background-color: rgba(0, 0, 255, 0.5);
   height: 100%;
   overflow: auto;
 }
@@ -163,7 +162,6 @@ header {
 }
 
 #brief-user-data {
-  border-bottom: 2px dashed black;
   max-width: 80%;
   margin: auto;
 }
@@ -194,6 +192,19 @@ header {
 #profile-student-stars {
   width: fit-content;
   margin: auto;
+}
+
+.svg-inline--fa {
+  min-height: 40px;
+  min-width: 40px;
+  color: white;
+  font-size: 2rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  background-color: #ffb498;
+  padding: 15px;
+  border-radius: 100%;
 }
 
 #skills-list {
