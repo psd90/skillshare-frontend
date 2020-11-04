@@ -3,6 +3,7 @@ import app from "../base";
 import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import PropTypes from 'prop-types'
+import Header from '../components/header'
 
 
 
@@ -39,7 +40,8 @@ const Login = ({history}) => {
 
 
 
-        return(<div id='logincard'>
+        return(<>
+        <div className='formcard'>
             <p id='loginsignup'><span id='bold'>Log in </span> <span id='light'> &nbsp;or&nbsp; </span><span id='bold'>Sign Up</span></p>
             <form onSubmit={handleLogin}>
 
@@ -55,6 +57,7 @@ const Login = ({history}) => {
                     
             </form>
             </div>
+            </>
         )
 }
 

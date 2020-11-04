@@ -1,5 +1,10 @@
 .App {
+}
+
+body {
   background-color: rgba(0, 0, 255, 0.5);
+  height: 100%;
+  overflow: auto;
 }
 /* ------------------------header---------------------------------------- */
 
@@ -15,7 +20,7 @@ header {
 
 .buffer {
   width: 100%;
-  height: 450px;
+  height: 100px;
 }
 
 /* ----------------------login page---------------------------------------- */
@@ -63,10 +68,13 @@ header {
   margin: 5px;
 }
 
-#logincard {
+.formcard {
   border: 2px solid black;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   border-radius: 20px;
   background-color: blanchedalmond;
-  margin: 5px;
-  bottom: 0;
+  margin-bottom: 50px;
 }

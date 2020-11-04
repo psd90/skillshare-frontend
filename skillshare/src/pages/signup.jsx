@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import { withRouter } from "react-router";
 import app from "../base";
 import PropTypes from 'prop-types'
+import Header from '../components/header'
+
 
 
 const SignUp = ({history}) => {
@@ -26,8 +28,9 @@ const SignUp = ({history}) => {
         history.push("/login");
       };
     
-      return (
-        <div>
+      return (<>
+        <Header />
+        <div className='formcard'>
           <h1>Sign Up</h1>
           <form onSubmit={handleSignUp}>
             <label>
@@ -42,6 +45,7 @@ const SignUp = ({history}) => {
           </form>
           <button onClick={redirectLogin}>Log in</button>
         </div>
+        </>
       );
     };
     
