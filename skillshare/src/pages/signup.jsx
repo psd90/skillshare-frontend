@@ -1,19 +1,53 @@
-import React from 'react'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-class Signup extends React.Component{
+import React, { useCallback } from "react";
+import { withRouter } from "react-router";
+import app from "../base";
+import PropTypes from 'prop-types'
 
 
-    render(){
-        return(
-            <h1>in signup page</h1>
-        )
-    }
-}
+const SignUp = ({history}) => {
 
-export default Signup
+    const handleSignUp = useCallback(
+        async (event) => {
+          event.preventDefault();
+          const { email, password } = event.target.elements;
+          try {
+            await app
+              .auth()
+              .createUserWithEmailAndPassword(email.value, password.value);
+            history.push("/");
+          } catch (error) {
+            alert(error);
+          }
+        },
+        [history]
+      );
+    
+      const redirectLogin = () => {
+        history.push("/login");
+      };
+    
+      return (
+        <div>
+          <h1>Sign Up</h1>
+          <form onSubmit={handleSignUp}>
+            <label>
+              Email
+              <input name="email" type="call" placeholder="email" />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="Password" />
+            </label>
+            <button type="submit">Sign Up</button>
+          </form>
+          <button onClick={redirectLogin}>Log in</button>
+        </div>
+      );
+    };
+    
+    SignUp.propTypes = {
+      history: PropTypes.node,
+  }
+
+    export default withRouter(SignUp);
+    
