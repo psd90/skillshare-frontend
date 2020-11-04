@@ -236,3 +236,18 @@ header {
   background-color: blanchedalmond;
   margin-bottom: 50px;
 }
+/* ----------------------Home page---------------------------------------- */
+#home-search-form{
+  margin-top: 30%;
+}
+
+.search-result-card{
+  border: 1px dashed black;
+  margin : 1%;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+.profile-image{
+  max-width: 20%;
+}

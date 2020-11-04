@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+import SkillCard from "../components/skill-cards";
+import { object } from "prop-types";
 
 class Home extends React.Component {
   state = {
@@ -135,10 +137,16 @@ class Home extends React.Component {
     });
   };
 
+  renderCards = () => {
+    return this.state.results.map((person, index) => {
+      return <SkillCard id={index} key={index} test={"test"} person={person[Object.keys(person)[0]]}/>
+    })
+  }
+
   render() {
     return (
       <>
-        <form action="">
+        <form id="home-search-form" action="">
           <label htmlFor="searchBar">
             Search:
             <input name="searchBar" type="text" />
@@ -149,6 +157,7 @@ class Home extends React.Component {
           <br />
           <button onClick={this.renderResults}>Search</button>
         </form>
+        {this.renderCards()}
       </>
     );
   }
