@@ -14,6 +14,7 @@ class Home extends React.Component {
     selectedCategories: [],
     selectedSearchSkillType: "desired",
     results: [],
+    hasSearched: false,
   };
 
   toggleSearchType = (e) => {
@@ -39,7 +40,8 @@ class Home extends React.Component {
         <label htmlFor="searchBar">
           Enter the skill you want to search for:
           <input
-            onChange={this.updateSearchText}
+            onChange={this.handleChange}
+            id="searchBySkillText"
             name="searchBar"
             type="text"
           />
@@ -67,13 +69,10 @@ class Home extends React.Component {
     }
   };
 
-  updateSearchText = (e) => {
-    this.setState({ searchBySkillText: e.target.value });
-  };
-
-  toggleSelectedSkillSearchType = (e) => {
-    const selectedSearchSkillType = e.target.value;
-    this.setState({ selectedSearchSkillType });
+  handleChange = (e) => {
+    //this event is currently only assigned updating to search by desired skills or teaching skills,
+    //and updating the current skill search text if searching by specific skill
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   toggleCategories = (e) => {
@@ -149,20 +148,23 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
-        this.setState({ results: resArr.map((res) => res.data) }, () => {
-          console.log(this.state.results);
+        this.setState({
+          results: resArr.map((res) => res.data),
+          hasSearched: true,
         });
       });
     });
   };
 
   renderCards = () => {
+    if (!this.state.results.length && this.state.hasSearched) {
+      return <div>No results found, please refine your search!</div>;
+    }
     return this.state.results.map((person, index) => {
       return (
         <SkillCard
           id={index}
           key={index}
-          test={"test"}
           person={person[Object.keys(person)[0]]}
         />
       );
@@ -177,7 +179,8 @@ class Home extends React.Component {
             name="searchType"
             type="radio"
             value="teaching"
-            onClick={this.toggleSelectedSkillSearchType}
+            id="selectedSearchSkillType"
+            onClick={this.handleChange}
           ></input>
           Search people by skills they want to teach
           <br />
@@ -186,8 +189,9 @@ class Home extends React.Component {
             name="searchType"
             type="radio"
             value="desired"
+            id="selectedSearchSkillType"
             defaultChecked
-            onClick={this.toggleSelectedSkillSearchType}
+            onClick={this.handleChange}
           ></input>
           Search people by skills they want to learn
           <br />

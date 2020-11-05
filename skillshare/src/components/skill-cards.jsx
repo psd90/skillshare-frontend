@@ -10,7 +10,6 @@ class SkillCard extends React.Component {
   };
 
   static propTypes = {
-    test: PropTypes.string,
     id: PropTypes.number,
     person: PropTypes.object,
   };
