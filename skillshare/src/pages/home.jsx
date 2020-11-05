@@ -77,16 +77,15 @@ class Home extends React.Component {
   };
 
   toggleCategories = (e) => {
-    const filterType = e.target.className;
     const category = e.target.name;
-    if (this.state[filterType].includes(category)) {
-      const indexOfCategory = this.state[filterType].indexOf(category);
-      this.state[filterType].splice(indexOfCategory, 1);
+    if (this.state.selectedCategories.includes(category)) {
+      const indexOfCategory = this.state.selectedCategories.indexOf(category);
+      this.state.selectedCategories.splice(indexOfCategory, 1);
     } else {
-      this.state[filterType].push(category);
+      this.state.selectedCategories.push(category);
     }
     console.log(
-      `Currently selected ${filterType} filters: ${this.state[filterType]}`
+      `Currently selected category filters: ${this.state.selectedCategories}`
     );
   };
 
@@ -102,40 +101,33 @@ class Home extends React.Component {
 
   renderResults = (e) => {
     e.preventDefault();
+    let skillsArr = [];
     const skillPromises = [];
     if (this.state.searchType === "category") {
       const { selectedCategories, categories } = this.state;
       /*Categories are saved in state - we need to access the skills in each category,
           and then make individual calls to the desired_skills node to find everyone who wants to learn the skills in that category */
       selectedCategories.forEach((category) => {
-        const skills = [...Object.keys(categories[category])];
-        skills.forEach((skill) => {
-          skillPromises.push(
-            axios.get(
-              `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchSkillType}_skills.json?orderBy="$key"&equalTo="${skill}"`
-            )
-          );
-        });
+        skillsArr.push(...Object.keys(categories[category]));
       });
     } else {
       const { searchBySkillText, categories } = this.state;
-      const matchingSkills = [];
       for (const prop in categories) {
         const categorySkills = Object.keys(categories[prop]);
         categorySkills.forEach((skill) => {
           if (skill.toLowerCase().includes(searchBySkillText.toLowerCase())) {
-            matchingSkills.push(skill);
+            skillsArr.push(skill);
           }
         });
       }
-      matchingSkills.forEach((skill) => {
-        skillPromises.push(
-          axios.get(
-            `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchSkillType}_skills.json?orderBy="$key"&equalTo="${skill}"`
-          )
-        );
-      });
     }
+    skillsArr.forEach((skill) => {
+      skillPromises.push(
+        axios.get(
+          `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchSkillType}_skills.json?orderBy="$key"&equalTo="${skill}"`
+        )
+      );
+    });
     Promise.all(skillPromises).then((resArr) => {
       /*We now have the names of everyone who wants to learn the skills in the category selected in the search.
         Now we need to take their names (or keys) and find matching users in the user table to get the rest of their information. Again an individual call for each name is required*/
@@ -181,6 +173,14 @@ class Home extends React.Component {
     return (
       <>
         <form id="home-search-form" action="">
+          <input
+            name="searchType"
+            type="radio"
+            value="teaching"
+            onClick={this.toggleSelectedSkillSearchType}
+          ></input>
+          Search people by skills they want to teach
+          <br />
           <br />
           <input
             name="searchType"
@@ -190,14 +190,6 @@ class Home extends React.Component {
             onClick={this.toggleSelectedSkillSearchType}
           ></input>
           Search people by skills they want to learn
-          <br />
-          <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            onClick={this.toggleSelectedSkillSearchType}
-          ></input>
-          Search people by skills they want to teach
           <br />
           <br />
           <button
