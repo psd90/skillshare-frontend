@@ -194,7 +194,7 @@ header {
 }
 .formcard {
   flex-direction: column;
-  border: 2px solid black;
+  border: 0px solid black;
   height: 270px;
   width: 80%;
   display: flex;
@@ -202,7 +202,7 @@ header {
   margin-bottom: 50px;
   margin: auto;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.338);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .innerForm {
@@ -240,14 +240,14 @@ header {
   display: flex;
   justify-content: center;
   height: 40px;
-  font-size: larger;
+  font-size: medium;
   background-color: #ffb498;
   flex-direction: column;
 }
 
 .bigA {
   font-weight: bold;
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 
 .smallA {
@@ -259,4 +259,12 @@ header {
   display: flex;
   flex-direction: row;
   width: 100%;
+}
+
+.bad {
+  color: red;
+}
+
+.good {
+  color: green;
 }
