@@ -8,7 +8,6 @@ import {
   Link
 } from "react-router-dom";
 import firebase from "firebase";
-import { faBoxTissue } from '@fortawesome/free-solid-svg-icons';
 
 class CreateProfile extends React.Component{
     state = {
@@ -18,8 +17,10 @@ class CreateProfile extends React.Component{
             image: '',
             name: '',
             location: '',
-            info: ''
-        }
+            info: '',
+        },
+        teachingSkills: {},
+        learningSkills: {},
     }
 
     static contextType = AuthContext
@@ -56,7 +57,7 @@ class CreateProfile extends React.Component{
             })
         })
         .then(() => {
-            Axios.put(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
+            Axios.patch(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
             {
                     name: this.state.profile.name, 
                     location: this.state.profile.location, 
@@ -64,15 +65,9 @@ class CreateProfile extends React.Component{
                 }
             )
         })
-        .catch((err) => console.log(err))
-        .then((res) => console.log(res))
-        
-        // firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
-        // .then(() => {
-            
-        // })
-        // .catch(err => console.log(err))
-    }
+        .then(() => 
+        firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
+        )}
 
     handleChange = (event) => {
         console.log(this.state.profile);
@@ -81,6 +76,20 @@ class CreateProfile extends React.Component{
              newProfile[event.target.id] = event.target.value;
              return {profile: newProfile};
          });
+    }
+
+    addTeachingSkill = (event) => {
+        this.setState(prevState => {
+            const newTeachingSkills = {...prevState.teachingSkills};
+            if(prevState.teachingSkills[event.target.value]){
+                delete newTeachingSkills[event.target.value]
+                return {teachingSkills: newTeachingSkills}
+            }else{
+             newTeachingSkills[event.target.value] = true;
+             return {teachingSkills: newTeachingSkills}
+            }
+        })
+        console.log(this.state.teachingSkills)
     }
 
     render(){
@@ -102,7 +111,7 @@ class CreateProfile extends React.Component{
                     <h3>Categories</h3>
                     <div className="edit-skills-buttons">
                         {Object.keys(this.state.skills).map(skill => {
-                            return <button key={skill}>{skill}</button>;
+                            return <button value={skill} onClick={this.addTeachingSkill} key={skill}>{skill}</button>;
                         })}
                     </div>
                     <div className="specific-skills-inputs">
