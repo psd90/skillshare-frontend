@@ -43,22 +43,22 @@ const Login = ({ history }) => {
         <form onSubmit={handleLogin}>
           <div id="inputboxs">
             <input
-              className="inputbox"
+              className="signUpInput"
               type="email"
               placeholder="Email:"
             ></input>
             <input
-              className="inputbox"
+              className="signUpInput"
               type="password"
               placeholder="password:"
             ></input>
           </div>
 
           <div className="buttons">
-            <button className="singlebutton" type="submit">
+            <button className="signUpButton" type="submit">
               Login
             </button>
-            <button className="singlebutton" onClick={signUpRedirect}>
+            <button className="signUpButton" onClick={signUpRedirect}>
               Sign Up
             </button>
           </div>
