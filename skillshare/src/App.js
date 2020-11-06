@@ -10,14 +10,11 @@ import Review from "./pages/review";
 import Profile from "./pages/profile";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute";
-import Header from "./components/header";
 
 function App() {
   return (
     <>
-      <Header />
       <div className="App" id="content" role="main">
-        <div className="buffer"></div>
         <AuthProvider>
           <Router>
             <PrivateRoute exact path="/" component={Home} />

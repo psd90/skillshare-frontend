@@ -3,6 +3,7 @@ import { withRouter } from "react-router";
 import app from "../base";
 import PropTypes from "prop-types";
 import axios from "axios";
+import Header from "../components/header";
 
 // hooks read up
 const SignUp = ({ history }) => {
@@ -159,6 +160,8 @@ const SignUp = ({ history }) => {
 
   return (
     <>
+      <Header className="testBackground"></Header>
+      <div className="buffer"></div>
       <h1 className="signUpHeading">Sign Up</h1>
       <div className="formcard">
         <div className="innerForm">
@@ -188,7 +191,7 @@ const SignUp = ({ history }) => {
               placeholder="Password"
             />
             <p className={classPassword}>{passPassword}</p>
-            Date of Birth
+            <p className="dob">Date of Birth</p>
             <input
               onChange={dateChange}
               className="signUpInput"
@@ -205,7 +208,7 @@ const SignUp = ({ history }) => {
               >
                 Sign Up
               </button>
-              <button className="signUpButton" onClick={redirectLogin}>
+              <button className="backButton" onClick={redirectLogin}>
                 Back
               </button>
             </div>

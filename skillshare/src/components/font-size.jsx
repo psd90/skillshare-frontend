@@ -17,11 +17,11 @@ const FontSize = () => {
 
   return (
     <div className="textcontrols">
-      <button onClick={decreaseText} role="button" className="fontSize">
-        <span className="smallA">A</span>
-      </button>
       <button onClick={increaseText} role="button" className="fontSize">
         <span className="bigA">A</span>
+      </button>
+      <button onClick={decreaseText} role="button" className="fontSize">
+        <span className="smallA">A</span>
       </button>
     </div>
   );

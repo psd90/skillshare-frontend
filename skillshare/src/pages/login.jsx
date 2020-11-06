@@ -34,7 +34,9 @@ const Login = ({ history }) => {
 
   return (
     <>
+      <div className="backgroundHeader"></div>
       <div className="formcard">
+        <h1 id="skillshare">Skill Share</h1>
         <p id="loginsignup">
           <span id="bold">Log in </span>{" "}
           <span id="light"> &nbsp;or&nbsp; </span>
@@ -50,12 +52,12 @@ const Login = ({ history }) => {
             <input
               className="signUpInput"
               type="password"
-              placeholder="password:"
+              placeholder="Password:"
             ></input>
           </div>
 
           <div className="buttons">
-            <button className="signUpButton" type="submit">
+            <button className="loginButton" type="submit">
               Login
             </button>
             <button className="signUpButton" onClick={signUpRedirect}>
