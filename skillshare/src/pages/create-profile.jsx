@@ -8,7 +8,6 @@ import {
   Link
 } from "react-router-dom";
 import firebase from "firebase";
-import { faBoxTissue } from '@fortawesome/free-solid-svg-icons';
 
 class CreateProfile extends React.Component{
     state = {
@@ -18,8 +17,10 @@ class CreateProfile extends React.Component{
             image: '',
             name: '',
             location: '',
-            info: ''
-        }
+            info: '',
+        },
+        teachingSkills: {},
+        learningSkills: {},
     }
 
     static contextType = AuthContext
@@ -56,7 +57,7 @@ class CreateProfile extends React.Component{
             })
         })
         .then(() => {
-            Axios.put(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
+            Axios.patch(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
             {
                     name: this.state.profile.name, 
                     location: this.state.profile.location, 
@@ -64,15 +65,29 @@ class CreateProfile extends React.Component{
                 }
             )
         })
-        .catch((err) => console.log(err))
-        .then((res) => console.log(res))
+        .then(() => 
+        firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
+        .then(() => {
+            Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+            this.state.teachingSkills)
+        }).then(() => {
+            const teachingPromises = Object.keys(this.state.teachingSkills).map(skill => {
+                Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`,
+                 {[user.context.currentUser.uid]: true})
+            })
+            Promise.all(teachingPromises).then(()=> {
+                Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
+                this.state.learningSkills)
+            }).then(()=> {
+                const learningPromises = Object.keys(this.state.learningSkills).map(skill => {
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`,
+                    {[user.context.currentUser.uid]: true})
+                })
+                Promise.all(learningPromises);
+            })
+        })
+        )}
         
-        // firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
-        // .then(() => {
-            
-        // })
-        // .catch(err => console.log(err))
-    }
 
     handleChange = (event) => {
         console.log(this.state.profile);
@@ -81,6 +96,33 @@ class CreateProfile extends React.Component{
              newProfile[event.target.id] = event.target.value;
              return {profile: newProfile};
          });
+    }
+
+    addTeachingSkill = (event) => {
+        this.setState(prevState => {
+            const newTeachingSkills = {...prevState.teachingSkills};
+            if(prevState.teachingSkills[event.target.value]){
+                delete newTeachingSkills[event.target.value]
+                return {teachingSkills: newTeachingSkills}
+            }else{
+             newTeachingSkills[event.target.value] = true;
+             return {teachingSkills: newTeachingSkills}
+            }
+        })
+        console.log(this.state.teachingSkills)
+    }
+
+    addLearningSkill = (event) => {
+        this.setState(prevState => {
+            const newLearningSkills = {...prevState.learningSkills};
+            if(prevState.learningSkills[event.target.value]){
+                delete newLearningSkills[event.target.value]
+                return {learningSkills: newLearningSkills}
+            }else{
+                newLearningSkills[event.target.value] = true;
+                return {learningSkills: newLearningSkills}
+            }
+        })
     }
 
     render(){
@@ -101,8 +143,15 @@ class CreateProfile extends React.Component{
                     <h2>What are your skills?</h2>
                     <h3>Categories</h3>
                     <div className="edit-skills-buttons">
-                        {Object.keys(this.state.skills).map(skill => {
-                            return <button key={skill}>{skill}</button>;
+                        {Object.keys(this.state.skills).map(category => {
+                            return (
+                                <>
+                            <h4 value={category} key={category}>{category}</h4>
+                                {Object.keys(this.state.skills[category]).map(skill => {
+                                    return <button value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                })}
+                                </>
+                            );
                         })}
                     </div>
                     <div className="specific-skills-inputs">
@@ -114,9 +163,15 @@ class CreateProfile extends React.Component{
                     <h2>What Skils Would You like to Learn?</h2>
                     <h3>Categories</h3>
                     <div className="edit-skills-buttons">
-                        {Object.keys(this.state.skills).map(skill => {
-                            return <button key={skill}>{skill}</button>;
-                        })}
+                        {Object.keys(this.state.skills).map(category => {
+                            return ( 
+                                <>
+                            <h4 key={category}>{category}</h4>
+                            {Object.keys(this.state.skills[category]).map(skill => {
+                                    return <button value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                })}
+                            </>
+                        )})}
                     </div>
                     <div className="specific-skills-inputs">
                         <p><label>Other: <input className="edit-profile-inputs specific-skill-other"></input></label></p>

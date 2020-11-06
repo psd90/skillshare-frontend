@@ -40,11 +40,11 @@ const SignUp = ({ history }) => {
               .then(() => {
                 axios.patch(
                   `https://firebasing-testing.firebaseio.com/usernames.json`,
-                  { [username]: true }
+                  { [username]: auth.user.uid }
                 );
               });
           });
-        history.push("/");
+        history.push("/createprofile");
       } catch (error) {
         alert(error);
       }
