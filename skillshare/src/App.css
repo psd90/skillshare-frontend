@@ -394,6 +394,68 @@ header {
   width: 100%;
 }
 
+/* ----------------------Home page---------------------------------------- */
+#home-search-form {
+  margin-top: 30%;
+}
+
+.search-result-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px dashed black;
+  margin: 1%;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+.profile-image {
+  width: 50%;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  align-self: center;
+  justify-self: center;
+}
+
+.search-card-header {
+  grid-column: 2 / 4;
+}
+
+.search-result-name {
+  margin: 0px;
+}
+
+.search-result-location {
+  margin: 0px;
+}
+
+.search-result-teaching-skills-header {
+  grid-column: 2 / 3;
+  margin: 0px;
+  margin-top: 10%;
+}
+
+.search-result-teaching-skills {
+  grid-row: 3 / 4;
+  grid-column: 1 / 4;
+}
+
+.search-result-desired-skills-header {
+  grid-row: 4 / 5;
+  grid-column: 2 / 3;
+  margin: 0px;
+  margin-top: 10%;
+}
+
+.search-result-desired-skills {
+  grid-row: 5 / 6;
+  grid-column: 1 / 4;
+}
+
+.search-view-more-button-link {
+  grid-row: 6 / 7;
+  grid-column: 3 / 4;
+}
+
 .specific-skills-inputs p {
   display: table-row;
 }
@@ -412,3 +474,4 @@ header {
   display: table-cell;
   width: 57.5%;
 }
+

@@ -1,47 +1,55 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+import SkillCard from "../components/skill-cards";
+import { object } from "prop-types";
 
 class Home extends React.Component {
   state = {
     currentUser: "alex",
-    showFilters: true,
+    searchType: "skill",
+    searchButtonText: "category",
+    searchBySkillText: "",
     categories: [],
     selectedCategories: [],
-    selectedSearchType: "desired",
+    selectedSearchSkillType: "desired",
     results: [],
+    hasSearched: false,
   };
 
-  toggleFilters = (e) => {
+  toggleSearchType = (e) => {
     e.preventDefault();
     this.setState((previousState) => {
-      return {
-        showFilters: !previousState.showFilters,
-      };
+      if (previousState.searchType === "skill") {
+        return {
+          searchType: "category",
+          searchButtonText: "skill",
+        };
+      } else {
+        return {
+          searchType: "skill",
+          searchButtonText: "category",
+        };
+      }
     });
   };
 
-  renderFilters = () => {
-    if (this.state.showFilters) {
+  renderSearchFields = () => {
+    if (this.state.searchType === "skill") {
+      return (
+        <label htmlFor="searchBar">
+          Enter the skill you want to search for:
+          <input
+            onChange={this.handleChange}
+            id="searchBySkillText"
+            name="searchBar"
+            type="text"
+          />
+        </label>
+      );
+    } else {
       return (
         <>
-          <br />
-          <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            defaultChecked
-            onClick={this.toggleSearchType}
-          ></input>
-          Search people by skills they want to learn
-          <br />
-          <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            onClick={this.toggleSearchType}
-          ></input>
-          Search people by skills they want to teach
           <h2>Categories</h2>
           {Object.keys(this.state.categories).map((category, index) => {
             return (
@@ -61,22 +69,22 @@ class Home extends React.Component {
     }
   };
 
-  toggleSearchType = (e) => {
-    const selectedSearchType = e.target.value;
-    this.setState({ selectedSearchType });
+  handleChange = (e) => {
+    //this event is currently only assigned updating to search by desired skills or teaching skills,
+    //and updating the current skill search text if searching by specific skill
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   toggleCategories = (e) => {
-    const filterType = e.target.className;
     const category = e.target.name;
-    if (this.state[filterType].includes(category)) {
-      const indexOfCategory = this.state[filterType].indexOf(category);
-      this.state[filterType].splice(indexOfCategory, 1);
+    if (this.state.selectedCategories.includes(category)) {
+      const indexOfCategory = this.state.selectedCategories.indexOf(category);
+      this.state.selectedCategories.splice(indexOfCategory, 1);
     } else {
-      this.state[filterType].push(category);
+      this.state.selectedCategories.push(category);
     }
     console.log(
-      `Currently selected ${filterType} filters: ${this.state[filterType]}`
+      `Currently selected category filters: ${this.state.selectedCategories}`
     );
   };
 
@@ -85,31 +93,43 @@ class Home extends React.Component {
       .get("https://firebasing-testing.firebaseio.com/skills.json")
       .then((res) => {
         this.setState({ categories: res.data }, () => {
-          console.log("the categores in state are:", this.state.categories);
+          console.log("the categories in state are:", this.state.categories);
         });
       });
   }
 
   renderResults = (e) => {
     e.preventDefault();
-
-    const { selectedCategories, categories } = this.state;
+    let skillsArr = [];
     const skillPromises = [];
-    /*Categories are saved in state - we need to access the skills in each category,
-        and then make individual calls to the desired_skills node to find everyone who wants to learn the skills in that category */
-    selectedCategories.forEach((category) => {
-      const skills = [...Object.keys(categories[category])];
-      skills.forEach((skill) => {
-        skillPromises.push(
-          axios.get(
-            `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchType}_skills.json?orderBy="$key"&equalTo="${skill}"`
-          )
-        );
+    if (this.state.searchType === "category") {
+      const { selectedCategories, categories } = this.state;
+      /*Categories are saved in state - we need to access the skills in each category,
+          and then make individual calls to the desired_skills node to find everyone who wants to learn the skills in that category */
+      selectedCategories.forEach((category) => {
+        skillsArr.push(...Object.keys(categories[category]));
       });
+    } else {
+      const { searchBySkillText, categories } = this.state;
+      for (const prop in categories) {
+        const categorySkills = Object.keys(categories[prop]);
+        categorySkills.forEach((skill) => {
+          if (skill.toLowerCase().includes(searchBySkillText.toLowerCase())) {
+            skillsArr.push(skill);
+          }
+        });
+      }
+    }
+    skillsArr.forEach((skill) => {
+      skillPromises.push(
+        axios.get(
+          `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchSkillType}_skills.json?orderBy="$key"&equalTo="${skill}"`
+        )
+      );
     });
     Promise.all(skillPromises).then((resArr) => {
       /*We now have the names of everyone who wants to learn the skills in the category selected in the search.
-      Now we need to take their names (or keys) and find matching users in the user table to get the rest of their information. Again an individual call for each name is required*/
+        Now we need to take their names (or keys) and find matching users in the user table to get the rest of their information. Again an individual call for each name is required*/
       const dataArr = resArr.map((res) => res.data);
       const userPromises = [];
       const names = [];
@@ -128,33 +148,70 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
-        const dataArr = resArr.map((res) => res.data);
-        console.log(dataArr);
+        this.setState({
+          results: resArr.map((res) => res.data),
+          hasSearched: true,
+        });
       });
+    });
+  };
+
+  renderCards = () => {
+    if (!this.state.results.length && this.state.hasSearched) {
+      return <div>No results found, please refine your search!</div>;
+    }
+    return this.state.results.map((person, index) => {
+      return (
+        <SkillCard
+          id={index}
+          key={index}
+          person={person[Object.keys(person)[0]]}
+        />
+      );
     });
   };
 
   render() {
     return (
       <>
-        <form action="">
-          <label htmlFor="searchBar">
-            Search:
-            <input name="searchBar" type="text" />
-          </label>
-          <button onClick={this.toggleFilters}>Filter</button>
-          {this.renderFilters()}
+        <form id="home-search-form" action="">
+          <input
+            name="searchType"
+            type="radio"
+            value="teaching"
+            id="selectedSearchSkillType"
+            onClick={this.handleChange}
+          ></input>
+          Search people by skills they want to teach
+          <br />
+          <br />
+          <input
+            name="searchType"
+            type="radio"
+            value="desired"
+            id="selectedSearchSkillType"
+            defaultChecked
+            onClick={this.handleChange}
+          ></input>
+          Search people by skills they want to learn
+          <br />
+          <br />
+          <button
+            onClick={this.toggleSearchType}
+          >{`Search by ${this.state.searchButtonText}`}</button>
+          <br />
+          {this.renderSearchFields()}
           <br />
           <br />
           <button onClick={this.renderResults}>Search</button>
         </form>
+        {this.renderCards()}
       </>
     );
   }
 }
 
 export default Home;
-
 
 /* We want to start rendering these results with skill-cards. 
 So we need to develop those skill cards */
