@@ -67,7 +67,27 @@ class CreateProfile extends React.Component{
         })
         .then(() => 
         firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
+        .then(() => {
+            Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+            this.state.teachingSkills)
+        }).then(() => {
+            const teachingPromises = Object.keys(this.state.teachingSkills).map(skill => {
+                Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`,
+                 {[user.context.currentUser.uid]: true})
+            })
+            Promise.all(teachingPromises).then(()=> {
+                Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
+                this.state.learningSkills)
+            }).then(()=> {
+                const learningPromises = Object.keys(this.state.learningSkills).map(skill => {
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`,
+                    {[user.context.currentUser.uid]: true})
+                })
+                Promise.all(learningPromises);
+            })
+        })
         )}
+        
 
     handleChange = (event) => {
         console.log(this.state.profile);
@@ -92,6 +112,19 @@ class CreateProfile extends React.Component{
         console.log(this.state.teachingSkills)
     }
 
+    addLearningSkill = (event) => {
+        this.setState(prevState => {
+            const newLearningSkills = {...prevState.learningSkills};
+            if(prevState.learningSkills[event.target.value]){
+                delete newLearningSkills[event.target.value]
+                return {learningSkills: newLearningSkills}
+            }else{
+                newLearningSkills[event.target.value] = true;
+                return {learningSkills: newLearningSkills}
+            }
+        })
+    }
+
     render(){
         if(this.state.isLoading) return <p>loading...</p>
         else return(
@@ -110,8 +143,15 @@ class CreateProfile extends React.Component{
                     <h2>What are your skills?</h2>
                     <h3>Categories</h3>
                     <div className="edit-skills-buttons">
-                        {Object.keys(this.state.skills).map(skill => {
-                            return <button value={skill} onClick={this.addTeachingSkill} key={skill}>{skill}</button>;
+                        {Object.keys(this.state.skills).map(category => {
+                            return (
+                                <>
+                            <h4 value={category} key={category}>{category}</h4>
+                                {Object.keys(this.state.skills[category]).map(skill => {
+                                    return <button value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                })}
+                                </>
+                            );
                         })}
                     </div>
                     <div className="specific-skills-inputs">
@@ -123,9 +163,15 @@ class CreateProfile extends React.Component{
                     <h2>What Skils Would You like to Learn?</h2>
                     <h3>Categories</h3>
                     <div className="edit-skills-buttons">
-                        {Object.keys(this.state.skills).map(skill => {
-                            return <button key={skill}>{skill}</button>;
-                        })}
+                        {Object.keys(this.state.skills).map(category => {
+                            return ( 
+                                <>
+                            <h4 key={category}>{category}</h4>
+                            {Object.keys(this.state.skills[category]).map(skill => {
+                                    return <button value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                })}
+                            </>
+                        )})}
                     </div>
                     <div className="specific-skills-inputs">
                         <p><label>Other: <input className="edit-profile-inputs specific-skill-other"></input></label></p>
