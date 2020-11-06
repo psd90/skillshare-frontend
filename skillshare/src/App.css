@@ -25,7 +25,6 @@ App {
 }
 
 body {
-  background-color: white;
   height: 100%;
   overflow: auto;
 }
@@ -134,7 +133,6 @@ header {
 }
 
 #brief-user-data {
-  border-bottom: 2px dashed black;
   max-width: 80%;
   margin: auto;
 }
@@ -165,6 +163,19 @@ header {
 #profile-student-stars {
   width: fit-content;
   margin: auto;
+}
+
+.svg-inline--fa {
+  min-height: 40px;
+  min-width: 40px;
+  color: white;
+  font-size: 2rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  background-color: #ffb498;
+  padding: 15px;
+  border-radius: 100%;
 }
 
 #skills-list {
@@ -286,4 +297,118 @@ header {
 
 .good {
   color: green;
+}
+
+/* ----------------------Edit Profile page---------------------------------------- */
+
+#create-profile-page {
+  text-align: center;
+}
+
+#select-image-div {
+  margin-left: 10px;
+  display: grid;
+  grid-template-columns: 100px auto;
+  line-height: 100%;
+}
+
+#edit-profile-image {
+  max-width: 60%;
+  border-radius: 100%;
+  border: 1px solid black;
+}
+
+.edit-profile-inputs {
+  border: 2px solid #ffb498
+}
+#select-photo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#name-location-bio-inputs {
+  margin-top: 10px;
+  margin-left: 10px;
+  text-align: left;
+  display: table;
+}
+
+#name-location-bio-inputs p {
+  display: table-row;
+}
+
+#name-location-bio-inputs p label{
+  display: table-cell;
+  
+}
+
+#name-location-bio-inputs p input{
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: table-cell;
+}
+
+.edit-skills {
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.edit-skills h2 {
+  margin-bottom: 0;
+}
+
+.edit-skills h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.edit-skills-buttons {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.edit-skills button {
+  width:30%;
+  height: 25px;
+  border: none;
+  background-color: #ffb498;
+  border-radius: 20%;
+  margin-bottom: 5px;
+}
+
+#edit-complete-button {
+  width: 80%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold ;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.specific-skills-inputs {
+  margin-top: 10px;
+  text-align: left;
+  display: table;
+  width: 100%;
+}
+
+.specific-skills-inputs p {
+  display: table-row;
+}
+
+.specific-skills-inputs p label{
+  display: table-cell;
+  
+}
+
+.specific-skills-inputs p .specific-skill-other {
+  width: 77%
+}
+
+.specific-skills-inputs p input{
+  margin-bottom: 10px;
+  display: table-cell;
+  width: 57.5%;
 }

@@ -9,11 +9,16 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../App.css'
 import ReactStars from "react-rating-stars-component";
+import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faPalette, faLaptopCode, faUtensils, faHammer,  faMusic} from '@fortawesome/free-solid-svg-icons'
 
 class Profile extends React.Component{
     state= {
         isLoading: true,
         user: {},
+        desiredSkills: {},
+        teachingSkills: {},
+        userSkillCats: [],
     }
 
     componentDidMount() {
@@ -38,12 +43,32 @@ class Profile extends React.Component{
             return Promise.all([user, desiredSkills.data, teachingSkills ])
         })
         .then(([user, desiredSkills, teachingSkills]) => {
-            this.setState({user, desiredSkills, teachingSkills: teachingSkills.data, isLoading: false})
+            const skillCats = axios.get(`https://firebasing-testing.firebaseio.com/skills.json`);
+            return Promise.all([user, desiredSkills, teachingSkills, skillCats])
         })
+        .then(([user, desiredSkills, teachingSkills, skillCats]) => {
+            const userSkillCats = []
+            Object.keys(teachingSkills.data).forEach(skill => {
+                Object.keys(skillCats.data).forEach(skillCat => {
+                    if(Object.keys(skillCats.data[skillCat]).includes(skill)) {
+                        if(!userSkillCats.includes(skillCat)) {
+                            userSkillCats.push(skillCat);
+                        }     
+                    }
+                })
+            })
+            this.setState({user, desiredSkills, teachingSkills: teachingSkills.data, isLoading: false, userSkillCats})
+        })   
     }
 
     render(){
-        console.log(this.state);
+        const skillsetIcons = {
+            Arts: faPalette, 
+            Coding: faLaptopCode, 
+            Cooking: faUtensils, 
+            Crafting: faHammer, 
+            Music: faMusic
+        }
         if(this.state.isLoading) return (<p>loading...</p>)
         return(
             <div id="profile-page">
@@ -58,7 +83,10 @@ class Profile extends React.Component{
                     <div className="profile-user-location-div">
                     <p id="profile-user-location">{this.state.user.location.nuts}</p>
                     </div>
-                    <h2>About Me</h2>
+                    <div id="about-me-div">
+                        <h2>About Me</h2>
+                        <p>{this.state.user.info}</p>
+                    </div>
                 </div>
                 <div id="profile-ratings">
                     <div id="profile-teacher-ratings">
@@ -78,6 +106,11 @@ class Profile extends React.Component{
                     </div>  
                 </div>
                 <h2>My Skillset</h2>
+                <div id="skillseticons">
+                    {this.state.userSkillCats.map(skillCat => {
+                       return <FontAwesomeIcon className="skill-cat-icon" key={skillCat} icon={skillsetIcons[skillCat]}/>
+                    })}
+                </div>
                 <div id="skills-list">
                     <div id ="teaching-skills">
                         <h3>My Skills</h3>

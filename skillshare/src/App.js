@@ -18,7 +18,6 @@ function App() {
       <Header />
       <div className="App" id="content" role="main">
         <div className="buffer"></div>
-
         <AuthProvider>
           <Router>
             <PrivateRoute exact path="/" component={Home} />
