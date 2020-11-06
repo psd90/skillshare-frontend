@@ -3,13 +3,13 @@ import React from "react";
 let curSize = 18;
 const FontSize = () => {
   const decreaseText = () => {
-    curSize -= 2;
+    if (curSize !== 12) curSize -= 2;
     curSize = parseInt(
       (document.getElementById("content").style.fontSize = `${curSize}px`)
     );
   };
   const increaseText = () => {
-    curSize += 2;
+    if (curSize !== 24) curSize += 2;
     curSize = parseInt(
       (document.getElementById("content").style.fontSize = `${curSize}px`)
     );
@@ -17,11 +17,11 @@ const FontSize = () => {
 
   return (
     <div className="textcontrols">
-      <button onClick={decreaseText} role="button" id="decreasetext">
-        <span>Decrease Font Size</span>
+      <button onClick={decreaseText} role="button" className="fontSize">
+        <span className="smallA">A</span>
       </button>
-      <button onClick={increaseText} role="button" id="increasetext">
-        <span>Increase Font Size</span>
+      <button onClick={increaseText} role="button" className="fontSize">
+        <span className="bigA">A</span>
       </button>
     </div>
   );

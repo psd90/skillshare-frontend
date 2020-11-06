@@ -4,48 +4,13 @@ App {
 
 /* ---------------TEXT CONTROLS--------------- */
 
-button {
-  vertical-align: bottom;
-  margin: 0 0.3125em;
-  padding: 0 0.3125em;
-  border: 1px solid #000;
-  background-color: #fff;
-  font-weight: bold;
-}
-
-button#increasetext {
-  font-size: 1.5em;
-}
-
-button#resettext {
-  font-size: 1.25em;
-}
-
-button#decreasetext {
-  font-size: 1.125em;
-}
-
 .textcontrols {
   padding: 0.625em 0;
-  background: #ccc;
 }
 /* content */
 
 #content {
   margin: 3em 0;
-  text-align: left;
-}
-
-/* demo container */
-
-#container {
-  width: 90%;
-  margin: 0 auto;
-  padding: 2%;
-}
-
-#description {
-  margin-bottom: 1.25em;
   text-align: left;
 }
 
@@ -71,7 +36,7 @@ header {
   background-color: #ffb498;
   position: fixed;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   box-shadow: 0px 1px 10px;
 }
 
@@ -84,15 +49,20 @@ header {
 
 #bold {
   font-weight: bold;
+  margin: auto;
 }
 
 #light {
   font-weight: light;
+  margin: auto;
 }
 
 #loginsignup {
   display: flex;
   justify-content: center;
+  font-size: 2em;
+  flex-direction: column;
+  margin: auto;
 }
 
 /* #loginform {
@@ -103,7 +73,6 @@ header {
 
 #inputboxs {
   width: 80%;
-  border: 2px solid rgba(0, 0, 0, 0.274);
   margin: 20px;
   display: flex;
   flex-direction: column;
@@ -114,6 +83,8 @@ header {
   border: 1px solid #00000065;
   margin-bottom: 10px;
   border-radius: 5px;
+  height: 30px;
+  font-size: larger;
 }
 
 .buttons {
@@ -234,18 +205,98 @@ header {
   border-radius: 20px;
   border: none;
   background-color: #ffb498;
-  font-weight: bold ;
+  font-weight: bold;
   margin-bottom: 10px;
 }
+
+/* ---------------Sign Up Page--------------- */
 .formcard {
-  border: 2px solid black;
-  height: 200px;
+  flex-direction: column;
+  border: 0px solid black;
+  height: 270px;
+  width: 80%;
+  display: flex;
+  border-radius: 20px;
+  margin-bottom: 50px;
+  margin: auto;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.innerForm {
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 110%;
+}
+
+.signUpInput {
+  width: 95%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  font-size: larger;
+  border-radius: 8px;
+  background-color: #ffb498;
+}
+
+.signUpHeading {
+  display: flex;
+  justify-content: center;
+}
+
+.signUpForm {
+  height: 110%;
+  width: 90%;
+}
+
+.signUpButton {
+  border-radius: 30px;
+  width: 40%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
   flex-direction: column;
-  border-radius: 20px;
-  background-color: blanchedalmond;
-  margin-bottom: 50px;
+}
+/* ---------------Font Size Controls--------------- */
+.bigA {
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+.smallA {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.fontSize {
+  background-color: rgb(255, 219, 219);
+  margin: 5px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 3px 3px 7px;
+}
+
+.fontSize:hover {
+  box-shadow: 1px 1px 4px;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.bad {
+  color: red;
+}
+
+.good {
+  color: green;
 }
 
 /* ----------------------Edit Profile page---------------------------------------- */
