@@ -4,48 +4,13 @@ App {
 
 /* ---------------TEXT CONTROLS--------------- */
 
-button {
-  vertical-align: bottom;
-  margin: 0 0.3125em;
-  padding: 0 0.3125em;
-  border: 1px solid #000;
-  background-color: #fff;
-  font-weight: bold;
-}
-
-button#increasetext {
-  font-size: 1.5em;
-}
-
-button#resettext {
-  font-size: 1.25em;
-}
-
-button#decreasetext {
-  font-size: 1.125em;
-}
-
 .textcontrols {
   padding: 0.625em 0;
-  background: #ccc;
 }
 /* content */
 
 #content {
   margin: 3em 0;
-  text-align: left;
-}
-
-/* demo container */
-
-#container {
-  width: 90%;
-  margin: 0 auto;
-  padding: 2%;
-}
-
-#description {
-  margin-bottom: 1.25em;
   text-align: left;
 }
 
@@ -60,7 +25,6 @@ button#decreasetext {
 }
 
 body {
-  background-color: rgba(0, 0, 255, 0.5);
   height: 100%;
   overflow: auto;
 }
@@ -72,7 +36,7 @@ header {
   background-color: #ffb498;
   position: fixed;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   box-shadow: 0px 1px 10px;
 }
 
@@ -85,15 +49,20 @@ header {
 
 #bold {
   font-weight: bold;
+  margin: auto;
 }
 
 #light {
   font-weight: light;
+  margin: auto;
 }
 
 #loginsignup {
   display: flex;
   justify-content: center;
+  font-size: 2em;
+  flex-direction: column;
+  margin: auto;
 }
 
 /* #loginform {
@@ -104,7 +73,6 @@ header {
 
 #inputboxs {
   width: 80%;
-  border: 2px solid rgba(0, 0, 0, 0.274);
   margin: 20px;
   display: flex;
   flex-direction: column;
@@ -115,6 +83,8 @@ header {
   border: 1px solid #00000065;
   margin-bottom: 10px;
   border-radius: 5px;
+  height: 30px;
+  font-size: larger;
 }
 
 .buttons {
@@ -163,7 +133,6 @@ header {
 }
 
 #brief-user-data {
-  border-bottom: 2px dashed black;
   max-width: 80%;
   margin: auto;
 }
@@ -196,6 +165,19 @@ header {
   margin: auto;
 }
 
+.svg-inline--fa {
+  min-height: 40px;
+  min-width: 40px;
+  color: white;
+  font-size: 2rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  background-color: #ffb498;
+  padding: 15px;
+  border-radius: 100%;
+}
+
 #skills-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -226,16 +208,192 @@ header {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+/* ---------------Sign Up Page--------------- */
 .formcard {
-  border: 2px solid black;
-  height: 200px;
+  flex-direction: column;
+  border: 0px solid black;
+  height: 270px;
+  width: 80%;
+  display: flex;
+  border-radius: 20px;
+  margin-bottom: 50px;
+  margin: auto;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.innerForm {
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  border-radius: 20px;
-  background-color: blanchedalmond;
-  margin-bottom: 50px;
+  width: 100%;
+  height: 110%;
 }
+
+.signUpInput {
+  width: 95%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  font-size: larger;
+  border-radius: 8px;
+  background-color: #ffb498;
+}
+
+.signUpHeading {
+  display: flex;
+  justify-content: center;
+}
+
+.signUpForm {
+  height: 110%;
+  width: 90%;
+}
+
+.signUpButton {
+  border-radius: 30px;
+  width: 40%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
+  flex-direction: column;
+}
+/* ---------------Font Size Controls--------------- */
+.bigA {
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+.smallA {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.fontSize {
+  background-color: rgb(255, 219, 219);
+  margin: 5px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 3px 3px 7px;
+}
+
+.fontSize:hover {
+  box-shadow: 1px 1px 4px;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.bad {
+  color: red;
+}
+
+.good {
+  color: green;
+}
+
+/* ----------------------Edit Profile page---------------------------------------- */
+
+#create-profile-page {
+  text-align: center;
+}
+
+#select-image-div {
+  margin-left: 10px;
+  display: grid;
+  grid-template-columns: 100px auto;
+  line-height: 100%;
+}
+
+#edit-profile-image {
+  max-width: 60%;
+  border-radius: 100%;
+  border: 1px solid black;
+}
+
+.edit-profile-inputs {
+  border: 2px solid #ffb498
+}
+#select-photo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#name-location-bio-inputs {
+  margin-top: 10px;
+  margin-left: 10px;
+  text-align: left;
+  display: table;
+}
+
+#name-location-bio-inputs p {
+  display: table-row;
+}
+
+#name-location-bio-inputs p label{
+  display: table-cell;
+  
+}
+
+#name-location-bio-inputs p input{
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: table-cell;
+}
+
+.edit-skills {
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.edit-skills h2 {
+  margin-bottom: 0;
+}
+
+.edit-skills h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.edit-skills-buttons {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.edit-skills button {
+  width:30%;
+  height: 25px;
+  border: none;
+  background-color: #ffb498;
+  border-radius: 20%;
+  margin-bottom: 5px;
+}
+
+#edit-complete-button {
+  width: 80%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold ;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.specific-skills-inputs {
+  margin-top: 10px;
+  text-align: left;
+  display: table;
+  width: 100%;
+}
+
 /* ----------------------Home page---------------------------------------- */
 #home-search-form {
   margin-top: 30%;
@@ -297,3 +455,23 @@ header {
   grid-row: 6 / 7;
   grid-column: 3 / 4;
 }
+
+.specific-skills-inputs p {
+  display: table-row;
+}
+
+.specific-skills-inputs p label{
+  display: table-cell;
+  
+}
+
+.specific-skills-inputs p .specific-skill-other {
+  width: 77%
+}
+
+.specific-skills-inputs p input{
+  margin-bottom: 10px;
+  display: table-cell;
+  width: 57.5%;
+}
+
