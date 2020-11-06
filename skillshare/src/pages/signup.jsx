@@ -25,7 +25,6 @@ const SignUp = ({ history }) => {
 
   const handleSignUp = useCallback(
     async (event) => {
-      console.log(username, emailTwo, date);
       event.preventDefault();
       const { email, password } = event.target.elements;
       try {
@@ -35,12 +34,16 @@ const SignUp = ({ history }) => {
           .then((auth) => {
             axios
               .put(
-                `https://firebasing-testing.firebaseio.com/users/${username}.json`,
-                { uid: auth.user.uid, email: emailTwo, date: date }
+                `https://firebasing-testing.firebaseio.com/users/${auth.user.uid}.json`,
+                { username: username, email: emailTwo, date: date }
               )
-              .then(() => console.log("posted!"));
+              .then(() => {
+                axios.patch(
+                  `https://firebasing-testing.firebaseio.com/usernames.json`,
+                  { [username]: true }
+                );
+              });
           });
-
         history.push("/");
       } catch (error) {
         alert(error);
@@ -55,6 +58,14 @@ const SignUp = ({ history }) => {
 
   const usernameChange = (event) => {
     const usernameChange = event.target.value;
+    // return app
+    //   .database()
+    //   .ref()
+    //   .child("users")
+    //   .once("value")
+    //   .then((snap) => {
+    //     console.log(snap.val());
+    //   });
     const regex = /^[0-9A-Za-z\-]+$/g;
     const isValid = regex.test(usernameChange);
     if (!isValid) {
