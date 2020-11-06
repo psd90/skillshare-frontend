@@ -58,35 +58,40 @@ const SignUp = ({ history }) => {
 
   const usernameChange = (event) => {
     const usernameChange = event.target.value;
-    // return app
-    //   .database()
-    //   .ref()
-    //   .child("users")
-    //   .once("value")
-    //   .then((snap) => {
-    //     console.log(snap.val());
-    //   });
-    const regex = /^[0-9A-Za-z\-]+$/g;
-    const isValid = regex.test(usernameChange);
-    if (!isValid) {
-      setClassUsername("bad");
-      setPassUsername("invalid");
-    } else {
-      setClassUsername("good");
-      setUsername(usernameChange);
-      setPassUsername("valid");
-    }
-    if (
-      passUsername !== "valid" ||
-      passEmail !== "valid" ||
-      passPassword !== "valid" ||
-      passDate !== "valid"
-    ) {
-      setPassSubmit(true);
-    } else {
-      console.log("passed");
-      setPassSubmit(false);
-    }
+    app
+      .database()
+      .ref()
+      .child("usernames")
+      .once("value")
+      .then((snap) => {
+        console.log(`checking if ${usernameChange} exists`);
+        if (snap.val()[usernameChange]) {
+          setClassUsername("bad");
+          setPassUsername("username already exists");
+        } else {
+          const regex = /^[0-9A-Za-z\-]+$/g;
+          const isValid = regex.test(usernameChange);
+          if (!isValid) {
+            setClassUsername("bad");
+            setPassUsername("invalid");
+          } else {
+            setClassUsername("good");
+            setUsername(usernameChange);
+            setPassUsername("valid");
+          }
+          if (
+            passUsername !== "valid" ||
+            passEmail !== "valid" ||
+            passPassword !== "valid" ||
+            passDate !== "valid"
+          ) {
+            setPassSubmit(true);
+          } else {
+            console.log("passed");
+            setPassSubmit(false);
+          }
+        }
+      });
   };
 
   const emailChange = (event) => {
