@@ -1,34 +1,29 @@
 import Axios from 'axios';
-import React, {useContext} from 'react'
+import React from 'react'
 import { AuthContext } from "../Auth";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import firebase from "firebase";
+import PropTypes from "prop-types";
 
 class CreateProfile extends React.Component{
     state = {
         isLoading: true,
         skills: {},
         profile: {
-            image: '',
-            name: '',
-            location: '',
-            info: '',
+            image: null,
+            name: null,
+            location: null,
+            info: null,
         },
         teachingSkills: {},
         learningSkills: {},
         newTeachingSkills: {},
         newLearningSkills: {},
+        error: false
     }
 
     static contextType = AuthContext
 
-    componentDidMount() 
-    {
+    componentDidMount() {
         Axios.get('https://firebasing-testing.firebaseio.com/skills.json')
         .then(res => {
             this.setState({isLoading: false, skills: res.data}) 
@@ -44,6 +39,18 @@ class CreateProfile extends React.Component{
     }
 
     handleSubmit = () => {
+
+        const { image, name, location, info } = this.state.profile
+        const { teachingSkills, learningSkills, newTeachingSkills, newLearningSkills } = this.state;
+
+        if(!image || !name || !location || !info) {
+            this.setState({error: 'Image, Name, Location, Bio must all be filled in'});
+        } else if(!Object.keys(teachingSkills).length && !Object.keys(newTeachingSkills).length) {
+            this.setState({error: 'Please select a teaching skill'});
+        } else if (!Object.keys(learningSkills).length && !Object.keys(newLearningSkills).length) {
+            this.setState({error: 'Please select a learning skill'});
+        }
+        else {
         const user = this;
         let newLearningSkillsPatch;
         let newTeachingSkillsPatch;
@@ -69,6 +76,9 @@ class CreateProfile extends React.Component{
                 }
                 return {profile : newProfile};
             })
+        })
+        .catch(err => {
+            this.setState({error: err.response.data.error});
         })
         .then(() => {
             Axios.patch(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
@@ -142,12 +152,16 @@ class CreateProfile extends React.Component{
                         )}
                     Promise.all([newDesiredSkills])
                 })
+                .then(() => {
+                    this.props.history.push("/");
+                })
             })
             })
         })
         })
         )}
-        )}
+        )
+    }}
    
     handleChange = (event) => {
         console.log(this.state.profile);
@@ -216,7 +230,7 @@ class CreateProfile extends React.Component{
                 </div>
                 <div id="name-location-bio-inputs">
                     <p><label >Name: </label><input id="name" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
-                    <p><label>Location:&nbsp;</label><input id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><label>Location:&nbsp;</label><input placeholder="enter your postcode" id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
                     <p><label>Bio: </label><input id="info" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
                 </div>
                 <div className="edit-skills">
@@ -252,10 +266,15 @@ class CreateProfile extends React.Component{
                         )})}
                     </div>                    
                 </div>
+                {this.state.error ? <p className="profile-error-message">{this.state.error}</p> : null}
                 <button onClick={this.handleSubmit}id="edit-complete-button">Complete</button>
             </div>
         )
     }
 }
+
+CreateProfile.propTypes = {
+    history: PropTypes.node,
+  };
 
 export default CreateProfile

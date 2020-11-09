@@ -481,6 +481,10 @@ h1 {
   width: 100%;
 }
 
+.profile-error-message {
+  color: red;
+}
+
 /* ----------------------Home page---------------------------------------- */
 #home-search-form {
   margin-top: 30%;
