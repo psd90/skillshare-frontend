@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 import SkillCard from "../components/skill-cards";
-import { object } from "prop-types";
 import Header from "../components/header";
+import Talk from "talkjs";
+import { AuthContext } from "../Auth";
 
 class Home extends React.Component {
   state = {
-    currentUser: "alex",
+    currentUser: {}, //This prop takes the current user from auth context (see did mount function)
+    me: {}, // This prop is for creating the TalkJS user (which has different properties to currentUser)
     searchType: "skill",
     searchButtonText: "category",
     searchBySkillText: "",
@@ -17,6 +19,8 @@ class Home extends React.Component {
     results: [],
     hasSearched: false,
   };
+
+  static contextType = AuthContext;
 
   toggleSearchType = (e) => {
     e.preventDefault();
@@ -84,20 +88,55 @@ class Home extends React.Component {
     } else {
       this.state.selectedCategories.push(category);
     }
-    console.log(
-      `Currently selected category filters: ${this.state.selectedCategories}`
-    );
   };
 
   componentDidMount() {
-    axios
-      .get("https://firebasing-testing.firebaseio.com/skills.json")
-      .then((res) => {
-        this.setState({ categories: res.data }, () => {
-          console.log("the categories in state are:", this.state.categories);
-        });
-      });
+    Promise.all([
+      axios.get("https://firebasing-testing.firebaseio.com/skills.json"), // Call to get current categories
+      axios.get(
+        `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json` // Call to get current user's information (as auth user only has uid and email)
+      ),
+    ]).then((resArr) => {
+      this.setState(
+        {
+          categories: resArr[0].data,
+          currentUser: resArr[1].data,
+        },
+        () => {
+          console.log(
+            "Current user in home page state: ",
+            this.state.currentUser
+          );
+        }
+      );
+    });
   }
+
+  handleNewMessage = (e) => {
+    const clickedUser = this.state.results.filter((person) => {
+      return Object.keys(person)[0] === e.target.id;
+    })[0];
+    const clickedUid = Object.keys(clickedUser)[0];
+    const clickedPersonObj = clickedUser[Object.keys(clickedUser)[0]];
+    window.talkSession = new Talk.Session({
+      appId: "tF07bX0H",
+      me: this.state.me,
+    });
+    const other = new Talk.User({
+      id: clickedUid,
+      name: clickedPersonObj.name,
+      email: clickedPersonObj.email,
+      photoUrl: "https://demo.talkjs.com/img/sebastian.jpg",
+      welcomeMessage: "Hey, how can I help?",
+    });
+    const conversation = window.talkSession.getOrCreateConversation(
+      Talk.oneOnOneId(this.state.me, other)
+    );
+    conversation.setParticipant(this.state.me);
+    conversation.setParticipant(other);
+    const inbox = window.talkSession.createInbox({ selected: conversation });
+    inbox.mount(this.talkjsContainer.current);
+  };
 
   renderResults = (e) => {
     e.preventDefault();
@@ -149,10 +188,15 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
-        this.setState({
-          results: resArr.map((res) => res.data),
-          hasSearched: true,
-        });
+        this.setState(
+          {
+            results: resArr.map((res) => res.data),
+            hasSearched: true,
+          },
+          () => {
+            console.log(this.state.results);
+          }
+        );
       });
     });
   };
@@ -168,6 +212,9 @@ class Home extends React.Component {
           key={index}
           person={person[Object.keys(person)[0]]}
           uid={Object.keys(person)[0]}
+          currentUserUid={this.context.currentUser.uid}
+          currentUserUsername={this.state.currentUser.username}
+          messageFunction={this.handleNewMessage}
         />
       );
     });

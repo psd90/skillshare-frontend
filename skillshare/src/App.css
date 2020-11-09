@@ -540,6 +540,11 @@ h1 {
 
 .search-view-more-button-link {
   grid-row: 6 / 7;
+  grid-column: 1 / 2;
+}
+
+.search-message-button-link {
+  grid-row: 6 / 7;
   grid-column: 3 / 4;
 }
 
@@ -561,12 +566,16 @@ h1 {
   width: 57.5%;
 }
 
-/* -----------Home Page --------------- */
-
 .searchTeachers {
   font-family: Poppins;
   border: solid 2px black;
   margin: 10px;
   padding: 10px;
   border-radius: 15px;
+}
+
+/* ----------------------Messages page---------------------------------------- */
+.chatbox-container {
+  margin-top: 5%;
+  height: 75vh;
 }
