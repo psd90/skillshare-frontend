@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 import SkillCard from "../components/skill-cards";
 import { object } from "prop-types";
+import Header from "../components/header";
 
 class Home extends React.Component {
   state = {
@@ -174,7 +175,9 @@ class Home extends React.Component {
   render() {
     return (
       <>
-        <form id="home-search-form" action="">
+        <Header />
+        <div className="buffer"></div>
+        <form className="searchTeachers" id="home-search-form" action="">
           <input
             name="searchType"
             type="radio"

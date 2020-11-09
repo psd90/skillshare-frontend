@@ -6,9 +6,9 @@ const Header = () => {
   return (
     <header className="header">
       <FontSize />
-      <h1>Skill share</h1>
-      <button id="signout" onClick={() => app.auth().signOut()}>
-        sign out
+      <h1>SkllShr</h1>
+      <button className="signOut" onClick={() => app.auth().signOut()}>
+        Sign Out
       </button>
     </header>
   );
