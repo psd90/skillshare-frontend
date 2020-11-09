@@ -3,6 +3,7 @@ import React from 'react'
 import { AuthContext } from "../Auth";
 import firebase from "firebase";
 import PropTypes from "prop-types";
+import Header from '../components/header'
 
 class CreateProfile extends React.Component{
     state = {
@@ -200,6 +201,7 @@ class CreateProfile extends React.Component{
     }
 
     addNewTeachingSkill = (event) => {
+     
         console.log(this.state.newTeachingSkills);
         this.setState(prevState => {
             const newTeachingSkills = {...prevState.newTeachingSkills};
@@ -223,43 +225,47 @@ class CreateProfile extends React.Component{
         if(this.state.isLoading) return <p>loading...</p>
         else return(
             <div id="create-profile-page">
-                <h1>Make Your Profile</h1>
+                 <Header />
+        <div className="buffer"></div>
+                <h1 id='makeProfileHeading' >Make Your Profile</h1>
                 <div id="select-image-div">
                 <img id="edit-profile-image" src="https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png"/>
-                <input type="file" onChange={this.changeImageFile}></input>
+                <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>
                 </div>
                 <div id="name-location-bio-inputs">
-                    <p><label >Name: </label><input id="name" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
-                    <p><label>Location:&nbsp;</label><input placeholder="enter your postcode" id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
-                    <p><label>Bio: </label><input id="info" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><input id="name" placeholder='Name' onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><input placeholder="Enter Postcode" id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><textarea id="info" placeholder='About Me' onChange = {this.handleChange} className="edit-profile-inputs"></textarea></p>
                 </div>
                 <div className="edit-skills">
-                    <h2>What are your skills?</h2>
-                    <h3>Categories</h3>
+                    <h2 className='centreItems'>What are your skills?</h2>
+                    <br />
+                    <h3 className='centreItems'>Categories</h3>
                     <div className="edit-skills-buttons">
                         {Object.keys(this.state.skills).map(category => {
                             return (
                                 <>
                             <h4 value={category} key={category}>{category}</h4>
                                 {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                    return <button  className='skillsButton' value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
                                 })}
-                                <p><label>Other: <input id={category} onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
+                                <p><label><input id={category} placeholder='Other' onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                                 </>
                             );
                         })}
                     </div>         
                 </div>
                 <div className="edit-skills"> 
-                    <h2>What Skils Would You like to Learn?</h2>
-                    <h3>Categories</h3>
+                    <h2 className='centreItems'>What Skills Would You Like to Learn?</h2>
+                    <br />
+                    <h3 className='centreItems'>Categories</h3>
                     <div className="edit-skills-buttons">
                         {Object.keys(this.state.skills).map(category => {
                             return ( 
                                 <>
                             <h4 key={category}>{category}</h4>
                             {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                    return <button className='skillsButton' value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
                                 })}
                                 <p><label>Other: <input id={category} onChange={this.addNewLearningSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                             </>
