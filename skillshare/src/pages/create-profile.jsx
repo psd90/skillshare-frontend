@@ -21,6 +21,8 @@ class CreateProfile extends React.Component{
         },
         teachingSkills: {},
         learningSkills: {},
+        newTeachingSkills: {},
+        newLearningSkills: {},
     }
 
     static contextType = AuthContext
@@ -43,8 +45,20 @@ class CreateProfile extends React.Component{
 
     handleSubmit = () => {
         const user = this;
+        let newLearningSkillsPatch;
+        let newTeachingSkillsPatch;
+        if(Object.keys(this.state.newLearningSkills).length) {
+          newLearningSkillsPatch = Object.keys(this.state.newLearningSkills).map(Skill =>
+              Axios.patch(`https://firebasing-testing.firebaseio.com/skills/${Skill}.json`, this.state.newLearningSkills[Skill]))
+        }
+        if(Object.keys(this.state.newTeachingSkills).length) {
+          newTeachingSkillsPatch = Object.keys(this.state.newTeachingSkills).map(Skill =>
+            Axios.patch(`https://firebasing-testing.firebaseio.com/skills/${Skill}.json`, this.state.newTeachingSkills[Skill]))
+        }
+        Promise.all([newLearningSkillsPatch, newTeachingSkillsPatch])
+        .then(()=>{
         Axios.get(`https://api.postcodes.io/postcodes/${this.state.profile.location}`)
-        .then(res => {
+        .then(res => { 
             this.setState((prevState) => {
                 const newProfile = {...prevState.profile};
                 newProfile.location = {
@@ -87,6 +101,7 @@ class CreateProfile extends React.Component{
             })
         })
         )}
+        )}
         
 
     handleChange = (event) => {
@@ -125,6 +140,26 @@ class CreateProfile extends React.Component{
         })
     }
 
+    addNewTeachingSkill = (event) => {
+        console.log(this.state.newTeachingSkills);
+        this.setState(prevState => {
+            const newTeachingSkills = {...prevState.newTeachingSkills};
+            newTeachingSkills[event.target.id]={[event.target.value]: true};
+            return {newTeachingSkills}
+        })
+
+    }
+
+    addNewLearningSkill = (event) => {
+        console.log(this.state.newLearningSkills);
+        this.setState(prevState => {
+            const newLearningSkills = {...prevState.newLearningSkills};
+            newLearningSkills[event.target.id]={[event.target.value]: true};
+            return {newLearningSkills}
+        })
+
+    }
+
     render(){
         if(this.state.isLoading) return <p>loading...</p>
         else return(
@@ -150,13 +185,10 @@ class CreateProfile extends React.Component{
                                 {Object.keys(this.state.skills[category]).map(skill => {
                                     return <button value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
                                 })}
+                                <p><label>Other: <input id={category} onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                                 </>
                             );
                         })}
-                    </div>
-                    <div className="specific-skills-inputs">
-                        <p><label>Other: <input className="edit-profile-inputs specific-skill-other"></input></label></p>
-                        <p><label>Specific Skills: <input className="edit-profile-inputs"></input></label></p>
                     </div>         
                 </div>
                 <div className="edit-skills"> 
@@ -170,14 +202,10 @@ class CreateProfile extends React.Component{
                             {Object.keys(this.state.skills[category]).map(skill => {
                                     return <button value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
                                 })}
+                                <p><label>Other: <input id={category} onChange={this.addNewLearningSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                             </>
                         )})}
-                    </div>
-                    <div className="specific-skills-inputs">
-                        <p><label>Other: <input className="edit-profile-inputs specific-skill-other"></input></label></p>
-                        <p><label>Specific Skills: <input className="edit-profile-inputs"></input></label></p>
-                    </div>
-                    
+                    </div>                    
                 </div>
                 <button onClick={this.handleSubmit}id="edit-complete-button">Complete</button>
             </div>
