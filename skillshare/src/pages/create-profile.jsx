@@ -97,8 +97,7 @@ class CreateProfile extends React.Component{
                     this.state.newTeachingSkills[category])
                 })  
             }
-            Promise.all(newTeachingPromises)
-        })
+            Promise.all([newTeachingPromises])
             .then(()=> {
             const teachingPromises = Object.keys(this.state.teachingSkills).map(skill => {
                 Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`,
@@ -108,28 +107,48 @@ class CreateProfile extends React.Component{
                 let newTeachingSkills
                 if(Object.keys(this.state.newTeachingSkills).length){
                     newTeachingSkills = Object.keys(this.state.newTeachingSkills).map(category => {
-                        Axios.put(`https://firebase-testing.firebaseio.com/teaching_skills/${Object.keys(this.state.newTeachingSkills[category])[0]}.json`, 
-                        {[user.context.currentUser.id]: true})
+                        Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills.json`, 
+                        {[Object.keys(this.state.newTeachingSkills[category])[0]] : {[user.context.currentUser.uid]: true}})
                     })
                 }
-                Promise.all(newTeachingSkills)
+                Promise.all([newTeachingSkills])
             })
-                .then(()=> {
+            .then(()=> {
                 Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
                 this.state.learningSkills)
-            }).then(()=> {
+            })
+            .then(()=> {
+                let newDesiredPromises;
+            if(Object.keys(this.state.newLearningSkills).length){ 
+                newDesiredPromises = Object.keys(this.state.newLearningSkills).map(category => {
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, 
+                    this.state.newLearningSkills[category])
+                })  
+            }
+            Promise.all([newDesiredPromises])
+            .then(() => {
                 const learningPromises = Object.keys(this.state.learningSkills).map(skill => {
                     Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`,
                     {[user.context.currentUser.uid]: true})
                 })
-                Promise.all(learningPromises);
+                Promise.all(learningPromises)
+                .then(() => {
+                    let newDesiredSkills
+                    if(Object.keys(this.state.newLearningSkills).length){
+                        newDesiredSkills = Object.keys(this.state.newLearningSkills).map(category => 
+                            Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills.json`, 
+                            {[Object.keys(this.state.newLearningSkills[category])[0]] : {[user.context.currentUser.uid]: true}}
+                        )
+                        )}
+                    Promise.all([newDesiredSkills])
+                })
             })
+            })
+        })
         })
         )}
         )}
-    
-        
-
+   
     handleChange = (event) => {
         console.log(this.state.profile);
          this.setState((prevState) => {
