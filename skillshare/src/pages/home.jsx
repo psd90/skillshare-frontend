@@ -38,15 +38,36 @@ class Home extends React.Component {
   renderSearchFields = () => {
     if (this.state.searchType === "skill") {
       return (
-        <label htmlFor="searchBar">
-          Enter the skill you want to search for:
+        <>
+          <label htmlFor="searchBar">
+            <input
+              onChange={this.handleChange}
+              id="searchBySkillText"
+              name="searchBar"
+              type="text"
+              placeholder="Enter Specific Skill"
+            />
+          </label>
+          <p>I want to...</p>
           <input
-            onChange={this.handleChange}
-            id="searchBySkillText"
-            name="searchBar"
-            type="text"
-          />
-        </label>
+            name="searchType"
+            type="radio"
+            value="teaching"
+            id="selectedSearchSkillType"
+            onClick={this.handleChange}
+          ></input>
+          Learn this skill
+          <br />
+          <input
+            name="searchType"
+            type="radio"
+            value="desired"
+            id="selectedSearchSkillType"
+            defaultChecked
+            onClick={this.handleChange}
+          ></input>
+          Teach this skill
+        </>
       );
     } else {
       return (
@@ -65,6 +86,25 @@ class Home extends React.Component {
               </label>
             );
           })}
+          <p>I want to...</p>
+          <input
+            name="searchType"
+            type="radio"
+            value="teaching"
+            id="selectedSearchSkillType"
+            onClick={this.handleChange}
+          ></input>
+          Learn a skill
+          <br />
+          <input
+            name="searchType"
+            type="radio"
+            value="desired"
+            id="selectedSearchSkillType"
+            defaultChecked
+            onClick={this.handleChange}
+          ></input>
+          Teach a skill
         </>
       );
     }
@@ -179,31 +219,10 @@ class Home extends React.Component {
         <Header />
         <div className="buffer"></div>
         <form className="searchTeachers" id="home-search-form" action="">
-          <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            id="selectedSearchSkillType"
-            onClick={this.handleChange}
-          ></input>
-          Search people by skills they want to teach
-          <br />
-          <br />
-          <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            id="selectedSearchSkillType"
-            defaultChecked
-            onClick={this.handleChange}
-          ></input>
-          Search people by skills they want to learn
-          <br />
-          <br />
           <button
             onClick={this.toggleSearchType}
           >{`Search by ${this.state.searchButtonText}`}</button>
-          <br />
+          <p>OR</p>
           {this.renderSearchFields()}
           <br />
           <br />

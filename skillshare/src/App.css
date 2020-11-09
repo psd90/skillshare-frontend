@@ -41,13 +41,13 @@ header {
 }
 
 .backgroundHeader {
-  height: 350px;
+  height: 500px;
   width: 100%;
-  top: 0px;
-  display: flex;
-  justify-content: space-around;
+  /* top: 0px; */
+  /* display: flex;
+  justify-content: space-around; */
   font-family: Poppins;
-  background-image: url("./images/background.png");
+  background-image: url("./images/fullBackground.png");
   background-size: cover;
 }
 
@@ -80,7 +80,7 @@ header {
   color: #ffa07d;
   font-size: 40px;
   margin: auto;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 h1 {
@@ -102,6 +102,7 @@ h1 {
   justify-content: center;
   font-size: 20px;
   margin: auto;
+  margin-top: 0;
   margin-bottom: 20px;
   font-family: Poppins;
 }
@@ -134,8 +135,9 @@ h1 {
 
 .buttons {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   width: 250px;
+  margin: auto;
 }
 
 .singlebutton {
@@ -259,14 +261,16 @@ h1 {
 .formcard {
   flex-direction: column;
   border: 0px solid black;
-  height: 270px;
-  width: 80%;
+  height: 230px;
+  width: 100%;
   display: flex;
-  border-radius: 20px;
   margin-bottom: 50px;
   margin: auto;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+  bottom: 5px;
+  background-color: white;
 }
 
 .innerForm {
@@ -293,6 +297,7 @@ h1 {
   display: flex;
   justify-content: center;
   font-family: Poppins;
+  margin-bottom: 50px;
 }
 
 .signUpForm {
@@ -303,7 +308,7 @@ h1 {
 .loginButton {
   border-radius: 30px;
   width: 40%;
-  margin: 10px;
+  margin: 3px;
   display: flex;
   justify-content: center;
   height: 40px;
@@ -322,7 +327,7 @@ h1 {
 .signUpButton {
   border-radius: 30px;
   width: 40%;
-  margin: 10px;
+  margin: auto;
   display: flex;
   justify-content: center;
   height: 40px;
@@ -393,17 +398,35 @@ h1 {
   text-align: center;
 }
 
+#makeProfileHeading {
+  font-family: Poppins;
+  margin-bottom: 10px;
+  /* font-size: 30px; */
+}
+
 #select-image-div {
   margin-left: 10px;
-  display: grid;
-  grid-template-columns: 100px auto;
+  display: flex;
+  flex-direction: column;
   line-height: 100%;
+  /* border: 2px solid black; */
+  font-family: Poppins;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+#chooseFile {
+  margin: auto;
+  margin-top: 10px;
+  margin-left: 70px;
+  font-family: Poppins;
 }
 
 #edit-profile-image {
-  max-width: 60%;
+  max-width: 25%;
   border-radius: 100%;
-  border: 1px solid black;
+  border: 1px solid #ffb498;
+  margin: auto;
 }
 
 .edit-profile-inputs {
@@ -415,25 +438,28 @@ h1 {
 }
 
 #name-location-bio-inputs {
-  margin-top: 10px;
-  margin-left: 10px;
-  text-align: left;
-  display: table;
+  margin-top: 50px;
+
+  /* width: 100%; */
+  border-bottom: 2px rgba(0, 0, 0, 0.297) solid;
+  margin: auto;
 }
 
-#name-location-bio-inputs p {
+/* #name-location-bio-inputs p {
   display: table-row;
-}
+} */
 
-#name-location-bio-inputs p label {
-  display: table-cell;
-}
-
-#name-location-bio-inputs p input {
+/* #name-location-bio-inputs p input {
   margin-left: 50px;
   margin-bottom: 10px;
   display: table-cell;
 }
+
+#name-location-bio-inputs p textarea {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: table-cell;
+} */
 
 .edit-skills {
   text-align: left;
@@ -459,7 +485,7 @@ h1 {
   height: 25px;
   border: none;
   background-color: #ffb498;
-  border-radius: 20%;
+  border-radius: 20px;
   margin-bottom: 5px;
 }
 
@@ -490,6 +516,9 @@ h1 {
   margin-top: 30%;
 }
 
+#searchBySkillText {
+  width: 90%;
+}
 .search-result-card {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

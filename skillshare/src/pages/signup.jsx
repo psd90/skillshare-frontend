@@ -179,7 +179,7 @@ const SignUp = ({ history }) => {
       <Header className="testBackground"></Header>
       <div className="buffer"></div>
       <h1 className="signUpHeading">Sign Up</h1>
-      <div className="formcard">
+      <div>
         <div className="innerForm">
           <form className="signUpForm" id="form" onSubmit={handleSignUp}>
             <input
