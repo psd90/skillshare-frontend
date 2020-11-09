@@ -38,8 +38,9 @@ class Home extends React.Component {
   renderSearchFields = () => {
     if (this.state.searchType === "skill") {
       return (
-        <>
-          <label htmlFor="searchBar">
+        <div id='searchInForm'>
+         <p className='searchInForm'>OR</p>
+          <label className='searchInForm' htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
@@ -49,7 +50,8 @@ class Home extends React.Component {
             />
           </label>
           <p>I want to...</p>
-          <input
+          <lable>
+                 <input
             name="searchType"
             type="radio"
             value="teaching"
@@ -57,8 +59,9 @@ class Home extends React.Component {
             onClick={this.handleChange}
           ></input>
           Learn this skill
-          <br />
-          <input
+          </lable>
+          <lable>
+            <input
             name="searchType"
             type="radio"
             value="desired"
@@ -66,8 +69,9 @@ class Home extends React.Component {
             defaultChecked
             onClick={this.handleChange}
           ></input>
-          Teach this skill
-        </>
+          Teach this skill 
+          </lable>
+        </div>
       );
     } else {
       return (
@@ -87,7 +91,8 @@ class Home extends React.Component {
             );
           })}
           <p>I want to...</p>
-          <input
+          <lable>
+             <input
             name="searchType"
             type="radio"
             value="teaching"
@@ -95,8 +100,9 @@ class Home extends React.Component {
             onClick={this.handleChange}
           ></input>
           Learn a skill
-          <br />
-          <input
+          </lable>
+          <lable>
+            <input
             name="searchType"
             type="radio"
             value="desired"
@@ -105,6 +111,8 @@ class Home extends React.Component {
             onClick={this.handleChange}
           ></input>
           Teach a skill
+          </lable>
+          
         </>
       );
     }
@@ -220,13 +228,13 @@ class Home extends React.Component {
         <div className="buffer"></div>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
+            className='searchByButton'
             onClick={this.toggleSearchType}
           >{`Search by ${this.state.searchButtonText}`}</button>
-          <p>OR</p>
           {this.renderSearchFields()}
           <br />
           <br />
-          <button onClick={this.renderResults}>Search</button>
+          <button className='searchButton' onClick={this.renderResults}>Search</button>
         </form>
         {this.renderCards()}
       </>

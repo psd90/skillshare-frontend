@@ -512,8 +512,38 @@ h1 {
   margin-top: 30%;
 }
 
+#searchInForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchInForm {
+  margin: auto;
+}
+
+.searchByButton {
+  width: 175px;
+  height: 40px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+}
+.searchButton {
+  width: 125px;
+  height: 30px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+}
+
 #searchBySkillText {
-  width: 90%;
+  width: 100%;
 }
 .search-result-card {
   display: grid;
@@ -595,7 +625,9 @@ h1 {
 .searchTeachers {
   font-family: Poppins;
   border: solid 2px black;
-  margin: 10px;
+  margin: auto;
   padding: 10px;
   border-radius: 15px;
+  display: flex;
+  flex-direction: column;
 }
