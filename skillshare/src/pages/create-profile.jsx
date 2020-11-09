@@ -75,7 +75,12 @@ class CreateProfile extends React.Component{
             {
                     name: this.state.profile.name, 
                     location: this.state.profile.location, 
-                    info: this.state.profile.info
+                    info: this.state.profile.info,
+                    role: "Member",
+                    welcomeMessage: `Hi this is ${this.state.profile.name}!`,
+                    friends: [],
+                    teacher_ratings: [],
+                    student_ratings: [],
                 }
             )
         })
@@ -85,11 +90,31 @@ class CreateProfile extends React.Component{
             Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
             this.state.teachingSkills)
         }).then(() => {
+            let newTeachingPromises
+            if(Object.keys(this.state.newTeachingSkills).length){ 
+                newTeachingPromises = Object.keys(this.state.newTeachingSkills).map(category => {
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+                    this.state.newTeachingSkills[category])
+                })  
+            }
+            Promise.all(newTeachingPromises)
+        })
+            .then(()=> {
             const teachingPromises = Object.keys(this.state.teachingSkills).map(skill => {
                 Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`,
                  {[user.context.currentUser.uid]: true})
             })
             Promise.all(teachingPromises).then(()=> {
+                let newTeachingSkills
+                if(Object.keys(this.state.newTeachingSkills).length){
+                    newTeachingSkills = Object.keys(this.state.newTeachingSkills).map(category => {
+                        Axios.put(`https://firebase-testing.firebaseio.com/teaching_skills/${Object.keys(this.state.newTeachingSkills[category])[0]}.json`, 
+                        {[user.context.currentUser.id]: true})
+                    })
+                }
+                Promise.all(newTeachingSkills)
+            })
+                .then(()=> {
                 Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
                 this.state.learningSkills)
             }).then(()=> {
@@ -102,6 +127,7 @@ class CreateProfile extends React.Component{
         })
         )}
         )}
+    
         
 
     handleChange = (event) => {
