@@ -36,7 +36,7 @@ const Login = ({ history }) => {
     <>
       <div className="backgroundHeader">
         <div className="formcard">
-          <h1 id="skillshare">Skill Share</h1>
+          <h1 id="skillshare">SkllShr</h1>
           <p id="loginsignup">
             <span id="bold">Log in </span>{" "}
             <span id="light"> &nbsp;or&nbsp; </span>
