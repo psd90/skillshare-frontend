@@ -101,7 +101,7 @@ class Home extends React.Component {
   renderResults = (e) => {
     e.preventDefault();
     let skillsArr = [];
-    const skillPromises = [];
+    const skillsPromises = [];
     if (this.state.searchType === "category") {
       const { selectedCategories, categories } = this.state;
       /*Categories are saved in state - we need to access the skills in each category,
@@ -121,28 +121,28 @@ class Home extends React.Component {
       }
     }
     skillsArr.forEach((skill) => {
-      skillPromises.push(
+      skillsPromises.push(
         axios.get(
           `https://firebasing-testing.firebaseio.com/${this.state.selectedSearchSkillType}_skills.json?orderBy="$key"&equalTo="${skill}"`
         )
       );
     });
-    Promise.all(skillPromises).then((resArr) => {
+    Promise.all(skillsPromises).then((resArr) => {
       /*We now have the names of everyone who wants to learn the skills in the category selected in the search.
         Now we need to take their names (or keys) and find matching users in the user table to get the rest of their information. Again an individual call for each name is required*/
       const dataArr = resArr.map((res) => res.data);
       const userPromises = [];
-      const names = [];
+      const uids = [];
       dataArr.forEach((skill) => {
         for (const prop in skill) {
-          names.push(...Object.keys(skill[prop]));
+          uids.push(...Object.keys(skill[prop]));
         }
       });
-      var uniqueNames = names.filter((v, i, a) => a.indexOf(v) === i);
-      uniqueNames.forEach((name) => {
+      var uniqueUids = uids.filter((v, i, a) => a.indexOf(v) === i);
+      uniqueUids.forEach((uid) => {
         userPromises.push(
           axios.get(
-            `https://firebasing-testing.firebaseio.com/users.json?orderBy="$key"&equalTo="${name}"`
+            `https://firebasing-testing.firebaseio.com/users.json?orderBy="$key"&equalTo="${uid}"`
           )
         );
       });
@@ -166,6 +166,7 @@ class Home extends React.Component {
           id={index}
           key={index}
           person={person[Object.keys(person)[0]]}
+          uid={Object.keys(person)[0]}
         />
       );
     });

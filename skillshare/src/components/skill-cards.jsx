@@ -12,15 +12,16 @@ class SkillCard extends React.Component {
   static propTypes = {
     id: PropTypes.number,
     person: PropTypes.object,
+    uid: PropTypes.number,
   };
 
   getCategories = () => {
     Promise.all([
       axios.get(
-        `https://firebasing-testing.firebaseio.com/users_desired_skills.json?orderBy="$key"&equalTo="${this.props.person.username}"`
+        `https://firebasing-testing.firebaseio.com/users_desired_skills.json?orderBy="$key"&equalTo="${this.props.uid}"`
       ),
       axios.get(
-        `https://firebasing-testing.firebaseio.com/users_teaching_skills.json?orderBy="$key"&equalTo="${this.props.person.username}"`
+        `https://firebasing-testing.firebaseio.com/users_teaching_skills.json?orderBy="$key"&equalTo="${this.props.uid}"`
       ),
     ]).then((resArr) => {
       const dataArr = resArr.map((res) => res.data[Object.keys(res.data)[0]]);
@@ -33,6 +34,7 @@ class SkillCard extends React.Component {
   };
 
   componentDidMount() {
+    console.log(this.props.person);
     this.getCategories();
   }
 
