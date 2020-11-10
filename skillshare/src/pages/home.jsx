@@ -42,9 +42,9 @@ class Home extends React.Component {
   renderSearchFields = () => {
     if (this.state.searchType === "skill") {
       return (
-        <div id='searchInForm'>
-         <p className='searchInForm'>OR</p>
-          <label className='searchInForm' htmlFor="searchBar">
+        <div id="searchInForm">
+          <p className="searchInForm">OR</p>
+          <label className="searchInForm" htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
@@ -55,25 +55,25 @@ class Home extends React.Component {
           </label>
           <p>I want to...</p>
           <lable>
-                 <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            id="selectedSearchSkillType"
-            onClick={this.handleChange}
-          ></input>
-          Learn this skill
+            <input
+              name="searchType"
+              type="radio"
+              value="teaching"
+              id="selectedSearchSkillType"
+              onClick={this.handleChange}
+            ></input>
+            Learn this skill
           </lable>
           <lable>
             <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            id="selectedSearchSkillType"
-            defaultChecked
-            onClick={this.handleChange}
-          ></input>
-          Teach this skill 
+              name="searchType"
+              type="radio"
+              value="desired"
+              id="selectedSearchSkillType"
+              defaultChecked
+              onClick={this.handleChange}
+            ></input>
+            Teach this skill
           </lable>
         </div>
       );
@@ -96,27 +96,26 @@ class Home extends React.Component {
           })}
           <p>I want to...</p>
           <lable>
-             <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            id="selectedSearchSkillType"
-            onClick={this.handleChange}
-          ></input>
-          Learn a skill
+            <input
+              name="searchType"
+              type="radio"
+              value="teaching"
+              id="selectedSearchSkillType"
+              onClick={this.handleChange}
+            ></input>
+            Learn a skill
           </lable>
           <lable>
             <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            id="selectedSearchSkillType"
-            defaultChecked
-            onClick={this.handleChange}
-          ></input>
-          Teach a skill
+              name="searchType"
+              type="radio"
+              value="desired"
+              id="selectedSearchSkillType"
+              defaultChecked
+              onClick={this.handleChange}
+            ></input>
+            Teach a skill
           </lable>
-          
         </>
       );
     }
@@ -159,32 +158,6 @@ class Home extends React.Component {
       );
     });
   }
-
-  handleNewMessage = (e) => {
-    const clickedUser = this.state.results.filter((person) => {
-      return Object.keys(person)[0] === e.target.id;
-    })[0];
-    const clickedUid = Object.keys(clickedUser)[0];
-    const clickedPersonObj = clickedUser[Object.keys(clickedUser)[0]];
-    window.talkSession = new Talk.Session({
-      appId: "tF07bX0H",
-      me: this.state.me,
-    });
-    const other = new Talk.User({
-      id: clickedUid,
-      name: clickedPersonObj.name,
-      email: clickedPersonObj.email,
-      photoUrl: "https://demo.talkjs.com/img/sebastian.jpg",
-      welcomeMessage: "Hey, how can I help?",
-    });
-    const conversation = window.talkSession.getOrCreateConversation(
-      Talk.oneOnOneId(this.state.me, other)
-    );
-    conversation.setParticipant(this.state.me);
-    conversation.setParticipant(other);
-    const inbox = window.talkSession.createInbox({ selected: conversation });
-    inbox.mount(this.talkjsContainer.current);
-  };
 
   renderResults = (e) => {
     e.preventDefault();
@@ -262,7 +235,6 @@ class Home extends React.Component {
           uid={Object.keys(person)[0]}
           currentUserUid={this.context.currentUser.uid}
           currentUserUsername={this.state.currentUser.username}
-          messageFunction={this.handleNewMessage}
         />
       );
     });
@@ -275,13 +247,15 @@ class Home extends React.Component {
         <div className="buffer"></div>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
-            className='searchByButton'
+            className="searchByButton"
             onClick={this.toggleSearchType}
           >{`Search by ${this.state.searchButtonText}`}</button>
           {this.renderSearchFields()}
           <br />
           <br />
-          <button className='searchButton' onClick={this.renderResults}>Search</button>
+          <button className="searchButton" onClick={this.renderResults}>
+            Search
+          </button>
         </form>
         {this.renderCards()}
       </>

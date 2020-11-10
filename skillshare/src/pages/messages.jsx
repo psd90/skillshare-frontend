@@ -3,6 +3,7 @@ import Talk from "talkjs";
 import { AuthContext } from "../Auth";
 import axios from "axios";
 import PropTypes from "prop-types";
+import Header from "../components/header";
 
 export default class Messages extends Component {
   state = {
@@ -80,6 +81,11 @@ export default class Messages extends Component {
   }
 
   render() {
-    return <div className="chatbox-container" ref={this.talkjsContainer}></div>;
+    return (
+      <>
+        <Header />
+        <div className="chatbox-container" ref={this.talkjsContainer}></div>
+      </>
+    );
   }
 }
