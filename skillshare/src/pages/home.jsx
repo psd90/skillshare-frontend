@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 import SkillCard from "../components/skill-cards";
-import { object } from "prop-types";
 import Header from "../components/header";
+import Talk from "talkjs";
+import { AuthContext } from "../Auth";
 
 class Home extends React.Component {
   state = {
-    currentUser: "alex",
+    currentUser: {}, //This prop takes the current user from auth context (see did mount function)
+    me: {}, // This prop is for creating the TalkJS user (which has different properties to currentUser)
     searchType: "skill",
     searchButtonText: "category",
     searchBySkillText: "",
@@ -17,6 +19,8 @@ class Home extends React.Component {
     results: [],
     hasSearched: false,
   };
+
+  static contextType = AuthContext;
 
   toggleSearchType = (e) => {
     e.preventDefault();
@@ -38,9 +42,9 @@ class Home extends React.Component {
   renderSearchFields = () => {
     if (this.state.searchType === "skill") {
       return (
-        <div id='searchInForm'>
-         <p className='searchInForm'>OR</p>
-          <label className='searchInForm' htmlFor="searchBar">
+        <div id="searchInForm">
+          <p className="searchInForm">OR</p>
+          <label className="searchInForm" htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
@@ -51,25 +55,25 @@ class Home extends React.Component {
           </label>
           <p>I want to...</p>
           <lable>
-                 <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            id="selectedSearchSkillType"
-            onClick={this.handleChange}
-          ></input>
-          Learn this skill
+            <input
+              name="searchType"
+              type="radio"
+              value="teaching"
+              id="selectedSearchSkillType"
+              onClick={this.handleChange}
+            ></input>
+            Learn this skill
           </lable>
           <lable>
             <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            id="selectedSearchSkillType"
-            defaultChecked
-            onClick={this.handleChange}
-          ></input>
-          Teach this skill 
+              name="searchType"
+              type="radio"
+              value="desired"
+              id="selectedSearchSkillType"
+              defaultChecked
+              onClick={this.handleChange}
+            ></input>
+            Teach this skill
           </lable>
         </div>
       );
@@ -92,27 +96,26 @@ class Home extends React.Component {
           })}
           <p>I want to...</p>
           <lable>
-             <input
-            name="searchType"
-            type="radio"
-            value="teaching"
-            id="selectedSearchSkillType"
-            onClick={this.handleChange}
-          ></input>
-          Learn a skill
+            <input
+              name="searchType"
+              type="radio"
+              value="teaching"
+              id="selectedSearchSkillType"
+              onClick={this.handleChange}
+            ></input>
+            Learn a skill
           </lable>
           <lable>
             <input
-            name="searchType"
-            type="radio"
-            value="desired"
-            id="selectedSearchSkillType"
-            defaultChecked
-            onClick={this.handleChange}
-          ></input>
-          Teach a skill
+              name="searchType"
+              type="radio"
+              value="desired"
+              id="selectedSearchSkillType"
+              defaultChecked
+              onClick={this.handleChange}
+            ></input>
+            Teach a skill
           </lable>
-          
         </>
       );
     }
@@ -132,19 +135,28 @@ class Home extends React.Component {
     } else {
       this.state.selectedCategories.push(category);
     }
-    console.log(
-      `Currently selected category filters: ${this.state.selectedCategories}`
-    );
   };
 
   componentDidMount() {
-    axios
-      .get("https://firebasing-testing.firebaseio.com/skills.json")
-      .then((res) => {
-        this.setState({ categories: res.data }, () => {
-          console.log("the categories in state are:", this.state.categories);
-        });
-      });
+    Promise.all([
+      axios.get("https://firebasing-testing.firebaseio.com/skills.json"), // Call to get current categories
+      axios.get(
+        `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json` // Call to get current user's information (as auth user only has uid and email)
+      ),
+    ]).then((resArr) => {
+      this.setState(
+        {
+          categories: resArr[0].data,
+          currentUser: resArr[1].data,
+        },
+        () => {
+          console.log(
+            "Current user in home page state: ",
+            this.state.currentUser
+          );
+        }
+      );
+    });
   }
 
   renderResults = (e) => {
@@ -197,10 +209,15 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
-        this.setState({
-          results: resArr.map((res) => res.data),
-          hasSearched: true,
-        });
+        this.setState(
+          {
+            results: resArr.map((res) => res.data),
+            hasSearched: true,
+          },
+          () => {
+            console.log(this.state.results);
+          }
+        );
       });
     });
   };
@@ -216,6 +233,8 @@ class Home extends React.Component {
           key={index}
           person={person[Object.keys(person)[0]]}
           uid={Object.keys(person)[0]}
+          currentUserUid={this.context.currentUser.uid}
+          currentUserUsername={this.state.currentUser.username}
         />
       );
     });
@@ -228,13 +247,15 @@ class Home extends React.Component {
         <div className="buffer"></div>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
-            className='searchByButton'
+            className="searchByButton"
             onClick={this.toggleSearchType}
           >{`Search by ${this.state.searchButtonText}`}</button>
           {this.renderSearchFields()}
           <br />
           <br />
-          <button className='searchButton' onClick={this.renderResults}>Search</button>
+          <button className="searchButton" onClick={this.renderResults}>
+            Search
+          </button>
         </form>
         {this.renderCards()}
       </>

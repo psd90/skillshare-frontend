@@ -12,7 +12,10 @@ class SkillCard extends React.Component {
   static propTypes = {
     id: PropTypes.number,
     person: PropTypes.object,
-    uid: PropTypes.number,
+    uid: PropTypes.string,
+    messageFunction: PropTypes.func,
+    currentUserUid: PropTypes.string,
+    currentUserUsername: PropTypes.string,
   };
 
   getCategories = () => {
@@ -34,7 +37,6 @@ class SkillCard extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.person);
     this.getCategories();
   }
 
@@ -45,6 +47,7 @@ class SkillCard extends React.Component {
   }
 
   render() {
+    console.log(this.props.uid);
     const { name, location, photoUrl, username } = this.props.person;
     const { desiredSkills, teachingSkills } = this.state;
     return (
@@ -62,6 +65,22 @@ class SkillCard extends React.Component {
         <div className="search-result-desired-skills">
           {desiredSkills.join(", ")}
         </div>
+        <Link
+          className="search-message-button-link"
+          to={{
+            pathname: `/${this.props.currentUserUsername}/messages`,
+            state: {
+              currentUserUid: this.props.currentUserUid,
+              messagedUser: this.props.person,
+              messagedUid: this.props.uid,
+              directedFromMessage: true,
+            },
+          }}
+        >
+          <button className="search-message-button" id={this.props.uid}>
+            Message
+          </button>
+        </Link>
         <Link
           className="search-view-more-button-link"
           to={`/profile/${username}`}
