@@ -6,6 +6,7 @@ import ReactStars from "react-rating-stars-component";
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faPalette, faLaptopCode, faUtensils, faHammer,  faMusic} from '@fortawesome/free-solid-svg-icons'
 import firebase from "firebase";
+import { AuthContext } from "../Auth";
 
 class Profile extends React.Component{
     state= {
@@ -17,10 +18,16 @@ class Profile extends React.Component{
         image: 'https://transmitconsulting.co.uk/wp-content/uploads/male-placeholder-image.jpeg'
     }
 
+    static contextType = AuthContext
+
     componentDidMount() {
         const { username } = this.props.match.params
+        let userId;
+        axios.get(`https://firebasing-testing.firebaseio.com/usernames/${username}.json`)
+        .then(uid => {
+        userId = uid.data;
         axios
-        .get(`https://firebasing-testing.firebaseio.com/users/${username}.json`)
+        .get(`https://firebasing-testing.firebaseio.com/users/${userId}.json`)
         .then((res) => {
             let studentAverage;
             let teacherAverage;
@@ -45,11 +52,11 @@ class Profile extends React.Component{
             return res.data
         })
         .then(user => {
-            const desiredSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${username}.json`)
+            const desiredSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${userId}.json`)
             return Promise.all([user, desiredSkills])
         })
         .then(([user, desiredSkills]) => {
-            const teachingSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${username}.json`)
+            const teachingSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${userId}.json`)
             return Promise.all([user, desiredSkills.data, teachingSkills ])
         })
         .then(([user, desiredSkills, teachingSkills]) => {
@@ -68,11 +75,12 @@ class Profile extends React.Component{
                 })
             })
             this.setState({user, desiredSkills, teachingSkills: teachingSkills.data, isLoading: false, userSkillCats})
-            firebase.storage().ref(`users/${username}/profile.jpg`).getDownloadURL().then(imgUrl => {
+            firebase.storage().ref(`users/${userId}/profile.jpg`).getDownloadURL().then(imgUrl => {
                 this.setState({image: imgUrl});  
               })
         })
-    }
+        })
+        }
 
     render(){
         const skillsetIcons = {

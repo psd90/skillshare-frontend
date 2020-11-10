@@ -33,7 +33,6 @@ class SkillCard extends React.Component {
       const image = resArr[2];
       resArr.pop()
       const dataArr = resArr.map((res) => res.data[Object.keys(res.data)[0]]);
-      console.log(dataArr);
       const mappedDataArr = dataArr.map((obj) => Object.keys(obj));
       this.setState({
         desiredSkills: mappedDataArr[0],
@@ -54,7 +53,6 @@ class SkillCard extends React.Component {
   }
 
   render() {
-    console.log(this.props.uid);
     const { name, location, username } = this.props.person;
     const { desiredSkills, teachingSkills, image } = this.state;
     return (
