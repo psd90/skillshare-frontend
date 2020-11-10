@@ -31,10 +31,28 @@ class EditProfile extends React.Component{
         .then(skillList => {
             const userInfo = Axios.get(`https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`)
             const userImage = firebase.storage().ref(`users/${this.context.currentUser.uid}/profile.jpg`).getDownloadURL()
-            Promise.all([userInfo, skillList, userImage])
-            .then(([userInfo, skillList, userImage]) => {
-                this.setState({isLoading: false, skills: skillList.data, user: userInfo.data, userImage}, () => {
-                })
+            const teachingSkills = Axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`);
+            const learningSkills = Axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`);
+            Promise.all([userInfo, skillList, userImage, teachingSkills, learningSkills])
+            .then(([userInfo, skillList, userImage, teachingSkills, learningSkills]) => {
+                this.setState(
+                    {
+                        isLoading: false, 
+                        skills: skillList.data, 
+                        user: userInfo.data, 
+                        userImage, 
+                        teachingSkills: teachingSkills.data, 
+                        learningSkills: learningSkills.data,
+                        profile: {
+                            image: userImage, 
+                            name: userInfo.data.name, 
+                            location: userInfo.data.location, 
+                            info: userInfo.data.info,
+                            friends: userInfo.data.friends ? userInfo.data.friends : [],
+                            teacher_ratings: userInfo.data.teacher_ratings ? userInfo.data.teacher_ratings : [],
+                            student_ratings: userInfo.data.student_ratings ? userInfo.data.student_ratings : [],
+                        }
+                    })
             })
         })
     }
@@ -97,16 +115,16 @@ class EditProfile extends React.Component{
                     info: this.state.profile.info,
                     role: "Member",
                     welcomeMessage: `Hi this is ${this.state.profile.name}!`,
-                    friends: [],
-                    teacher_ratings: [],
-                    student_ratings: [],
+                    friends: this.state.profile.friends,
+                    teacher_ratings: this.state.profile.teacher_ratings,
+                    student_ratings: this.state.profile.student_ratings,
                 }
             )
         })
         .then(() => 
         firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
         .then(() => {
-            Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+            Axios.put(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
             this.state.teachingSkills)
         }).then(() => {
             let newTeachingPromises
@@ -133,7 +151,7 @@ class EditProfile extends React.Component{
                 Promise.all([newTeachingSkills])
             })
             .then(()=> {
-                Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
+                Axios.put(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
                 this.state.learningSkills)
             })
             .then(()=> {
@@ -231,6 +249,7 @@ class EditProfile extends React.Component{
     }
 
     render(){
+        console.log(this.state);
         if(this.state.isLoading) return <p>loading...</p>
         else return(
             <div id="create-profile-page">
@@ -256,7 +275,7 @@ class EditProfile extends React.Component{
                                 <>
                                     <h4 value={category} key={category}>{category}</h4>
                                     {Object.keys(this.state.skills[category]).map(skill => {
-                                        return <button  className='skillsButton' value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                        return <button  className={Object.keys(this.state.teachingSkills).includes(skill) ? "selectedSkillsButton" : "unselectedSkillsButton"} value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
                                     })}
                                     <p><label><input id={category} placeholder='Other' onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                                 </>
@@ -274,7 +293,7 @@ class EditProfile extends React.Component{
                                 <>
                             <h4 key={category}>{category}</h4>
                             {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button className='skillsButton' value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                    return <button className={Object.keys(this.state.learningSkills).includes(skill) ? "selectedSkillsButton" : "unselectedSkillsButton"} value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
                                 })}
                                 <p><label>Other: <input id={category} onChange={this.addNewLearningSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                             </>
