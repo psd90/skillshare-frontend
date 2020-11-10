@@ -51,20 +51,30 @@ class SkillCard extends React.Component {
     const { name, location, photoUrl, username } = this.props.person;
     const { desiredSkills, teachingSkills } = this.state;
     return (
+      <div id="cardBackground">
       <div className="search-result-card">
         <img className="profile-image" src={photoUrl} alt={name} />
         <div className="search-card-header">
           <h5 className="search-result-name">{name}</h5>
           <h6 className="search-result-location">{location.nuts}</h6>
         </div>
+        </div>
+
+        <div id="toTeachSkills">
         <h6 className="search-result-teaching-skills-header">Skills</h6>
         <div className="search-result-teaching-skills">
           {teachingSkills.join(", ")}
         </div>
-        <h6 className="search-result-desired-skills-header">Wants to Learn</h6>
+        </div>
+
+        <div id="toLearnSkills">
+          <h6 className="search-result-desired-skills-header">Wants to Learn</h6>
         <div className="search-result-desired-skills">
           {desiredSkills.join(", ")}
         </div>
+        </div>
+
+        <div id="homePageButtons">
         <Link
           className="search-message-button-link"
           to={{
@@ -87,6 +97,7 @@ class SkillCard extends React.Component {
         >
           <button className="search-view-more-button">View more...</button>
         </Link>
+        </div>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import Review from "./pages/review";
 import Profile from "./pages/profile";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute";
+import 'semantic-ui-css/semantic.min.css'
 
 function App() {
   return (
