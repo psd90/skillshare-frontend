@@ -2,11 +2,13 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
+import firebase from 'firebase'
 
 class SkillCard extends React.Component {
   state = {
     desiredSkills: [],
     teachingSkills: [],
+    image: 'https://transmitconsulting.co.uk/wp-content/uploads/male-placeholder-image.jpeg'
   };
 
   static propTypes = {
@@ -26,12 +28,16 @@ class SkillCard extends React.Component {
       axios.get(
         `https://firebasing-testing.firebaseio.com/users_teaching_skills.json?orderBy="$key"&equalTo="${this.props.uid}"`
       ),
+      firebase.storage().ref(`users/${this.props.uid}/profile.jpg`).getDownloadURL()
     ]).then((resArr) => {
+      const image = resArr[2];
+      resArr.pop()
       const dataArr = resArr.map((res) => res.data[Object.keys(res.data)[0]]);
       const mappedDataArr = dataArr.map((obj) => Object.keys(obj));
       this.setState({
         desiredSkills: mappedDataArr[0],
         teachingSkills: mappedDataArr[1],
+        image
       });
     });
   };
@@ -47,12 +53,11 @@ class SkillCard extends React.Component {
   }
 
   render() {
-    console.log(this.props.uid);
-    const { name, location, photoUrl, username } = this.props.person;
-    const { desiredSkills, teachingSkills } = this.state;
+    const { name, location, username } = this.props.person;
+    const { desiredSkills, teachingSkills, image } = this.state;
     return (
       <div className="search-result-card">
-        <img className="profile-image" src={photoUrl} alt={name} />
+        <img className="profile-image" src={image} alt={name} />
         <div className="search-card-header">
           <h5 className="search-result-name">{name}</h5>
           <h6 className="search-result-location">{location.nuts}</h6>

@@ -6,6 +6,7 @@ import ReactStars from "react-rating-stars-component";
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faPalette, faLaptopCode, faUtensils, faHammer,  faMusic} from '@fortawesome/free-solid-svg-icons'
 import firebase from "firebase";
+import { AuthContext } from "../Auth";
 
 class Profile extends React.Component{
     state= {
@@ -17,25 +18,45 @@ class Profile extends React.Component{
         image: 'https://transmitconsulting.co.uk/wp-content/uploads/male-placeholder-image.jpeg'
     }
 
+    static contextType = AuthContext
+
     componentDidMount() {
         const { username } = this.props.match.params
+        let userId;
+        axios.get(`https://firebasing-testing.firebaseio.com/usernames/${username}.json`)
+        .then(uid => {
+        userId = uid.data;
         axios
-        .get(`https://firebasing-testing.firebaseio.com/users/${username}.json`)
+        .get(`https://firebasing-testing.firebaseio.com/users/${userId}.json`)
         .then((res) => {
-            const studentAverage = res.data.student_ratings.reduce((a, b) => a + b, 0) / res.data.student_ratings.length;
-            const teacherAverage = res.data.teacher_ratings.reduce((a, b) => a + b, 0) / res.data.teacher_ratings.length;
-            const studentVoteCounts = res.data.student_ratings.length;
-            const teacherVoteCounts = res.data.teacher_ratings.length; 
+            let studentAverage;
+            let teacherAverage;
+            let studentVoteCounts;
+            let teacherVoteCounts;
+            if(!res.data.student_ratings) {
+                studentAverage = 0;
+                studentVoteCounts = 0;
+            } else {
+                studentAverage = res.data.student_ratings.reduce((a, b) => a + b, 0) / res.data.student_ratings.length;
+                studentVoteCounts = res.data.student_ratings.length;
+            }
+            if(!res.data.teacher_ratings) {
+                teacherAverage = 0;
+                teacherVoteCounts = 0;
+            } else {
+                teacherAverage = res.data.teacher_ratings.reduce((a, b) => a + b, 0) / res.data.teacher_ratings.length;
+                teacherVoteCounts = res.data.teacher_ratings.length;
+            }
             res.data.student_ratings = {average: studentAverage, total: studentVoteCounts};
             res.data.teacher_ratings = {average: teacherAverage, total: teacherVoteCounts};
             return res.data
         })
         .then(user => {
-            const desiredSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${username}.json`)
+            const desiredSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${userId}.json`)
             return Promise.all([user, desiredSkills])
         })
         .then(([user, desiredSkills]) => {
-            const teachingSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${username}.json`)
+            const teachingSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${userId}.json`)
             return Promise.all([user, desiredSkills.data, teachingSkills ])
         })
         .then(([user, desiredSkills, teachingSkills]) => {
@@ -54,11 +75,12 @@ class Profile extends React.Component{
                 })
             })
             this.setState({user, desiredSkills, teachingSkills: teachingSkills.data, isLoading: false, userSkillCats})
-            firebase.storage().ref(`users/${username}/profile.jpg`).getDownloadURL().then(imgUrl => {
+            firebase.storage().ref(`users/${userId}/profile.jpg`).getDownloadURL().then(imgUrl => {
                 this.setState({image: imgUrl});  
               })
         })
-    }
+        })
+        }
 
     render(){
         const skillsetIcons = {
