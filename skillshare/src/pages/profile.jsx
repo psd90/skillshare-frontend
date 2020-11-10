@@ -22,10 +22,24 @@ class Profile extends React.Component{
         axios
         .get(`https://firebasing-testing.firebaseio.com/users/${username}.json`)
         .then((res) => {
-            const studentAverage = res.data.student_ratings.reduce((a, b) => a + b, 0) / res.data.student_ratings.length;
-            const teacherAverage = res.data.teacher_ratings.reduce((a, b) => a + b, 0) / res.data.teacher_ratings.length;
-            const studentVoteCounts = res.data.student_ratings.length;
-            const teacherVoteCounts = res.data.teacher_ratings.length; 
+            let studentAverage;
+            let teacherAverage;
+            let studentVoteCounts;
+            let teacherVoteCounts;
+            if(!res.data.student_ratings) {
+                studentAverage = 0;
+                studentVoteCounts = 0;
+            } else {
+                studentAverage = res.data.student_ratings.reduce((a, b) => a + b, 0) / res.data.student_ratings.length;
+                studentVoteCounts = res.data.student_ratings.length;
+            }
+            if(!res.data.teacher_ratings) {
+                teacherAverage = 0;
+                teacherVoteCounts = 0;
+            } else {
+                teacherAverage = res.data.teacher_ratings.reduce((a, b) => a + b, 0) / res.data.teacher_ratings.length;
+                teacherVoteCounts = res.data.teacher_ratings.length;
+            }
             res.data.student_ratings = {average: studentAverage, total: studentVoteCounts};
             res.data.teacher_ratings = {average: teacherAverage, total: teacherVoteCounts};
             return res.data
