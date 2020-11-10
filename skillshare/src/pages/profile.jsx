@@ -1,16 +1,11 @@
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../App.css'
 import ReactStars from "react-rating-stars-component";
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faPalette, faLaptopCode, faUtensils, faHammer,  faMusic} from '@fortawesome/free-solid-svg-icons'
+import firebase from "firebase";
 
 class Profile extends React.Component{
     state= {
@@ -19,6 +14,7 @@ class Profile extends React.Component{
         desiredSkills: {},
         teachingSkills: {},
         userSkillCats: [],
+        image: 'https://transmitconsulting.co.uk/wp-content/uploads/male-placeholder-image.jpeg'
     }
 
     componentDidMount() {
@@ -58,7 +54,10 @@ class Profile extends React.Component{
                 })
             })
             this.setState({user, desiredSkills, teachingSkills: teachingSkills.data, isLoading: false, userSkillCats})
-        })   
+            firebase.storage().ref(`users/${username}/profile.jpg`).getDownloadURL().then(imgUrl => {
+                this.setState({image: imgUrl});  
+              })
+        })
     }
 
     render(){
@@ -77,7 +76,7 @@ class Profile extends React.Component{
                 </div>
                 <div id="brief-user-data">
                     <div id="profile-image-div">
-                    <img id='profile-image' src={this.state.user.photoUrl} alt={`${this.state.user.name}'s Profile Picture`}/>
+                    <img id='profile-image' src={this.state.image} alt={`${this.state.user.name}'s Profile Picture`}/>
                     </div>
                     <h3>{this.state.user.name} (@{this.state.user.username}), {this.state.user.age}</h3>
                     <div className="profile-user-location-div">
