@@ -400,7 +400,7 @@ h1 {
 
 #makeProfileHeading {
   font-family: Poppins;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   /* font-size: 30px; */
 }
 
@@ -418,8 +418,12 @@ h1 {
 #chooseFile {
   margin: auto;
   margin-top: 10px;
-  margin-left: 70px;
   font-family: Poppins;
+  display: flex;
+  flex-direction: column;
+  border: 0px solid black;
+  width: 180px;
+  margin-bottom: 20px;
 }
 
 #edit-profile-image {
@@ -431,7 +435,15 @@ h1 {
 
 .edit-profile-inputs {
   border: 2px solid #ffb498;
+  border-radius: 10px;
+  height: 25px;
+  padding: 5px;
 }
+
+.edit-profile-inputs:focus {
+  outline: rgb(119, 24, 24);
+}
+
 #select-photo-text {
   font-size: 1.5rem;
   font-weight: bold;
@@ -440,7 +452,7 @@ h1 {
 #name-location-bio-inputs {
   margin-top: 50px;
 
-  /* width: 100%; */
+  width: 80%;
   border-bottom: 2px rgba(0, 0, 0, 0.297) solid;
   margin: auto;
 }
@@ -461,10 +473,17 @@ h1 {
   display: table-cell;
 } */
 
+.centreItems {
+  margin: auto;
+  text-align: center;
+}
+
 .edit-skills {
   text-align: left;
   margin-left: 10px;
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .edit-skills h2 {
@@ -481,8 +500,10 @@ h1 {
   margin-bottom: 10px;
 }
 .edit-skills button {
-  width: 30%;
-  height: 25px;
+  width: 100px;
+  font-family: poppins;
+  margin: 1px;
+  height: 30px;
   border: none;
   background-color: #ffb498;
   border-radius: 20px;
