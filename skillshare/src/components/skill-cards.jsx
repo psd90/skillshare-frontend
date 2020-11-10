@@ -53,8 +53,10 @@ class SkillCard extends React.Component {
   }
 
   render() {
+
     const { name, location, username } = this.props.person;
     const { desiredSkills, teachingSkills, image } = this.state;
+    
     return (
       <div className="search-result-card">
         <img className="profile-image" src={image} alt={name} />

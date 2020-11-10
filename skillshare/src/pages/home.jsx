@@ -245,6 +245,20 @@ class Home extends React.Component {
       <>
         <Header />
         <div className="buffer"></div>
+        <Link
+          className="search-message-button-link"
+          to={{
+            pathname: `/${this.state.currentUser.username}/messages`,
+            state: {
+              currentUserUid: this.context.currentUser.uid,
+              messagedUser: null,
+              messagedUid: null,
+              directedFromMessage: false,
+            },
+          }}
+        >
+          <button className="search-message-button">Message</button>
+        </Link>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
             className="searchByButton"
