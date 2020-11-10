@@ -2,16 +2,20 @@ import React from 'react'
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../App.css'
+import { BrowserRouter as  Link } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faPalette, faLaptopCode, faUtensils, faHammer,  faMusic} from '@fortawesome/free-solid-svg-icons'
 import firebase from "firebase";
 import { AuthContext } from "../Auth";
+import Header from '../components/header';
 
 class Profile extends React.Component{
     state= {
+        currentUser: {},
         isLoading: true,
         user: {},
+        userUid: "",
         desiredSkills: {},
         teachingSkills: {},
         userSkillCats: [],
@@ -78,6 +82,14 @@ class Profile extends React.Component{
             firebase.storage().ref(`users/${userId}/profile.jpg`).getDownloadURL().then(imgUrl => {
                 this.setState({image: imgUrl});  
               })
+        }).then(() => {
+            axios.get(`https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`)
+            .then((res) =>{
+                this.setState({currentUser:res.data, userUid: userId},() => {
+                    console.log(this.state.userUid)
+                    console.log(this.state.user)
+                })
+            })
         })
         })
         }
@@ -93,6 +105,7 @@ class Profile extends React.Component{
         if(this.state.isLoading) return (<p>loading...</p>)
         return(
             <div id="profile-page">
+                <Header />
                 <div id="profile-add-friend-button-div">
                     <button className="profile-add-friend-button">Add Friend</button>
                 </div>
@@ -108,6 +121,22 @@ class Profile extends React.Component{
                         <h2>About Me</h2>
                         <p>{this.state.user.info}</p>
                     </div>
+                    <Link
+          
+          to={{
+            pathname: `/${this.state.currentUser.username}/messages`,
+            state: {
+              currentUserUid: this.context.currentUser.uid,
+              messagedUser: this.state.user,
+              messagedUid: this.state.userUid,
+              directedFromMessage: true,
+            },
+          }}
+        >
+          <button id={this.state.userUid}>
+            Message
+          </button>
+        </Link>
                 </div>
                 <div id="profile-ratings">
                     <div id="profile-teacher-ratings">
