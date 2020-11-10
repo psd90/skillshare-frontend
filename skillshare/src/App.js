@@ -18,6 +18,10 @@ function App() {
         <AuthProvider>
           <Router>
             <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute exact path="/:username/messages" component={Messages} />
+            <PrivateRoute exact path="/createprofile" component={CreateProfile} />
+            <PrivateRoute exact path="/:username/review" component={Review} />
+            <PrivateRoute exact path="/profile/:username" component={Profile} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/createprofile" component={CreateProfile} />
