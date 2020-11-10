@@ -47,7 +47,6 @@ class SkillCard extends React.Component {
   }
 
   render() {
-    console.log(this.props.uid);
     const { name, location, photoUrl, username } = this.props.person;
     const { desiredSkills, teachingSkills } = this.state;
     return (
