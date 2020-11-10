@@ -3,8 +3,9 @@ import React from 'react'
 import { AuthContext } from "../Auth";
 import firebase from "firebase";
 import PropTypes from "prop-types";
+import Header from '../components/header'
 
-class CreateProfile extends React.Component{
+class EditProfile extends React.Component{
     state = {
         isLoading: true,
         skills: {},
@@ -18,15 +19,23 @@ class CreateProfile extends React.Component{
         learningSkills: {},
         newTeachingSkills: {},
         newLearningSkills: {},
-        error: false
+        error: false,
+        user: {},
+        userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png'
     }
 
-    static contextType = AuthContext
+    static contextType = AuthContext;
 
     componentDidMount() {
         Axios.get('https://firebasing-testing.firebaseio.com/skills.json')
-        .then(res => {
-            this.setState({isLoading: false, skills: res.data}) 
+        .then(skillList => {
+            const userInfo = Axios.get(`https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`)
+            const userImage = firebase.storage().ref(`users/${this.context.currentUser.uid}/profile.jpg`).getDownloadURL()
+            Promise.all([userInfo, skillList, userImage])
+            .then(([userInfo, skillList, userImage]) => {
+                this.setState({isLoading: false, skills: skillList.data, user: userInfo.data, userImage}, () => {
+                })
+            })
         })
     }
 
@@ -187,6 +196,8 @@ class CreateProfile extends React.Component{
     }
 
     addLearningSkill = (event) => {
+        const element = document.getElementById(event.target.value);
+        console.log(element);
         this.setState(prevState => {
             const newLearningSkills = {...prevState.learningSkills};
             if(prevState.learningSkills[event.target.value]){
@@ -223,43 +234,47 @@ class CreateProfile extends React.Component{
         if(this.state.isLoading) return <p>loading...</p>
         else return(
             <div id="create-profile-page">
-                <h1>Make Your Profile</h1>
+                 <Header />
+        <div className="buffer"></div>
+                <h1 id='makeProfileHeading' >Edit Your Profile</h1>
                 <div id="select-image-div">
-                <img id="edit-profile-image" src="https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png"/>
-                <input type="file" onChange={this.changeImageFile}></input>
+                <img id="edit-profile-image" src={this.state.userImage}/>
+                <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>
                 </div>
                 <div id="name-location-bio-inputs">
-                    <p><label >Name: </label><input id="name" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
-                    <p><label>Location:&nbsp;</label><input placeholder="enter your postcode" id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
-                    <p><label>Bio: </label><input id="info" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><input id="name" placeholder={`Name: ${this.state.user.name}`} onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><input placeholder={`Postcode: ${this.state.user.location.postcode}`} id="location" onChange = {this.handleChange} className="edit-profile-inputs"></input></p>
+                    <p><textarea id="info" placeholder={`Bio: ${this.state.user.info}`}onChange = {this.handleChange} className="edit-profile-inputs"></textarea></p>
                 </div>
                 <div className="edit-skills">
-                    <h2>What are your skills?</h2>
-                    <h3>Categories</h3>
+                    <h2 className='centreItems'>What are your skills?</h2>
+                    <br />
+                    <h3 className='centreItems'>Categories</h3>
                     <div className="edit-skills-buttons">
                         {Object.keys(this.state.skills).map(category => {
                             return (
                                 <>
-                            <h4 value={category} key={category}>{category}</h4>
-                                {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
-                                })}
-                                <p><label>Other: <input id={category} onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
+                                    <h4 value={category} key={category}>{category}</h4>
+                                    {Object.keys(this.state.skills[category]).map(skill => {
+                                        return <button  className='skillsButton' value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                    })}
+                                    <p><label><input id={category} placeholder='Other' onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                                 </>
                             );
                         })}
                     </div>         
                 </div>
                 <div className="edit-skills"> 
-                    <h2>What Skils Would You like to Learn?</h2>
-                    <h3>Categories</h3>
+                    <h2 className='centreItems'>What Skills Would You Like to Learn?</h2>
+                    <br />
+                    <h3 className='centreItems'>Categories</h3>
                     <div className="edit-skills-buttons">
                         {Object.keys(this.state.skills).map(category => {
                             return ( 
                                 <>
                             <h4 key={category}>{category}</h4>
                             {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                    return <button className='skillsButton' value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
                                 })}
                                 <p><label>Other: <input id={category} onChange={this.addNewLearningSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                             </>
@@ -273,8 +288,8 @@ class CreateProfile extends React.Component{
     }
 }
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
     history: PropTypes.node,
   };
 
-export default CreateProfile
+export default EditProfile

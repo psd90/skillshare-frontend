@@ -10,6 +10,7 @@ import Review from "./pages/review";
 import Profile from "./pages/profile";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute";
+import EditProfile from "./pages/edit-profile";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route exact path="/:username/messages" component={Messages} />
             <Route exact path="/:username/review" component={Review} />
             <Route exact path="/profile/:username" component={Profile} />
+            <Route exact path ="/editprofile" component={EditProfile} />
           </Router>
         </AuthProvider>
       </div>

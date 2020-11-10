@@ -5,20 +5,22 @@ import PropTypes from 'prop-types'
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState("no user");
 
     useEffect(() => {
         app.auth().onAuthStateChanged((user) => {
             setCurrentUser(user)
+            console.log(user);
         });
     }, []);
 
     return (
-        <AuthContext.Provider 
+        currentUser !== "no user" ? <AuthContext.Provider 
             value={{ currentUser }}
         >
             {children}
         </AuthContext.Provider>
+        : <p>...loading</p>
     )
 }
 
