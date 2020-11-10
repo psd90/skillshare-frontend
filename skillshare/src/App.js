@@ -23,14 +23,10 @@ function App() {
             <PrivateRoute exact path="/createprofile" component={CreateProfile} />
             <PrivateRoute exact path="/:username/review" component={Review} />
             <PrivateRoute exact path="/profile/:username" component={Profile} />
+            <PrivateRoute exact path ="/editprofile" component={EditProfile} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/createprofile" component={CreateProfile} />
             <Route exact path="/home" component={Home} />
-            <Route exact path="/:username/messages" component={Messages} />
-            <Route exact path="/:username/review" component={Review} />
-            <Route exact path="/profile/:username" component={Profile} />
-            <Route exact path ="/editprofile" component={EditProfile} />
           </Router>
         </AuthProvider>
       </div>
