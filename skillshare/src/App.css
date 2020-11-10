@@ -40,6 +40,11 @@ header {
   background-image: url("./images/smallHeader.png");
 }
 
+.skllshrTitle {
+  color: black;
+  text-decoration: none;
+}
+
 .backgroundHeader {
   height: 500px;
   width: 100%;
@@ -457,6 +462,14 @@ h1 {
   margin: auto;
 }
 
+.selectedSkillsButton {
+  background-color: #b9ffad;
+}
+
+.selectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
 /* #name-location-bio-inputs p {
   display: table-row;
 } */
@@ -476,8 +489,13 @@ h1 {
 .centreItems {
   margin: auto;
   text-align: center;
+  font-family: Poppins;
+  color: #ffa07d;
 }
 
+.categoryFont {
+  font-family: Poppins;
+}
 .edit-skills {
   text-align: left;
   margin-left: 10px;
@@ -499,13 +517,27 @@ h1 {
   text-align: center;
   margin-bottom: 10px;
 }
+
+.line {
+  width: 80%;
+  border-bottom: 2px rgba(0, 0, 0, 0.297) solid;
+  margin: auto;
+}
+
+.unselectedSkillsButton {
+  background-color: #ffb498;
+}
+
+.unselectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
 .edit-skills button {
   width: 100px;
   font-family: poppins;
   margin: 1px;
   height: 30px;
   border: none;
-  background-color: #ffb498;
   border-radius: 20px;
   margin-bottom: 5px;
 }
@@ -555,6 +587,7 @@ h1 {
   border-radius: 20px;
   margin-bottom: 5px;
   margin: auto;
+  font-family: Poppins;
 }
 .searchButton {
   width: 125px;
@@ -565,6 +598,7 @@ h1 {
   border-radius: 20px;
   margin-bottom: 5px;
   margin: auto;
+  font-family: Poppins;
 }
 
 #searchBySkillText {
