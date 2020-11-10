@@ -83,10 +83,14 @@ export default class Messages extends Component {
       });
   }
 
+  destroySession = () => {
+    window.talkSession.destroy()
+  }
+
   render() {
     return (
       <>
-        <Header />
+        <Header destroySession={this.destroySession}/>
         <div className="chatbox-container" ref={this.talkjsContainer}></div>
       </>
     );
