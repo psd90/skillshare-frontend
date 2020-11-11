@@ -18,9 +18,28 @@ class Home extends React.Component {
     selectedSearchSkillType: "desired",
     results: [],
     hasSearched: false,
+    userLoc: {lat: 0, long: 0},
   };
 
   static contextType = AuthContext;
+
+  calculateDistance = (lat1, lon1, lat2, lon2) => {
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
+    }
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lon2-lon1); 
+    var a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+      ; 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return Math.round(d);
+  }
 
   toggleSearchType = (e) => {
     e.preventDefault();
@@ -148,11 +167,12 @@ class Home extends React.Component {
         {
           categories: resArr[0].data,
           currentUser: resArr[1].data,
+          userLoc: {lat:resArr[1].data.location.latitude, long:resArr[1].data.location.longitude}
         },
         () => {
-          console.log(
-            "Current user in home page state: ",
-            this.state.currentUser
+            console.log(
+            "User location: ",
+            this.state.userLoc
           );
         }
       );
@@ -214,18 +234,23 @@ class Home extends React.Component {
         const filteredResults = unfilteredResults.filter(
           (result) => Object.keys(result)[0] !== this.context.currentUser.uid
         );
+        const distancedResults = filteredResults.map((result)=> {
+          const uid = Object.keys(result)[0]
+          const distanceFrom = this.calculateDistance(this.state.userLoc.lat, this.state.userLoc.long, result[uid].location.latitude, result[uid].location.longitude)
+          result.distanceFromUser = distanceFrom
+          return result;
+        })
+        distancedResults.sort((a, b)=> a.distanceFromUser - b.distanceFromUser)
         this.setState(
           {
-            results: filteredResults,
+            results: distancedResults,
             hasSearched: true,
           },
-          () => {
-            console.log(this.state.results);
-          }
         );
       });
     });
   };
+  
 
   renderCards = () => {
     if (!this.state.results.length && this.state.hasSearched) {
@@ -244,6 +269,7 @@ class Home extends React.Component {
       );
     });
   };
+ 
 
   render() {
     return (
@@ -284,5 +310,4 @@ class Home extends React.Component {
 
 export default Home;
 
-/* We want to start rendering these results with skill-cards. 
-So we need to develop those skill cards */
+
