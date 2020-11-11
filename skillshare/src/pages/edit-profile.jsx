@@ -3,7 +3,9 @@ import React from 'react'
 import { AuthContext } from "../Auth";
 import firebase from "firebase";
 import PropTypes from "prop-types";
-import Header from '../components/header'
+import Header from '../components/header';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 class EditProfile extends React.Component{
     state = {
@@ -21,7 +23,13 @@ class EditProfile extends React.Component{
         newLearningSkills: {},
         error: false,
         user: {},
-        userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png'
+        userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png',
+        crop: {
+            unit: '%',
+            width: 30,
+            aspect: 1/1
+        },
+        src: null
     }
 
     static contextType = AuthContext;
@@ -58,9 +66,19 @@ class EditProfile extends React.Component{
     }
 
     changeImageFile = (event) => {
+        const file = (event.target.files[0])
+        const fileReader = new FileReader();
+        
+
+        fileReader.onloadend = () => {
+            this.setState({src: fileReader.result})
+        }
+        
+        fileReader.readAsDataURL(file)
+
         this.setState((prevState) => {
             const newProfile = {...prevState.profile};
-            newProfile.image = event.target.files[0];
+            newProfile.image = file;
             return {profile : newProfile};
         });
     }
@@ -248,8 +266,51 @@ class EditProfile extends React.Component{
 
     }
 
+    onImageLoaded = image => {
+        this.imageRef = image
+    }
+
+    onCropChange = (crop) => {
+        this.setState({ crop });
+    }
+
+    // onCropComplete = crop => {
+    //     if (this.imageRef && crop.width && crop.height) {
+    //         const croppedImageUrl = this.getCroppedImg(this.imageRef, crop)
+    //         this.setState({ croppedImageUrl })
+    //     }
+    // }
+
+    // getCroppedImg(image, crop) {
+    //     const canvas = document.createElement("canvas");
+    //     const scaleX = image.naturalWidth / image.width;
+    //     const scaleY = image.naturalHeight / image.height;
+    //     canvas.width = crop.width;
+    //     canvas.height = crop.height;
+    //     const ctx = canvas.getContext("2d");
+    //     ctx.drawImage(
+    //         image,
+    //         crop.x * scaleX,
+    //         crop.y * scaleY,
+    //         crop.width * scaleX,
+    //         crop.height * scaleY,
+    //         0,
+    //         0,
+    //         crop.width,
+    //         crop.height
+    //      )
+    
+    //     const reader = new FileReader()
+    //     canvas.toBlob(blob => {
+    //         reader.readAsDataURL(blob)
+    //         reader.onloadend = () => {
+    //             this.dataURLtoFile(reader.result, 'cropped.jpg')
+    //         }
+    //     })
+    // }
+    
+
     render(){
-        console.log(this.state);
         if(this.state.isLoading) return <p>loading...</p>
         else return(
             <div id="create-profile-page">
@@ -258,6 +319,8 @@ class EditProfile extends React.Component{
                 <h1 id='makeProfileHeading' >Edit Your Profile</h1>
                 <div id="select-image-div">
                 <img id="edit-profile-image" src={this.state.userImage}/>
+                {this.state.src && <ReactCrop src={this.state.src} crop={this.state.crop} onImageLoaded={this.onImageLoaded} onComplete={this.onCropComplete}
+                  onChange={this.onCropChange}/>}
                 <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>
                 </div>
                 <div id="name-location-bio-inputs">
