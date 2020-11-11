@@ -18,6 +18,14 @@ export default class Messages extends Component {
   static contextType = AuthContext;
 
   componentDidMount() {
+    if (!this.props.location.state) {
+      this.props.location.state = {
+        currentUserUid: this.context.currentUser.uid,
+        messagedUser: null,
+        messagedUid: null,
+        directedFromMessage: false,
+      };
+    }
     console.log("Messaged User: ", this.props.location.state.messagedUser);
     const {
       currentUserUid,
@@ -84,13 +92,13 @@ export default class Messages extends Component {
   }
 
   destroySession = () => {
-    window.talkSession.destroy()
-  }
+    window.talkSession.destroy();
+  };
 
   render() {
     return (
       <>
-        <Header destroySession={this.destroySession}/>
+        <Header destroySession={this.destroySession} />
         <div className="chatbox-container" ref={this.talkjsContainer}></div>
       </>
     );
