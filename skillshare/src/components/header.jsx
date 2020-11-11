@@ -4,10 +4,9 @@ import FontSize from "./font-size";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import DropdownMenu from './dropdown'
 
-const Header = () => {
+const Header = (props) => {  
   return (
     <header className="header">
-      
       <FontSize />
       <Link  id='link' to="/">
         <h1 className="skllshrTitle">SkllShr</h1>

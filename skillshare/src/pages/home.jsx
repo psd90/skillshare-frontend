@@ -209,9 +209,14 @@ class Home extends React.Component {
       });
       // Now we have all of the users' data as an array, we need to render it on the page
       Promise.all(userPromises).then((resArr) => {
+        const unfilteredResults = resArr.map((res) => res.data);
+        //filter out current user
+        const filteredResults = unfilteredResults.filter(
+          (result) => Object.keys(result)[0] !== this.context.currentUser.uid
+        );
         this.setState(
           {
-            results: resArr.map((res) => res.data),
+            results: filteredResults,
             hasSearched: true,
           },
           () => {
@@ -245,6 +250,20 @@ class Home extends React.Component {
       <>
         <Header />
         <div className="buffer"></div>
+        <Link
+          className="search-message-button-link"
+          to={{
+            pathname: `/${this.state.currentUser.username}/messages`,
+            state: {
+              currentUserUid: this.context.currentUser.uid,
+              messagedUser: null,
+              messagedUid: null,
+              directedFromMessage: false,
+            },
+          }}
+        >
+          <button className="search-message-button">Message</button>
+        </Link>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
             className="searchByButton"

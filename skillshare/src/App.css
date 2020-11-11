@@ -754,8 +754,15 @@ h1 {
 
 /* ----------------------Messages page---------------------------------------- */
 .chatbox-container {
-  margin-top: 20%;
+  margin-top: 30%;
   height: 75vh;
 }
 
 /* -----------------------drop down -------------------------- */
+
+/* ----------------------Edit Profile page---------------------------------------- */
+
+.edit-skills .selectedSkillsButton {
+  background-color: red;
+}
+

@@ -10,7 +10,7 @@ import Review from "./pages/review";
 import Profile from "./pages/profile";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute";
-import 'semantic-ui-css/semantic.min.css'
+import EditProfile from "./pages/edit-profile";
 
 function App() {
   return (
@@ -19,13 +19,21 @@ function App() {
         <AuthProvider>
           <Router>
             <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute
+              exact
+              path="/:username/messages"
+              component={Messages}
+            />
+            <PrivateRoute
+              exact
+              path="/createprofile"
+              component={CreateProfile}
+            />
+            <PrivateRoute exact path="/:username/review" component={Review} />
+            <PrivateRoute exact path="/profile/:username" component={Profile} />
+            <PrivateRoute exact path="/editprofile" component={EditProfile} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/createprofile" component={CreateProfile} />
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/:username/messages" component={Messages} />
-            <Route exact path="/:username/review" component={Review} />
-            <Route exact path="/profile/:username" component={Profile} />
           </Router>
         </AuthProvider>
       </div>
