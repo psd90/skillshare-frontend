@@ -100,6 +100,7 @@ class Profile extends React.Component {
           })
           .then(([user, desiredSkills, teachingSkills, skillCats]) => {
             const userSkillCats = [];
+
             Object.keys(teachingSkills.data).forEach((skill) => {
               Object.keys(skillCats.data).forEach((skillCat) => {
                 if (Object.keys(skillCats.data[skillCat]).includes(skill)) {
