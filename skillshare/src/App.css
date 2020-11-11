@@ -29,15 +29,28 @@ body {
 }
 /* ------------------------header---------------------------------------- */
 
-header {
+.header {
   width: 100%;
   top: 0px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   font-family: Poppins;
   box-shadow: 0px 1px 10px #6f99b1;
   position: fixed;
   background-image: url("./images/smallHeader.png");
+}
+
+.skllshrTitle {
+  font-family: Poppins;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+#link {
+  text-decoration: none;
 }
 
 .backgroundHeader {
@@ -72,6 +85,8 @@ header {
 .signOut:hover {
   box-shadow: 1px 1px 4px;
 }
+
+/* --------------dropdown---------------- */
 
 /* ----------------------login page---------------------------------------- */
 
@@ -457,6 +472,14 @@ h1 {
   margin: auto;
 }
 
+.selectedSkillsButton {
+  background-color: #b9ffad;
+}
+
+.selectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
 /* #name-location-bio-inputs p {
   display: table-row;
 } */
@@ -476,8 +499,13 @@ h1 {
 .centreItems {
   margin: auto;
   text-align: center;
+  font-family: Poppins;
+  color: #ffa07d;
 }
 
+.categoryFont {
+  font-family: Poppins;
+}
 .edit-skills {
   text-align: left;
   margin-left: 10px;
@@ -499,13 +527,27 @@ h1 {
   text-align: center;
   margin-bottom: 10px;
 }
+
+.line {
+  width: 80%;
+  border-bottom: 2px rgba(0, 0, 0, 0.297) solid;
+  margin: auto;
+}
+
+.unselectedSkillsButton {
+  background-color: #ffb498;
+}
+
+.unselectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
 .edit-skills button {
   width: 100px;
   font-family: poppins;
   margin: 1px;
   height: 30px;
   border: none;
-  background-color: #ffb498;
   border-radius: 20px;
   margin-bottom: 5px;
 }
@@ -555,6 +597,7 @@ h1 {
   border-radius: 20px;
   margin-bottom: 5px;
   margin: auto;
+  font-family: Poppins;
 }
 .searchButton {
   width: 125px;
@@ -565,6 +608,7 @@ h1 {
   border-radius: 20px;
   margin-bottom: 5px;
   margin: auto;
+  font-family: Poppins;
 }
 
 #searchBySkillText {
@@ -573,10 +617,6 @@ h1 {
 .search-result-card {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px dashed black;
-  margin: 1%;
-  border-radius: 10px;
-  padding: 3%;
 }
 
 .profile-image {
@@ -593,43 +633,95 @@ h1 {
 
 .search-result-name {
   margin: 0px;
+  font-size: 25px;
 }
 
 .search-result-location {
   margin: 0px;
+  font-size: 12px;
 }
 
 .search-result-teaching-skills-header {
-  grid-column: 2 / 3;
-  margin: 0px;
-  margin-top: 10%;
+  /* grid-column: 2 / 3; */
+  margin: auto;
+  /* margin-top: 10%; */
+  font-size: 17px;
+}
+
+#cardBackground {
+  background-color: #ffb39888;
+  font-family: poppins;
+  border: 1px solid black;
+  margin: 1%;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+#toTeachSkills {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+#toLearnSkills {
+  display: flex;
+  flex-direction: column;
 }
 
 .search-result-teaching-skills {
-  grid-row: 3 / 4;
-  grid-column: 1 / 4;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
 }
 
 .search-result-desired-skills-header {
-  grid-row: 4 / 5;
-  grid-column: 2 / 3;
-  margin: 0px;
-  margin-top: 10%;
+  margin: auto;
+  font-size: 17px;
 }
 
 .search-result-desired-skills {
-  grid-row: 5 / 6;
-  grid-column: 1 / 4;
+  margin: auto;
 }
 
-.search-view-more-button-link {
+#homePageButtons {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+/* .search-view-more-button-link {
   grid-row: 6 / 7;
   grid-column: 1 / 2;
-}
+} */
 
-.search-message-button-link {
+/* .search-message-button-link {
   grid-row: 6 / 7;
   grid-column: 3 / 4;
+} */
+
+.search-message-button {
+  width: 105px;
+  height: 25px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
+}
+.search-view-more-button {
+  width: 105px;
+  height: 25px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
 }
 
 .specific-skills-inputs p {
@@ -666,8 +758,11 @@ h1 {
   height: 75vh;
 }
 
+/* -----------------------drop down -------------------------- */
+
 /* ----------------------Edit Profile page---------------------------------------- */
 
 .edit-skills .selectedSkillsButton {
   background-color: red;
 }
+
