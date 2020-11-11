@@ -19,14 +19,21 @@ function App() {
         <AuthProvider>
           <Router>
             <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute exact path="/:username/messages" component={Messages} />
-            <PrivateRoute exact path="/createprofile" component={CreateProfile} />
+            <PrivateRoute
+              exact
+              path="/:username/messages"
+              component={Messages}
+            />
+            <PrivateRoute
+              exact
+              path="/createprofile"
+              component={CreateProfile}
+            />
             <PrivateRoute exact path="/:username/review" component={Review} />
             <PrivateRoute exact path="/profile/:username" component={Profile} />
-            <PrivateRoute exact path ="/editprofile" component={EditProfile} />
+            <PrivateRoute exact path="/editprofile" component={EditProfile} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/home" component={Home} />
           </Router>
         </AuthProvider>
       </div>
