@@ -331,12 +331,17 @@ class Home extends React.Component {
         </>
       );
     } else if (hasSearched && results.length) {
-      return <h2 id="results-title">Search Results</h2>;
+      return (
+        <>
+          <h2 id="results-title">Search Results</h2>
+          <h4 id="results-sub-title">Sorted by those closest to you:</h4>
+        </>
+      );
     } else if (!hasSearched && !results.length && !isLoading) {
       return (
         <h3 id="results-title">
           Update your profile with skills you want to teach and learn to see
-          automatic matches here
+          automatic matches here!
         </h3>
       );
     }
