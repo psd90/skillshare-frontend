@@ -3,7 +3,9 @@ import React from 'react'
 import { AuthContext } from "../Auth";
 import firebase from "firebase";
 import PropTypes from "prop-types";
-import Header from '../components/header'
+import Header from '../components/header';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 class EditProfile extends React.Component{
     state = {
@@ -21,7 +23,13 @@ class EditProfile extends React.Component{
         newLearningSkills: {},
         error: false,
         user: {},
-        userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png'
+        userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png',
+        crop: {
+            unit: '%',
+            width: 30,
+            aspect: 1/1
+        },
+        src: null
     }
 
     static contextType = AuthContext;
@@ -31,18 +39,46 @@ class EditProfile extends React.Component{
         .then(skillList => {
             const userInfo = Axios.get(`https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`)
             const userImage = firebase.storage().ref(`users/${this.context.currentUser.uid}/profile.jpg`).getDownloadURL()
-            Promise.all([userInfo, skillList, userImage])
-            .then(([userInfo, skillList, userImage]) => {
-                this.setState({isLoading: false, skills: skillList.data, user: userInfo.data, userImage}, () => {
-                })
+            const teachingSkills = Axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`);
+            const learningSkills = Axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`);
+            Promise.all([userInfo, skillList, userImage, teachingSkills, learningSkills])
+            .then(([userInfo, skillList, userImage, teachingSkills, learningSkills]) => {
+                this.setState(
+                    {
+                        isLoading: false, 
+                        skills: skillList.data, 
+                        user: userInfo.data, 
+                        userImage, 
+                        teachingSkills: teachingSkills.data, 
+                        learningSkills: learningSkills.data,
+                        profile: {
+                            image: userImage, 
+                            name: userInfo.data.name, 
+                            location: userInfo.data.location, 
+                            info: userInfo.data.info,
+                            friends: userInfo.data.friends ? userInfo.data.friends : [],
+                            teacher_ratings: userInfo.data.teacher_ratings ? userInfo.data.teacher_ratings : [],
+                            student_ratings: userInfo.data.student_ratings ? userInfo.data.student_ratings : [],
+                        }
+                    })
             })
         })
     }
 
     changeImageFile = (event) => {
+        const file = (event.target.files[0])
+        const fileReader = new FileReader();
+        
+
+        fileReader.onloadend = () => {
+            this.setState({src: fileReader.result})
+        }
+        
+        fileReader.readAsDataURL(file)
+
         this.setState((prevState) => {
             const newProfile = {...prevState.profile};
-            newProfile.image = event.target.files[0];
+            newProfile.image = file;
             return {profile : newProfile};
         });
     }
@@ -97,16 +133,16 @@ class EditProfile extends React.Component{
                     info: this.state.profile.info,
                     role: "Member",
                     welcomeMessage: `Hi this is ${this.state.profile.name}!`,
-                    friends: [],
-                    teacher_ratings: [],
-                    student_ratings: [],
+                    friends: this.state.profile.friends,
+                    teacher_ratings: this.state.profile.teacher_ratings,
+                    student_ratings: this.state.profile.student_ratings,
                 }
             )
         })
         .then(() => 
         firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
         .then(() => {
-            Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+            Axios.put(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
             this.state.teachingSkills)
         }).then(() => {
             let newTeachingPromises
@@ -133,7 +169,7 @@ class EditProfile extends React.Component{
                 Promise.all([newTeachingSkills])
             })
             .then(()=> {
-                Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
+                Axios.put(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
                 this.state.learningSkills)
             })
             .then(()=> {
@@ -230,6 +266,50 @@ class EditProfile extends React.Component{
 
     }
 
+    onImageLoaded = image => {
+        this.imageRef = image
+    }
+
+    onCropChange = (crop) => {
+        this.setState({ crop });
+    }
+
+    // onCropComplete = crop => {
+    //     if (this.imageRef && crop.width && crop.height) {
+    //         const croppedImageUrl = this.getCroppedImg(this.imageRef, crop)
+    //         this.setState({ croppedImageUrl })
+    //     }
+    // }
+
+    // getCroppedImg(image, crop) {
+    //     const canvas = document.createElement("canvas");
+    //     const scaleX = image.naturalWidth / image.width;
+    //     const scaleY = image.naturalHeight / image.height;
+    //     canvas.width = crop.width;
+    //     canvas.height = crop.height;
+    //     const ctx = canvas.getContext("2d");
+    //     ctx.drawImage(
+    //         image,
+    //         crop.x * scaleX,
+    //         crop.y * scaleY,
+    //         crop.width * scaleX,
+    //         crop.height * scaleY,
+    //         0,
+    //         0,
+    //         crop.width,
+    //         crop.height
+    //      )
+    
+    //     const reader = new FileReader()
+    //     canvas.toBlob(blob => {
+    //         reader.readAsDataURL(blob)
+    //         reader.onloadend = () => {
+    //             this.dataURLtoFile(reader.result, 'cropped.jpg')
+    //         }
+    //     })
+    // }
+    
+
     render(){
         if(this.state.isLoading) return <p>loading...</p>
         else return(
@@ -239,6 +319,8 @@ class EditProfile extends React.Component{
                 <h1 id='makeProfileHeading' >Edit Your Profile</h1>
                 <div id="select-image-div">
                 <img id="edit-profile-image" src={this.state.userImage}/>
+                {this.state.src && <ReactCrop src={this.state.src} crop={this.state.crop} onImageLoaded={this.onImageLoaded} onComplete={this.onCropComplete}
+                  onChange={this.onCropChange}/>}
                 <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>
                 </div>
                 <div id="name-location-bio-inputs">
@@ -256,7 +338,7 @@ class EditProfile extends React.Component{
                                 <>
                                     <h4 value={category} key={category}>{category}</h4>
                                     {Object.keys(this.state.skills[category]).map(skill => {
-                                        return <button  className='skillsButton' value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
+                                        return <button  className={Object.keys(this.state.teachingSkills).includes(skill) ? "selectedSkillsButton" : "unselectedSkillsButton"} value={skill} key={skill} onClick={this.addTeachingSkill}>{skill}</button>
                                     })}
                                     <p><label><input id={category} placeholder='Other' onChange={this.addNewTeachingSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                                 </>
@@ -274,7 +356,7 @@ class EditProfile extends React.Component{
                                 <>
                             <h4 key={category}>{category}</h4>
                             {Object.keys(this.state.skills[category]).map(skill => {
-                                    return <button className='skillsButton' value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
+                                    return <button className={Object.keys(this.state.learningSkills).includes(skill) ? "selectedSkillsButton" : "unselectedSkillsButton"} value={skill} key={skill} onClick={this.addLearningSkill}>{skill}</button>
                                 })}
                                 <p><label>Other: <input id={category} onChange={this.addNewLearningSkill} className="edit-profile-inputs specific-skill-other"></input></label></p>
                             </>
