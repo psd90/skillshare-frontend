@@ -155,6 +155,7 @@ class Profile extends React.Component {
     return (
       <div id="profile-page">
         <Header />
+        <div className="bufferProfile"></div>
         <div id="profile-add-friend-button-div">
           <button className="profile-add-friend-button">Add Friend</button>
         </div>
@@ -166,7 +167,7 @@ class Profile extends React.Component {
               alt={`${this.state.user.name}'s Profile Picture`}
             />
           </div>
-          <h3>
+          <h3 className='username-profile'>
             {this.state.user.name} (@{this.state.user.username}),{" "}
             {this.state.user.age}
           </h3>
@@ -174,13 +175,14 @@ class Profile extends React.Component {
             <p id="profile-user-location">{this.state.user.location.nuts}</p>
           </div>
           <div id="about-me-div">
-            <h2>About Me</h2>
+            {/* <h2 className='aboutprofile'>About Me</h2> */}
             <p>{this.state.user.info}</p>
+            <div className='line2'></div>
           </div>
         </div>
-        <div id="profile-ratings">
+        <div  id="profile-ratings">
           <div id="profile-teacher-ratings">
-            <h3>TEACHER</h3>
+            <h3 className='aboutprofile'>TEACHER</h3>
             <div id="profile-teacher-stars">
               <ReactStars
                 count={5}
@@ -195,7 +197,7 @@ class Profile extends React.Component {
             <p>({this.state.user.teacher_ratings.total} reviews)</p>
           </div>
           <div id="profile-student-ratings">
-            <h3>STUDENT</h3>
+            <h3 className='aboutprofile'>STUDENT</h3>
             <div id="profile-student-stars">
               <ReactStars
                 count={5}
@@ -210,7 +212,7 @@ class Profile extends React.Component {
             <p>({this.state.user.student_ratings.total} reviews)</p>
           </div>
         </div>
-        <h2>My Skillset</h2>
+        <h2 id="myskillset">My Skillset</h2>
         <div id="skillseticons">
           {this.state.userSkillCats.map((skillCat) => {
             return (
@@ -224,7 +226,7 @@ class Profile extends React.Component {
         </div>
         <div id="skills-list">
           <div id="teaching-skills">
-            <h3>My Skills</h3>
+            <h3 className='aboutprofile'>My Skills</h3>
             <ul id="teaching-skills-list">
               {Object.keys(this.state.teachingSkills).map((skill) => {
                 return <p key={skill}>{skill}</p>;
@@ -232,7 +234,7 @@ class Profile extends React.Component {
             </ul>
           </div>
           <div id="desired-skills">
-            <h3>Desired Skills</h3>
+            <h3 className='aboutprofile'>Desired Skills</h3>
             <ul id="desired-skills-list">
               {Object.keys(this.state.desiredSkills).map((skill) => {
                 return <p key={skill}>{skill}</p>;

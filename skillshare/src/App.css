@@ -40,6 +40,7 @@ body {
   position: fixed;
   background-image: url("./images/smallHeader.png");
   height: 110px;
+  z-index: 99;
 }
 
 .skllshrTitle {
@@ -76,6 +77,16 @@ body {
   width: 100%;
   height: 100px;
 }
+.buffer-messages {
+  width: 100%;
+  height: 120px;
+}
+
+.bufferProfile {
+  width: 100%;
+  height: 125px;
+}
+
 /* .signOut {
   background-color: #ffb498;
   margin-top: 30px;
@@ -166,32 +177,57 @@ h1 {
 
 #profile-add-friend-button-div {
   text-align: left;
+  position: absolute;
+  z-index: 1;
 }
 
 .profile-add-friend-button {
   margin-left: 10px;
   border: none;
   background-color: #ffb498;
-  border-radius: 5px;
-  height: 3vh;
+  border-radius: 20px;
+  height: 4.5vh;
   width: 80px;
+  font-family: poppins;
 }
 
 #profile-image-div {
   height: 150px;
   width: 150px;
   border-radius: 100%;
-  border: 2px solid black;
+  border: 2px solid #e09377;
   margin: auto;
   object-fit: cover;
   overflow: hidden;
   background-position: center;
   background-size: cover;
   background-color: #ffb498;
+  margin-bottom: 10px;
 }
 
 #profile-image {
   max-height: 150px;
+}
+
+.username-profile {
+  width: fit-content;
+  font-family: poppins;
+  margin: auto;
+}
+
+#about-me-div {
+  margin-top: 15px;
+  font-family: poppins;
+}
+
+.line2 {
+  width: 100%;
+  border-bottom: 0.5px solid rgb(105, 93, 93);
+  margin-bottom: 8px;
+}
+
+.aboutprofile {
+  font-family: poppins;
 }
 
 #profile-page {
@@ -210,6 +246,8 @@ h1 {
 
 #profile-user-location {
   margin-top: 0;
+  width: fit-content;
+  margin: auto;
 }
 
 .profile-user-location-div {
@@ -219,6 +257,7 @@ h1 {
 #profile-ratings {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  font-family: poppins;
 }
 
 #profile-teacher-stars {
@@ -231,6 +270,25 @@ h1 {
   margin: auto;
 }
 
+#myskillset {
+  font-family: poppins;
+}
+
+.skill-cat-icon {
+  padding: 0;
+  font-size: 45px;
+  margin: 0;
+}
+
+/* .profileIconContainer {
+  height: 100%;
+  display: flex;
+  padding-top: 15px; */
+/* border: 2px solid black;
+  border-radius: 50%;
+  box-shadow: 5px 5px 10px;
+} */
+
 .svg-inline--fa {
   min-height: 40px;
   min-width: 40px;
@@ -240,17 +298,19 @@ h1 {
   margin-left: 10px;
   margin-bottom: 15px;
   background-color: #ffb498;
-  padding: 15px;
+  padding: 6px;
   border-radius: 100%;
 }
 
 #skills-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  font-family: poppins;
+  margin-top: 10px;
 }
 
 #teaching-skills {
-  border-right: 1px solid black;
+  border-right: 0.5px solid rgb(105, 93, 93);
 }
 
 #teaching-skills-list {
@@ -273,6 +333,7 @@ h1 {
   background-color: #ffb498;
   font-weight: bold;
   margin-bottom: 10px;
+  font-family: poppins;
 }
 
 /* ---------------Sign Up Page--------------- */
@@ -761,7 +822,7 @@ h1 {
 
 /* ----------------------Messages page---------------------------------------- */
 .chatbox-container {
-  margin-top: 30%;
+  margin: 10px;
   height: 75vh;
 }
 
@@ -843,5 +904,5 @@ nav a {
 /* ----------------------Edit Profile page---------------------------------------- */
 
 .edit-skills .selectedSkillsButton {
-  background-color: red;
+  background-color: #b9ffad;
 }

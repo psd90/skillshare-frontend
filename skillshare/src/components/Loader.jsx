@@ -1,10 +1,12 @@
 import React from "react";
 
+
+
 const Loader = () => {
   return (
     <section>
       <img
-        src="http://www.oceaninvestments.com/images/loading-red.gif"
+        src="../img/loader"
         alt="loading symbol"
       />
     </section>
