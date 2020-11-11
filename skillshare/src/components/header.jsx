@@ -12,11 +12,11 @@ const Header = () => {
       <Link  id='link' to="/">
         <h1 className="skllshrTitle">SkllShr</h1>
       </Link>
-      {/* <Link to='/'>
+      <Link to='/'>
       <button className="signOut" onClick={() => app.auth().signOut()}>
         Sign Out
       </button>
-      </Link> */}
+      </Link>
       <DropdownMenu/>
     </header>
   );
