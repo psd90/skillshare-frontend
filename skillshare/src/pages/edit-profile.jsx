@@ -255,23 +255,25 @@ class EditProfile extends React.Component{
 
     changeImageFile = (event) => {
         const file = (event.target.files[0])
+        console.log(event.target.files);
         const fileReader = new FileReader();
         
+        fileReader.readAsDataURL(file)
 
         fileReader.onloadend = () => {
             this.setState((prevState) => {
                 const newProfile = {...prevState.profile};
                 newProfile.image = file;
+                console.log(fileReader.result);
                 return {profile : newProfile, src: fileReader.result}
             })
         }
         
-        fileReader.readAsDataURL(file)
+        
     }
 
     onImageLoaded = (image) => {
-
-        this.imageRef = image
+        this.imageRef = image;
     }
 
     onCropChange = (crop) => {
@@ -316,7 +318,7 @@ class EditProfile extends React.Component{
             crop.width,
             crop.height
          )
-    
+        console.log(canvas);
         const reader = new FileReader()
         canvas.toBlob(blob => {
             reader.readAsDataURL(blob)
@@ -325,23 +327,6 @@ class EditProfile extends React.Component{
             }
         })
     }
-    
-    // editCurrentImage = () => {
-    //     firebase.storage().ref(`users/${this.context.currentUser.uid}/profile.jpg`).getDownloadURL()
-    //   .then(res => {
-    //       console.log(res);
-    //       const blob = new Blob(res);
-    //   })
-    //   .then(blob => {
-    //       console.log(res);
-    //   })
-    //   .catch(err => console.log(err));
-    // //   })
-    // //   .then(function (blob) {
-    // //      resEle.innerHTML = "blob.size = " + blob.size + "<br>";
-    // //      resEle.innerHTML += "blob.type = " + blob.type + "<br>";
-    // //   });
-    // }
     
     render(){
         if(this.state.isLoading) return <p>loading...</p>
@@ -356,7 +341,6 @@ class EditProfile extends React.Component{
                 </div>
                 {this.state.src && <ReactCrop src={this.state.src} crop={this.state.crop} onImageLoaded={this.onImageLoaded} onComplete={this.onCropComplete}
                   onChange={this.onCropChange}/>}
-                  {/* <button onClick={this.editCurrentImage}>Edit Current Image</button> */}
                 <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>
                 </div>
                 <div id="name-location-bio-inputs">
