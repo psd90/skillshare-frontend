@@ -35,7 +35,6 @@ const Header = (props) => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
               ).then((user) => {
-                console.log(user, "<<----USER");
                 history.push(`/profile/${user.data.username}`);
               });
             }}
@@ -47,7 +46,6 @@ const Header = (props) => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
               ).then((user) => {
-                console.log(user, "<<----USER");
                 history.push(`/${user.data.username}/messages`);
               });
             }}
