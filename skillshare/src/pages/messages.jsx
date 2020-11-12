@@ -4,6 +4,7 @@ import { AuthContext } from "../Auth";
 import axios from "axios";
 import PropTypes from "prop-types";
 import Header from "../components/header";
+import firebase from "firebase";
 
 export default class Messages extends Component {
   state = {
@@ -18,6 +19,8 @@ export default class Messages extends Component {
   static contextType = AuthContext;
 
   componentDidMount() {
+    let meImageUrl;
+    let otherImageUrl;
     if (!this.props.location.state) {
       this.props.location.state = {
         currentUserUid: this.context.currentUser.uid,
@@ -44,6 +47,25 @@ export default class Messages extends Component {
         });
       })
       .then(() => {
+        return firebase
+          .storage()
+          .ref(`/users/${currentUserUid}/profile.jpg`)
+          .getDownloadURL();
+      })
+      .then((url) => {
+        meImageUrl = url;
+        if (messagedUser) {
+          return firebase
+            .storage()
+            .ref(`/users/${messagedUid}/profile.jpg`)
+            .getDownloadURL();
+        } else {
+          return null;
+        }
+      })
+      .then((url) => {
+        otherImageUrl = url;
+        console.log(otherImageUrl);
         return Talk.ready;
       })
       .then(() => {
@@ -52,7 +74,7 @@ export default class Messages extends Component {
           id: currentUserUid,
           name: name,
           email: email,
-          photoUrl: "https://demo.talkjs.com/img/sebastian.jpg",
+          photoUrl: meImageUrl,
           welcomeMessage: `Hi! It's ${name}!`,
           role: "Admin",
         });
@@ -67,7 +89,7 @@ export default class Messages extends Component {
             id: messagedUid,
             name: messagedUser.name,
             email: messagedUser.email,
-            photoUrl: "https://demo.talkjs.com/img/sebastian.jpg",
+            photoUrl: otherImageUrl,
             welcomeMessage: `Hi! It's ${messagedUser.name}`,
             role: "Admin",
           });
