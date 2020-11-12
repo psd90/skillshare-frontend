@@ -135,8 +135,14 @@ class Profile extends React.Component {
                 this.setState(
                   { currentUser: res.data, userUid: userId },
                   () => {
-                    console.log(this.state.userUid);
-                    console.log(this.state.user);
+                    console.log(
+                      "this profile belongs to this user: ",
+                      this.state.user
+                    );
+                    console.log(
+                      "currently logged on user is: ",
+                      this.state.currentUser
+                    );
                   }
                 );
               });
@@ -144,12 +150,51 @@ class Profile extends React.Component {
       });
   }
 
+  renderAddFriendButton = () => {
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return (
+        <div id="profile-add-friend-button-div">
+          <button className="profile-add-friend-button">Add Friend</button>
+        </div>
+      );
+    }
+  };
+
+  renderSendMessageButton = () => {
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return (
+        <div id="profile-send-message-button-div">
+          <Link
+            to={{
+              pathname: `/${this.state.currentUser.username}/messages`,
+              state: {
+                currentUserUid: this.context.currentUser.uid,
+                messagedUser: this.state.user,
+                messagedUid: this.state.userUid,
+                directedFromMessage: true,
+              },
+            }}
+          >
+            <button className="profile-send-message-button">
+              Send Message
+            </button>
+          </Link>
+        </div>
+      );
+    }
+  };
+
 updateUser = (userUid, user) =>{
   console.log(userUid +' '+"----------------userUid")
   console.dir(user)
   this.setState({user, userUid})
 }
-
 
   render() {
     console.dir(this.state)
@@ -166,10 +211,7 @@ updateUser = (userUid, user) =>{
       <div id="profile-page">
         <Header updateUser={this.updateUser}/>
         <div className="bufferProfile"></div>
-        <div id="profile-add-friend-button-div">
-          <button className="profile-add-friend-button">Add Friend</button>
-        </div>
-
+        {this.renderAddFriendButton()}
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img
@@ -253,23 +295,7 @@ updateUser = (userUid, user) =>{
             </ul>
           </div>
         </div>
-        <div id="profile-send-message-button-div">
-          <Link
-            to={{
-              pathname: `/${this.state.currentUser.username}/messages`,
-              state: {
-                currentUserUid: this.context.currentUser.uid,
-                messagedUser: this.state.user,
-                messagedUid: this.state.userUid,
-                directedFromMessage: true,
-              },
-            }}
-          >
-            <button className="profile-send-message-button">
-              Send Message
-            </button>
-          </Link>
-        </div>
+        {this.renderSendMessageButton()}
       </div>
     );
   }
