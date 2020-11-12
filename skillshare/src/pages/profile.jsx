@@ -144,7 +144,16 @@ class Profile extends React.Component {
       });
   }
 
+updateUser = (userUid, user) =>{
+  console.log(userUid +' '+"----------------userUid")
+  console.dir(user)
+  this.setState({user, userUid})
+}
+
+
   render() {
+    console.dir(this.state)
+
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -155,13 +164,12 @@ class Profile extends React.Component {
     if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
-        <Header />
-
+        <Header updateUser={this.updateUser}/>
         <div className="bufferProfile"></div>
-
         <div id="profile-add-friend-button-div">
           <button className="profile-add-friend-button">Add Friend</button>
         </div>
+
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img

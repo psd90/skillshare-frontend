@@ -179,6 +179,10 @@ h1 {
 
 /* ----------------------Profile page---------------------------------------- */
 
+#editlink {
+  padding: 10px;
+}
+
 #profile-add-friend-button-div {
   text-align: left;
   position: absolute;
