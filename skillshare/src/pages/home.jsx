@@ -262,8 +262,28 @@ class Home extends React.Component {
               )
             );
             Promise.all(userPromises).then((resArr) => {
+              const unfilteredResults = resArr.map((res) => res.data);
+              //filter out current user
+              const filteredResults = unfilteredResults.filter(
+                (result) =>
+                  Object.keys(result)[0] !== this.context.currentUser.uid
+              );
+              const distancedResults = filteredResults.map((result) => {
+                const uid = Object.keys(result)[0];
+                const distanceFrom = this.calculateDistance(
+                  this.state.userLoc.lat,
+                  this.state.userLoc.long,
+                  result[uid].location.latitude,
+                  result[uid].location.longitude
+                );
+                result.distanceFromUser = distanceFrom;
+                return result;
+              });
+              distancedResults.sort(
+                (a, b) => a.distanceFromUser - b.distanceFromUser
+              );
               this.setState({
-                results: resArr.map((res) => res.data),
+                results: distancedResults,
                 isLoading: false,
               });
             });
