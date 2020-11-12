@@ -402,6 +402,7 @@ class Home extends React.Component {
     return (
       <>
         <Header />
+        <div className="buffer"></div>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
             className="searchByButton"

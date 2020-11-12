@@ -1,4 +1,4 @@
-App {
+.locaApp {
   max-width: 100%;
 }
 
@@ -300,6 +300,24 @@ h1 {
   background-color: #ffb498;
   padding: 6px;
   border-radius: 100%;
+}
+
+.addRatingToggle {
+  border: none;
+  background-color: #ffb498;
+}
+
+.add-rating-div {
+  text-align: center;
+  width: fit-content;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.add-rating-div-button {
+  border: none;
+  background-color: #ffb498;
+  margin-top: 10px;
 }
 
 #skills-list {
