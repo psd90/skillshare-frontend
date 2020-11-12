@@ -174,23 +174,6 @@ h1 {
   width: 80px;
 }
 
-#profile-image-div {
-  height: 150px;
-  width: 150px;
-  border-radius: 100%;
-  border: 2px solid black;
-  margin: auto;
-  object-fit: cover;
-  overflow: hidden;
-  background-position: center;
-  background-size: cover;
-  background-color: #ffb498;
-}
-
-#profile-image {
-  max-height: 150px;
-}
-
 #profile-page {
   text-align: center;
 }
@@ -441,11 +424,27 @@ h1 {
   margin-bottom: 20px;
 }
 
-#edit-profile-image {
-  max-width: 25%;
+#profile-image-div {
+  height: 150px;
+  width: 150px;
   border-radius: 100%;
-  border: 1px solid #ffb498;
+  border: 2px solid black;
   margin: auto;
+  background-color: #ffb498;
+  position: relative;
+  overflow: hidden;
+}
+
+#profile-image-div img{
+  max-width: 110%;
+  max-height: 110%;
+  border-radius: 100%;
+  position: absolute;
+  margin: auto;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
 }
 
 .edit-profile-inputs {
