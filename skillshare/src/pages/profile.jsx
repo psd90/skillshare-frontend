@@ -167,21 +167,25 @@ class Profile extends React.Component {
       this.state.user.username !== this.state.currentUser.username &&
       this.state.currentUser.username
     ) {
-      <div id="profile-send-message-button-div">
-        <Link
-          to={{
-            pathname: `/${this.state.currentUser.username}/messages`,
-            state: {
-              currentUserUid: this.context.currentUser.uid,
-              messagedUser: this.state.user,
-              messagedUid: this.state.userUid,
-              directedFromMessage: true,
-            },
-          }}
-        >
-          <button className="profile-send-message-button">Send Message</button>
-        </Link>
-      </div>;
+      return (
+        <div id="profile-send-message-button-div">
+          <Link
+            to={{
+              pathname: `/${this.state.currentUser.username}/messages`,
+              state: {
+                currentUserUid: this.context.currentUser.uid,
+                messagedUser: this.state.user,
+                messagedUid: this.state.userUid,
+                directedFromMessage: true,
+              },
+            }}
+          >
+            <button className="profile-send-message-button">
+              Send Message
+            </button>
+          </Link>
+        </div>
+      );
     }
   };
 
