@@ -99,7 +99,7 @@ export default class Messages extends Component {
     return (
       <>
         <Header />
-        <div className="buffer"></div>
+        <div className="buffer-messages"></div>
         <div className="chatbox-container" ref={this.talkjsContainer}></div>
       </>
     );
