@@ -15,6 +15,7 @@ import {
 import firebase from "firebase";
 import { AuthContext } from "../Auth";
 import Header from "../components/header";
+import Loader from "../components/Loader";
 
 class Profile extends React.Component {
   state = {
@@ -189,7 +190,15 @@ class Profile extends React.Component {
     }
   };
 
+updateUser = (userUid, user) =>{
+  console.log(userUid +' '+"----------------userUid")
+  console.dir(user)
+  this.setState({user, userUid})
+}
+
   render() {
+    console.dir(this.state)
+
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -197,13 +206,11 @@ class Profile extends React.Component {
       Crafting: faHammer,
       Music: faMusic,
     };
-    if (this.state.isLoading) return <p>loading...</p>;
+    if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
-        <Header />
-
+        <Header updateUser={this.updateUser}/>
         <div className="bufferProfile"></div>
-
         {this.renderAddFriendButton()}
         <div id="brief-user-data">
           <div id="profile-image-div">
