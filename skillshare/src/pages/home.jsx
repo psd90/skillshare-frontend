@@ -5,6 +5,7 @@ import SkillCard from "../components/skill-cards";
 import Header from "../components/header";
 import Talk from "talkjs";
 import { AuthContext } from "../Auth";
+import Loader from "../components/Loader";
 
 class Home extends React.Component {
   state = {
@@ -399,23 +400,25 @@ class Home extends React.Component {
   };
 
   render() {
-    return (
-      <>
-        <Header />
-        <form className="searchTeachers" id="home-search-form" action="">
-          <button
-            className="searchByButton"
-            onClick={this.toggleSearchType}
-          >{`Search by ${this.state.searchButtonText}`}</button>
-          {this.renderSearchFields()}
-          <button className="searchButton" onClick={this.renderResults}>
-            Search
-          </button>
-        </form>
-        {this.renderResultsTitle()}
-        {this.renderCards()}
-      </>
-    );
+    if (this.state.isLoading) return <Loader />;
+    else
+      return (
+        <>
+          <Header />
+          <form className="searchTeachers" id="home-search-form" action="">
+            <button
+              className="searchByButton"
+              onClick={this.toggleSearchType}
+            >{`Search by ${this.state.searchButtonText}`}</button>
+            {this.renderSearchFields()}
+            <button className="searchButton" onClick={this.renderResults}>
+              Search
+            </button>
+          </form>
+          {this.renderResultsTitle()}
+          {this.renderCards()}
+        </>
+      );
   }
 }
 

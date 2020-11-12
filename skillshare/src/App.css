@@ -2,6 +2,10 @@ App {
   max-width: 100%;
 }
 
+.loadingGif {
+  display: flex;
+  justify-content: center;
+}
 /* ---------------TEXT CONTROLS--------------- */
 
 .textcontrols {
@@ -798,11 +802,17 @@ h1 {
 }
 
 .profile-image {
-  width: 50%;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  align-self: center;
-  justify-self: center;
+  height: 95px;
+  width: 95px;
+  border-radius: 100%;
+  border: 2px solid #e09377;
+  margin: auto;
+  object-fit: cover;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ffb498;
+  margin-bottom: 10px;
 }
 
 .search-card-header {
