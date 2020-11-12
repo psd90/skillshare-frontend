@@ -172,6 +172,7 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
+    //possiblew to do a loop that loops axios calls until data is returned so that fi stateent on line 211 is executed
     Promise.all([
       axios.get("https://firebasing-testing.firebaseio.com/skills.json"), // Call to get current categories
       axios.get(
@@ -184,7 +185,6 @@ class Home extends React.Component {
         `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
       ),
     ]).then((resArr) => {
-      console.log(resArr[1].data);
       this.setState(
         {
           categories: resArr[0].data,
@@ -198,6 +198,14 @@ class Home extends React.Component {
         },
         () => {
           console.log("User location: ", this.state.userLoc);
+          console.log(
+            "current user desired skills: ",
+            this.state.currentUserDesiredSkills
+          );
+          console.log(
+            "current user teaching skills: ",
+            this.state.currentUserTeachingSkills
+          );
         }
       );
       if (

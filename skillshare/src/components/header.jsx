@@ -16,8 +16,6 @@ import { contextType } from "react-image-crop";
 import Axios from "axios";
 import PropTypes from "prop-types";
 
-
-
 const Header = (props) => {
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -33,17 +31,17 @@ const Header = (props) => {
       <nav>
         <ul>
           <li
-        
             onClick={() => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
               ).then((user) => {
-                console.log(props)
-                if(props.updateUser){
-                  props.updateUser(currentUser.uid, user.data)
+                console.log(props);
+                if (props.updateUser) {
+                  history.push(`/profile/${user.data.username}`);
+                  props.updateUser(currentUser.uid, user.data);
+                } else {
+                  history.push(`/profile/${user.data.username}`);
                 }
-                
-                history.push(`/profile/${user.data.username}`);
               });
             }}
           >
@@ -78,7 +76,7 @@ const Header = (props) => {
 
 Header.propTypes = {
   history: PropTypes.node,
-  updateUser:PropTypes.func,
+  updateUser: PropTypes.func,
 };
 
 export default Header;

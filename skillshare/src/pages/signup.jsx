@@ -240,26 +240,5 @@ const SignUp = ({ history }) => {
 SignUp.propTypes = {
   history: PropTypes.node,
 };
+
 export default withRouter(SignUp);
-
-// const formElements = document.getElementById("form");
-// console.log(formElements);
-// let usernamePass = false;
-// let emailPass = false;
-// let passwordPass = false;
-// let datePass = false;
-
-// // for (let i = 0; i < formElements.length; i++) {
-// //   const obj = {
-// //     username: "change",
-// //     email: "change",
-// //     password: "keyup",
-// //     date: "change",
-// //     submit: "click",
-// //   };
-// //   const eventToUse = obj[formElements[i].name];
-// //   formElements[i].addEventListener(eventToUse, (event) => {
-// //     const value = event.target.value;
-// //     const name = event.target.name;
-// //   });
-// // }

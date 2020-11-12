@@ -116,7 +116,7 @@ class Profile extends React.Component {
               });
             });
 
-            user.uid = userId
+            user.uid = userId;
             this.setState({
               user,
               desiredSkills,
@@ -157,30 +157,30 @@ class Profile extends React.Component {
   }
 
   toggleAddTeacherRating = () => {
-    this.setState({addTeacherRating : !this.state.addTeacherRating})
-  }
+    this.setState({ addTeacherRating: !this.state.addTeacherRating });
+  };
 
   toggleAddStudentRating = () => {
-    this.setState({addStudentRating : !this.state.addStudentRating})
-  }
+    this.setState({ addStudentRating: !this.state.addStudentRating });
+  };
 
   addRatings = (teacherOrStudent, value) => {
-    this.setState(prevState => {
-      const userCopy = {...prevState.user}
-      const ratingsCopy = {...userCopy[teacherOrStudent]};
+    this.setState((prevState) => {
+      const userCopy = { ...prevState.user };
+      const ratingsCopy = { ...userCopy[teacherOrStudent] };
       userCopy[teacherOrStudent] = ratingsCopy;
       let newAmountofVotes = prevState.user[teacherOrStudent].total;
       let newAverage = prevState.user[teacherOrStudent].average;
       newAverage = newAverage * newAmountofVotes;
       newAmountofVotes += 1;
       newAverage += value;
-      newAverage = newAverage / newAmountofVotes
+      newAverage = newAverage / newAmountofVotes;
       userCopy[teacherOrStudent].total = newAmountofVotes;
       userCopy[teacherOrStudent].average = newAverage;
-      console.log(userCopy)
-      return {user: userCopy};
-    })
-  }
+      console.log(userCopy);
+      return { user: userCopy };
+    });
+  };
 
   renderAddFriendButton = () => {
     if (
@@ -222,14 +222,84 @@ class Profile extends React.Component {
     }
   };
 
-updateUser = (userUid, user) =>{
-  console.log(userUid +' '+"----------------userUid")
-  console.dir(user)
-  this.setState({user, userUid})
-}
+  updateUser = (userUid, user) => {
+    let studentAverage;
+    let teacherAverage;
+    let studentVoteCounts;
+    let teacherVoteCounts;
+    if (!user.student_ratings) {
+      studentAverage = 0;
+      studentVoteCounts = 0;
+    } else {
+      studentAverage =
+        user.student_ratings.reduce((a, b) => a + b, 0) /
+        user.student_ratings.length;
+      studentVoteCounts = user.student_ratings.length;
+    }
+    if (!user.teacher_ratings) {
+      teacherAverage = 0;
+      teacherVoteCounts = 0;
+    } else {
+      teacherAverage =
+        user.teacher_ratings.reduce((a, b) => a + b, 0) /
+        user.teacher_ratings.length;
+      teacherVoteCounts = user.teacher_ratings.length;
+    }
+    user.student_ratings = {
+      average: studentAverage,
+      total: studentVoteCounts,
+    };
+    user.teacher_ratings = {
+      average: teacherAverage,
+      total: teacherVoteCounts,
+    };
+    const desiredSkills = axios.get(
+      `https://firebasing-testing.firebaseio.com/users_desired_skills/${userUid}.json`
+    );
+    return Promise.all([user, desiredSkills])
+      .then(([user, desiredSkills]) => {
+        const teachingSkills = axios.get(
+          `https://firebasing-testing.firebaseio.com/users_teaching_skills/${userUid}.json`
+        );
+        return Promise.all([user, desiredSkills.data, teachingSkills]);
+      })
+      .then(([user, desiredSkills, teachingSkills]) => {
+        const skillCats = axios.get(
+          `https://firebasing-testing.firebaseio.com/skills.json`
+        );
+        return Promise.all([user, desiredSkills, teachingSkills, skillCats]);
+      })
+      .then(([user, desiredSkills, teachingSkills, skillCats]) => {
+        const userSkillCats = [];
+        Object.keys(teachingSkills.data).forEach((skill) => {
+          Object.keys(skillCats.data).forEach((skillCat) => {
+            if (Object.keys(skillCats.data[skillCat]).includes(skill)) {
+              if (!userSkillCats.includes(skillCat)) {
+                userSkillCats.push(skillCat);
+              }
+            }
+          });
+        });
+        user.uid = userUid;
+        this.setState({
+          user,
+          desiredSkills,
+          teachingSkills: teachingSkills.data,
+          isLoading: false,
+          userSkillCats,
+        });
+        firebase
+          .storage()
+          .ref(`users/${userUid}/profile.jpg`)
+          .getDownloadURL()
+          .then((imgUrl) => {
+            this.setState({ image: imgUrl });
+          });
+      });
+  };
 
   render() {
-    console.dir(this.state)
+    console.dir(this.state);
 
     const skillsetIcons = {
       Arts: faPalette,
@@ -241,7 +311,7 @@ updateUser = (userUid, user) =>{
     if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
-        <Header updateUser={this.updateUser}/>
+        <Header updateUser={this.updateUser} />
         <div className="bufferProfile"></div>
         {this.renderAddFriendButton()}
         <div id="brief-user-data">
@@ -269,20 +339,42 @@ updateUser = (userUid, user) =>{
           <div id="profile-teacher-ratings">
             <h3 className="aboutprofile">TEACHER</h3>
             <div id="profile-teacher-stars">
-              <Stars ratings={this.state.user.teacher_ratings.average}/>
+              <Stars ratings={this.state.user.teacher_ratings.average} />
             </div>
             <p>({this.state.user.teacher_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddTeacherRating}>{this.state.addTeacherRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
+            <button
+              className="addRatingToggle"
+              onClick={this.toggleAddTeacherRating}
+            >
+              {this.state.addTeacherRating ? "▼ Add Rating" : "▶ Add Rating"}
+            </button>
+            {this.state.addTeacherRating ? (
+              <AddRating
+                userId={this.state.user.uid}
+                ratingType="teacher_ratings"
+                addRatings={this.addRatings}
+              />
+            ) : null}
           </div>
           <div id="profile-student-ratings">
             <h3 className="aboutprofile">STUDENT</h3>
             <div id="profile-student-stars">
-            <Stars ratings={this.state.user.student_ratings.average}/>
+              <Stars ratings={this.state.user.student_ratings.average} />
             </div>
             <p>({this.state.user.student_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddStudentRating}>{this.state.addStudentRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addStudentRating ? <AddRating userId={this.state.user.uid} ratingType="student_ratings" addRatings={this.addRatings}/> : null}
+            <button
+              className="addRatingToggle"
+              onClick={this.toggleAddStudentRating}
+            >
+              {this.state.addStudentRating ? "▼ Add Rating" : "▶ Add Rating"}
+            </button>
+            {this.state.addStudentRating ? (
+              <AddRating
+                userId={this.state.user.uid}
+                ratingType="student_ratings"
+                addRatings={this.addRatings}
+              />
+            ) : null}
           </div>
         </div>
         <h2 id="myskillset">My Skillset</h2>
