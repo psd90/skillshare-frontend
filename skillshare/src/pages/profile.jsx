@@ -15,6 +15,8 @@ import {
 import firebase from "firebase";
 import { AuthContext } from "../Auth";
 import Header from "../components/header";
+import AddRating from "../components/AddRating";
+import Stars from "../components/stars";
 import Loader from "../components/Loader";
 
 class Profile extends React.Component {
@@ -28,6 +30,8 @@ class Profile extends React.Component {
     userSkillCats: [],
     image:
       "https://transmitconsulting.co.uk/wp-content/uploads/male-placeholder-image.jpeg",
+    addTeacherRating: false,
+    addStudentRating: false,
   };
 
   static contextType = AuthContext;
@@ -111,6 +115,8 @@ class Profile extends React.Component {
                 }
               });
             });
+
+            user.uid = userId
             this.setState({
               user,
               desiredSkills,
@@ -148,6 +154,32 @@ class Profile extends React.Component {
               });
           });
       });
+  }
+
+  toggleAddTeacherRating = () => {
+    this.setState({addTeacherRating : !this.state.addTeacherRating})
+  }
+
+  toggleAddStudentRating = () => {
+    this.setState({addStudentRating : !this.state.addStudentRating})
+  }
+
+  addRatings = (teacherOrStudent, value) => {
+    this.setState(prevState => {
+      const userCopy = {...prevState.user}
+      const ratingsCopy = {...userCopy[teacherOrStudent]};
+      userCopy[teacherOrStudent] = ratingsCopy;
+      let newAmountofVotes = prevState.user[teacherOrStudent].total;
+      let newAverage = prevState.user[teacherOrStudent].average;
+      newAverage = newAverage * newAmountofVotes;
+      newAmountofVotes += 1;
+      newAverage += value;
+      newAverage = newAverage / newAmountofVotes
+      userCopy[teacherOrStudent].total = newAmountofVotes;
+      userCopy[teacherOrStudent].average = newAverage;
+      console.log(userCopy)
+      return {user: userCopy};
+    })
   }
 
   renderAddFriendButton = () => {
@@ -237,32 +269,20 @@ updateUser = (userUid, user) =>{
           <div id="profile-teacher-ratings">
             <h3 className="aboutprofile">TEACHER</h3>
             <div id="profile-teacher-stars">
-              <ReactStars
-                count={5}
-                value={this.state.user.teacher_ratings.average}
-                edit={false}
-                isHalf={true}
-                color="lightgray"
-                activeColor="orange"
-                size={20}
-              />
+              <Stars ratings={this.state.user.teacher_ratings.average}/>
             </div>
             <p>({this.state.user.teacher_ratings.total} reviews)</p>
+            <button className="addRatingToggle" onClick={this.toggleAddTeacherRating}>{this.state.addTeacherRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
+            {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
           </div>
           <div id="profile-student-ratings">
             <h3 className="aboutprofile">STUDENT</h3>
             <div id="profile-student-stars">
-              <ReactStars
-                count={5}
-                value={this.state.user.student_ratings.average}
-                edit={false}
-                isHalf={true}
-                color="lightgray"
-                activeColor="orange"
-                size={20}
-              />
+            <Stars ratings={this.state.user.student_ratings.average}/>
             </div>
             <p>({this.state.user.student_ratings.total} reviews)</p>
+            <button className="addRatingToggle" onClick={this.toggleAddStudentRating}>{this.state.addStudentRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
+            {this.state.addStudentRating ? <AddRating userId={this.state.user.uid} ratingType="student_ratings" addRatings={this.addRatings}/> : null}
           </div>
         </div>
         <h2 id="myskillset">My Skillset</h2>
