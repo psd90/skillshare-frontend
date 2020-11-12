@@ -236,12 +236,12 @@ class CreateProfile extends React.Component {
         })
         .then(() => {
           this.props.history.push("/");
+        })
+        .catch((err) => {
+          this.setState({ error: err.response.data.error });
         });
     }
   };
-  //            .catch((err) => {
-  //   this.setState({ error: err.response.data.error });
-  // })
 
   handleChange = (event) => {
     console.log(this.state.profile.location);
