@@ -731,6 +731,10 @@ h1 {
   font-size: 12px;
 }
 
+.search-result-distance-from-user {
+  font-size: 12px;
+}
+
 .search-result-teaching-skills-header {
   /* grid-column: 2 / 3; */
   margin: auto;
