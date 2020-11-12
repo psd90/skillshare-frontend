@@ -25,11 +25,12 @@ class EditProfile extends React.Component{
         user: {},
         userImage: 'https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png',
         crop: {
-            unit: '%',
-            width: 30,
+            unit: 'px',
+            width: 220,
             aspect: 1/1
         },
-        src: null
+        src: null,
+        croppedImage: null
     }
 
     static contextType = AuthContext;
@@ -65,24 +66,6 @@ class EditProfile extends React.Component{
         })
     }
 
-    changeImageFile = (event) => {
-        const file = (event.target.files[0])
-        const fileReader = new FileReader();
-        
-
-        fileReader.onloadend = () => {
-            this.setState({src: fileReader.result})
-        }
-        
-        fileReader.readAsDataURL(file)
-
-        this.setState((prevState) => {
-            const newProfile = {...prevState.profile};
-            newProfile.image = file;
-            return {profile : newProfile};
-        });
-    }
-
     handleSubmit = () => {
 
         const { image, name, location, info } = this.state.profile
@@ -99,21 +82,21 @@ class EditProfile extends React.Component{
         const user = this;
         let newLearningSkillsPatch;
         let newTeachingSkillsPatch;
-        if(Object.keys(this.state.newLearningSkills).length) {
+        if(Object.keys(this.state.newLearningSkills).length) { //if newly entered learning skill submit to skills table
           newLearningSkillsPatch = Object.keys(this.state.newLearningSkills).map(Skill =>
               Axios.patch(`https://firebasing-testing.firebaseio.com/skills/${Skill}.json`, this.state.newLearningSkills[Skill]))
         }
-        if(Object.keys(this.state.newTeachingSkills).length) {
+        if(Object.keys(this.state.newTeachingSkills).length) { //if newly entered teaching skills submit to skills table
           newTeachingSkillsPatch = Object.keys(this.state.newTeachingSkills).map(Skill =>
             Axios.patch(`https://firebasing-testing.firebaseio.com/skills/${Skill}.json`, this.state.newTeachingSkills[Skill]))
         }
         Promise.all([newLearningSkillsPatch, newTeachingSkillsPatch])
         .then(()=>{
-        Axios.get(`https://api.postcodes.io/postcodes/${this.state.profile.location}`)
+        Axios.get(`https://api.postcodes.io/postcodes/${this.state.profile.location}`) //get location from entered postcode
         .then(res => { 
             this.setState((prevState) => {
                 const newProfile = {...prevState.profile};
-                newProfile.location = {
+                newProfile.location = { //set location data to state
                     latitude: res.data.result.latitude,
                     longitude: res.data.result.longitude,
                     nuts: res.data.result.nuts,
@@ -122,11 +105,11 @@ class EditProfile extends React.Component{
                 return {profile : newProfile};
             })
         })
-        .catch(err => {
+        .catch(err => { //if error from postcode api set state to error
             this.setState({error: err.response.data.error});
         })
         .then(() => {
-            Axios.patch(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, 
+            Axios.patch(`https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, //patch existing user with new data
             {
                     name: this.state.profile.name, 
                     location: this.state.profile.location, 
@@ -139,23 +122,26 @@ class EditProfile extends React.Component{
                 }
             )
         })
-        .then(() => 
-        firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.profile.image)
         .then(() => {
-            Axios.put(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+            if(this.state.croppedImage) {
+            firebase.storage().ref(`/users/${user.context.currentUser.uid}/profile.jpg`).put(this.state.croppedImage) //add image to cloud storage
+            }
+        })
+        .then(() => {
+            Axios.put(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //update user teaching skills
             this.state.teachingSkills)
         }).then(() => {
             let newTeachingPromises
             if(Object.keys(this.state.newTeachingSkills).length){ 
                 newTeachingPromises = Object.keys(this.state.newTeachingSkills).map(category => {
-                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, 
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //add new teaching skill to user teching skills if one has been entered
                     this.state.newTeachingSkills[category])
                 })  
             }
             Promise.all([newTeachingPromises])
             .then(()=> {
             const teachingPromises = Object.keys(this.state.teachingSkills).map(skill => {
-                Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`,
+                Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`, //update teaching skills
                  {[user.context.currentUser.uid]: true})
             })
             Promise.all(teachingPromises).then(()=> {
@@ -163,27 +149,27 @@ class EditProfile extends React.Component{
                 if(Object.keys(this.state.newTeachingSkills).length){
                     newTeachingSkills = Object.keys(this.state.newTeachingSkills).map(category => {
                         Axios.patch(`https://firebasing-testing.firebaseio.com/teaching_skills.json`, 
-                        {[Object.keys(this.state.newTeachingSkills[category])[0]] : {[user.context.currentUser.uid]: true}})
+                        {[Object.keys(this.state.newTeachingSkills[category])[0]] : {[user.context.currentUser.uid]: true}}) //update teaching sills with new skill if one has been entered
                     })
                 }
                 Promise.all([newTeachingSkills])
             })
             .then(()=> {
-                Axios.put(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,
+                Axios.put(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, //update user desired skills
                 this.state.learningSkills)
             })
             .then(()=> {
                 let newDesiredPromises;
             if(Object.keys(this.state.newLearningSkills).length){ 
                 newDesiredPromises = Object.keys(this.state.newLearningSkills).map(category => {
-                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, 
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`,  //update user desired skills if one has been entered
                     this.state.newLearningSkills[category])
                 })  
             }
             Promise.all([newDesiredPromises])
             .then(() => {
                 const learningPromises = Object.keys(this.state.learningSkills).map(skill => {
-                    Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`,
+                    Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`, //update desired skills
                     {[user.context.currentUser.uid]: true})
                 })
                 Promise.all(learningPromises)
@@ -191,7 +177,7 @@ class EditProfile extends React.Component{
                     let newDesiredSkills
                     if(Object.keys(this.state.newLearningSkills).length){
                         newDesiredSkills = Object.keys(this.state.newLearningSkills).map(category => 
-                            Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills.json`, 
+                            Axios.patch(`https://firebasing-testing.firebaseio.com/desired_skills.json`, //update desired skills with new skill if one has been entered
                             {[Object.keys(this.state.newLearningSkills[category])[0]] : {[user.context.currentUser.uid]: true}}
                         )
                         )}
@@ -203,10 +189,11 @@ class EditProfile extends React.Component{
             })
             })
         })
-        })
-        )}
-        )
-    }}
+    })
+    }
+
+    )}
+    }
    
     handleChange = (event) => {
         console.log(this.state.profile);
@@ -266,50 +253,81 @@ class EditProfile extends React.Component{
 
     }
 
-    onImageLoaded = image => {
-        this.imageRef = image
+    changeImageFile = (event) => {
+        const file = (event.target.files[0])
+        console.log(event.target.files);
+        const fileReader = new FileReader();
+        
+        fileReader.readAsDataURL(file)
+
+        fileReader.onloadend = () => {
+            this.setState((prevState) => {
+                const newProfile = {...prevState.profile};
+                newProfile.image = file;
+                console.log(fileReader.result);
+                return {profile : newProfile, src: fileReader.result}
+            })
+        }
+        
+        
+    }
+
+    onImageLoaded = (image) => {
+        this.imageRef = image;
     }
 
     onCropChange = (crop) => {
         this.setState({ crop });
     }
 
-    // onCropComplete = crop => {
-    //     if (this.imageRef && crop.width && crop.height) {
-    //         const croppedImageUrl = this.getCroppedImg(this.imageRef, crop)
-    //         this.setState({ croppedImageUrl })
-    //     }
-    // }
+    onCropComplete = (crop) => {
+        if (this.imageRef && crop.width && crop.height) {
+            this.getCroppedImg(this.imageRef, crop)
+        }
+    }
 
-    // getCroppedImg(image, crop) {
-    //     const canvas = document.createElement("canvas");
-    //     const scaleX = image.naturalWidth / image.width;
-    //     const scaleY = image.naturalHeight / image.height;
-    //     canvas.width = crop.width;
-    //     canvas.height = crop.height;
-    //     const ctx = canvas.getContext("2d");
-    //     ctx.drawImage(
-    //         image,
-    //         crop.x * scaleX,
-    //         crop.y * scaleY,
-    //         crop.width * scaleX,
-    //         crop.height * scaleY,
-    //         0,
-    //         0,
-    //         crop.width,
-    //         crop.height
-    //      )
-    
-    //     const reader = new FileReader()
-    //     canvas.toBlob(blob => {
-    //         reader.readAsDataURL(blob)
-    //         reader.onloadend = () => {
-    //             this.dataURLtoFile(reader.result, 'cropped.jpg')
-    //         }
-    //     })
-    // }
-    
+    dataURLtoFile(dataurl, filename) {
+        let arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+                
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        let croppedImage = new File([u8arr], filename, {type:mime});
+        this.setState({ croppedImage }) 
+    }
 
+    getCroppedImg(image, crop) {
+        const canvas = document.createElement("canvas");
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+            image,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            crop.width * scaleX,
+            crop.height * scaleY,
+            0,
+            0,
+            crop.width,
+            crop.height
+         )
+        console.log(canvas);
+        const reader = new FileReader()
+        canvas.toBlob(blob => {
+            reader.readAsDataURL(blob)
+            reader.onloadend = () => {
+                this.dataURLtoFile(reader.result, 'cropped.jpg')
+            }
+        })
+    }
+    
     render(){
         if(this.state.isLoading) return <p>loading...</p>
         else return(
@@ -318,7 +336,9 @@ class EditProfile extends React.Component{
         <div className="buffer"></div>
                 <h1 id='makeProfileHeading' >Edit Your Profile</h1>
                 <div id="select-image-div">
-                <img id="edit-profile-image" src={this.state.userImage}/>
+                <div id="profile-image-div">
+                    <img id="edit-profile-image" src={this.state.userImage}/>
+                </div>
                 {this.state.src && <ReactCrop src={this.state.src} crop={this.state.crop} onImageLoaded={this.onImageLoaded} onComplete={this.onCropComplete}
                   onChange={this.onCropChange}/>}
                 <input type="file" id='chooseFile' onChange={this.changeImageFile}></input>

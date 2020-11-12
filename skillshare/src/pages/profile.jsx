@@ -155,7 +155,9 @@ class Profile extends React.Component {
     return (
       <div id="profile-page">
         <Header />
+        
         <div className="bufferProfile"></div>
+
         <div id="profile-add-friend-button-div">
           <button className="profile-add-friend-button">Add Friend</button>
         </div>

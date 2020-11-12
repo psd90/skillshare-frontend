@@ -9,6 +9,8 @@ import { AuthContext } from "../Auth";
 class Home extends React.Component {
   state = {
     currentUser: {}, //This prop takes the current user from auth context (see did mount function)
+    currentUserDesiredSkills: {},
+    currentUserTeachingSkills: {},
     me: {}, // This prop is for creating the TalkJS user (which has different properties to currentUser)
     searchType: "skill",
     searchButtonText: "category",
@@ -18,9 +20,30 @@ class Home extends React.Component {
     selectedSearchSkillType: "desired",
     results: [],
     hasSearched: false,
+    userLoc: { lat: 0, long: 0 },
+    isLoading: true,
   };
 
   static contextType = AuthContext;
+
+  calculateDistance = (lat1, lon1, lat2, lon2) => {
+    function deg2rad(deg) {
+      return deg * (Math.PI / 180);
+    }
+
+    var R = 3959; // Radius of the earth in miles
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in  miles
+    return Math.round(d);
+  };
 
   toggleSearchType = (e) => {
     e.preventDefault();
@@ -43,8 +66,10 @@ class Home extends React.Component {
     if (this.state.searchType === "skill") {
       return (
         <div id="searchInForm">
-          <p className="searchInForm">OR</p>
-          <label className="searchInForm" htmlFor="searchBar">
+          <p id="or" className="searchInForm">
+            OR
+          </p>
+          <label id="skill-input" className="searchInForm" htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
@@ -53,8 +78,8 @@ class Home extends React.Component {
               placeholder="Enter Specific Skill"
             />
           </label>
-          <p>I want to...</p>
-          <lable>
+          <p id="i-want-to">I want to...</p>
+          <label id="learn-skill-radio-label">
             <input
               name="searchType"
               type="radio"
@@ -63,8 +88,8 @@ class Home extends React.Component {
               onClick={this.handleChange}
             ></input>
             Learn this skill
-          </lable>
-          <lable>
+          </label>
+          <label id="teach-skill-radio-label">
             <input
               name="searchType"
               type="radio"
@@ -74,48 +99,56 @@ class Home extends React.Component {
               onClick={this.handleChange}
             ></input>
             Teach this skill
-          </lable>
+          </label>
         </div>
       );
     } else {
       return (
         <>
-          <h2>Categories</h2>
-          {Object.keys(this.state.categories).map((category, index) => {
-            return (
-              <label key={index} htmlFor={category}>
-                {category}
-                <input
-                  type="checkbox"
-                  name={category}
-                  className="selectedCategories"
-                  onClick={this.toggleCategories}
-                />
-              </label>
-            );
-          })}
-          <p>I want to...</p>
-          <lable>
-            <input
-              name="searchType"
-              type="radio"
-              value="teaching"
-              id="selectedSearchSkillType"
-              onClick={this.handleChange}
-            ></input>
-            Learn a skill
-          </lable>
-          <lable>
-            <input
-              name="searchType"
-              type="radio"
-              value="desired"
-              id="selectedSearchSkillType"
-              defaultChecked
-              onClick={this.handleChange}
-            ></input>
-            Teach a skill
-          </lable>
+          <div id="categories-container">
+            <h3 id="categories-header">Categories</h3>
+            {Object.keys(this.state.categories).map((category, index) => {
+              return (
+                <label
+                  className="categoryCheckboxLabel"
+                  key={index}
+                  htmlFor={category}
+                >
+                  {category}
+                  <input
+                    type="checkbox"
+                    name={category}
+                    className="selectedCategories"
+                    onClick={this.toggleCategories}
+                  />
+                </label>
+              );
+            })}
+          </div>
+          <div id="category-radio-flex">
+            <p id="category-i-want-to">I want to...</p>
+            <label id="category-learn-radio">
+              <input
+                name="searchType"
+                type="radio"
+                value="teaching"
+                id="selectedSearchSkillType"
+                onClick={this.handleChange}
+              ></input>
+              Learn a skill
+            </label>
+            <label id="category-teach-radio">
+              <input
+                name="searchType"
+                type="radio"
+                value="desired"
+                id="selectedSearchSkillType"
+                defaultChecked
+                onClick={this.handleChange}
+              ></input>
+              Teach a skill
+            </label>
+          </div>
         </>
       );
     }
@@ -143,19 +176,99 @@ class Home extends React.Component {
       axios.get(
         `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json` // Call to get current user's information (as auth user only has uid and email)
       ),
+      axios.get(
+        `https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`
+      ),
+      axios.get(
+        `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
+      ),
     ]).then((resArr) => {
+      console.log(resArr[1].data);
       this.setState(
         {
           categories: resArr[0].data,
           currentUser: resArr[1].data,
+          userLoc: {
+            lat: resArr[1].data.location.latitude,
+            long: resArr[1].data.location.longitude,
+          },
+          currentUserDesiredSkills: resArr[2].data,
+          currentUserTeachingSkills: resArr[3].data,
         },
         () => {
-          console.log(
-            "Current user in home page state: ",
-            this.state.currentUser
-          );
+          console.log("User location: ", this.state.userLoc);
         }
       );
+      if (
+        this.state.currentUserDesiredSkills &&
+        this.state.currentUserTeachingSkills
+      ) {
+        const peopleWhoCanTeachWhatIWantToLearnPromises = [];
+        Object.keys(this.state.currentUserDesiredSkills).forEach((skill) => {
+          peopleWhoCanTeachWhatIWantToLearnPromises.push(
+            axios.get(
+              `https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`
+            )
+          );
+        });
+        return Promise.all(peopleWhoCanTeachWhatIWantToLearnPromises)
+          .then((resArr) => {
+            const peopleWhoCanTeachWhatIWantToLearn = resArr
+              .map((res) => res.data)
+              .filter((people) => people);
+            const peopleWhoWantToLearnWhatICanTeachPromises = [];
+            Object.keys(this.state.currentUserTeachingSkills).forEach(
+              (skill) => {
+                peopleWhoWantToLearnWhatICanTeachPromises.push(
+                  axios.get(
+                    `https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`
+                  )
+                );
+              }
+            );
+            peopleWhoWantToLearnWhatICanTeachPromises.push(
+              peopleWhoCanTeachWhatIWantToLearn
+            );
+            return Promise.all(peopleWhoWantToLearnWhatICanTeachPromises);
+          })
+          .then((resArr) => {
+            //Get a 1d array of unique uids of people who can teach what the current user wants to learn
+            const peopleWhoCanTeachWhatIWantToLearn = resArr.pop();
+            const flattenedPeopleWhoCanTeach = peopleWhoCanTeachWhatIWantToLearn
+              .map((person) => Object.keys(person))
+              .flat();
+            const filteredPeopleWhoCanTeach = Array.from(
+              new Set(flattenedPeopleWhoCanTeach)
+            );
+
+            //Get a 1d array of unique uids of people who want to learn what the current user can teach
+            const peopleWhoWantToLearnWhatICanTeach = resArr
+              .map((res) => res.data)
+              .filter((people) => people);
+            const flattenedPeopleWhoWantToLearn = peopleWhoWantToLearnWhatICanTeach
+              .map((person) => Object.keys(person))
+              .flat();
+            const filteredPeopleWhoWantToLearn = Array.from(
+              new Set(flattenedPeopleWhoWantToLearn)
+            );
+
+            const uidsOnBoth = filteredPeopleWhoCanTeach.filter((uid) =>
+              filteredPeopleWhoWantToLearn.includes(uid)
+            );
+
+            const userPromises = uidsOnBoth.map((uid) =>
+              axios.get(
+                `https://firebasing-testing.firebaseio.com/users.json?orderBy="$key"&equalTo="${uid}"`
+              )
+            );
+            Promise.all(userPromises).then((resArr) => {
+              this.setState({
+                results: resArr.map((res) => res.data),
+                isLoading: false,
+              });
+            });
+          });
+      }
     });
   }
 
@@ -214,9 +327,23 @@ class Home extends React.Component {
         const filteredResults = unfilteredResults.filter(
           (result) => Object.keys(result)[0] !== this.context.currentUser.uid
         );
+        const distancedResults = filteredResults.map((result) => {
+          const uid = Object.keys(result)[0];
+          const distanceFrom = this.calculateDistance(
+            this.state.userLoc.lat,
+            this.state.userLoc.long,
+            result[uid].location.latitude,
+            result[uid].location.longitude
+          );
+          result.distanceFromUser = distanceFrom;
+          return result;
+        });
+        distancedResults.sort(
+          (a, b) => a.distanceFromUser - b.distanceFromUser
+        );
         this.setState(
           {
-            results: filteredResults,
+            results: distancedResults,
             hasSearched: true,
           },
           () => {
@@ -225,6 +352,31 @@ class Home extends React.Component {
         );
       });
     });
+  };
+
+  renderResultsTitle = () => {
+    const { hasSearched, results, isLoading } = this.state;
+    if (!hasSearched && results.length) {
+      return (
+        <>
+          <h2 id="results-title">Your top matches</h2>
+        </>
+      );
+    } else if (hasSearched && results.length) {
+      return (
+        <>
+          <h2 id="results-title">Search Results</h2>
+          <h4 id="results-sub-title">Sorted by those closest to you:</h4>
+        </>
+      );
+    } else if (!hasSearched && !results.length && !isLoading) {
+      return (
+        <h3 id="results-title">
+          Update your profile with skills you want to teach and learn to see
+          automatic matches here!
+        </h3>
+      );
+    }
   };
 
   renderCards = () => {
@@ -240,6 +392,7 @@ class Home extends React.Component {
           uid={Object.keys(person)[0]}
           currentUserUid={this.context.currentUser.uid}
           currentUserUsername={this.state.currentUser.username}
+          distanceFromUser={person.distanceFromUser}
         />
       );
     });
@@ -249,33 +402,17 @@ class Home extends React.Component {
     return (
       <>
         <Header />
-        <div className="buffer"></div>
-        <Link
-          className="search-message-button-link"
-          to={{
-            pathname: `/${this.state.currentUser.username}/messages`,
-            state: {
-              currentUserUid: this.context.currentUser.uid,
-              messagedUser: null,
-              messagedUid: null,
-              directedFromMessage: false,
-            },
-          }}
-        >
-          <button className="search-message-button">Message</button>
-        </Link>
         <form className="searchTeachers" id="home-search-form" action="">
           <button
             className="searchByButton"
             onClick={this.toggleSearchType}
           >{`Search by ${this.state.searchButtonText}`}</button>
           {this.renderSearchFields()}
-          <br />
-          <br />
           <button className="searchButton" onClick={this.renderResults}>
             Search
           </button>
         </form>
+        {this.renderResultsTitle()}
         {this.renderCards()}
       </>
     );
@@ -283,6 +420,3 @@ class Home extends React.Component {
 }
 
 export default Home;
-
-/* We want to start rendering these results with skill-cards. 
-So we need to develop those skill cards */

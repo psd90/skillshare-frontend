@@ -5,6 +5,8 @@ import firebase from "firebase";
 import PropTypes from "prop-types";
 import Header from "../components/header";
 import Loader from "../components/Loader";
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 class CreateProfile extends React.Component {
   state = {
@@ -21,6 +23,13 @@ class CreateProfile extends React.Component {
     newTeachingSkills: {},
     newLearningSkills: {},
     error: false,
+    crop: {
+      unit: 'px',
+      width: 220,
+      aspect: 1/1
+    },
+    src: null,
+    croppedImage: null
   };
 
   static contextType = AuthContext;
@@ -298,6 +307,81 @@ class CreateProfile extends React.Component {
     });
   };
 
+  changeImageFile = (event) => {
+    const file = (event.target.files[0])
+    console.log(event.target.files);
+    const fileReader = new FileReader();
+    
+    fileReader.readAsDataURL(file)
+
+    fileReader.onloadend = () => {
+        this.setState((prevState) => {
+            const newProfile = {...prevState.profile};
+            newProfile.image = file;
+            console.log(fileReader.result);
+            return {profile : newProfile, src: fileReader.result}
+        })
+    }
+    
+    
+}
+
+onImageLoaded = (image) => {
+    this.imageRef = image;
+}
+
+onCropChange = (crop) => {
+    this.setState({ crop });
+}
+
+onCropComplete = (crop) => {
+    if (this.imageRef && crop.width && crop.height) {
+        this.getCroppedImg(this.imageRef, crop)
+    }
+}
+
+dataURLtoFile(dataurl, filename) {
+    let arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+            
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    let croppedImage = new File([u8arr], filename, {type:mime});
+    this.setState({ croppedImage }) 
+}
+
+getCroppedImg(image, crop) {
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width,
+        crop.height,
+     )
+    console.log(canvas);
+    const reader = new FileReader()
+    canvas.toBlob(blob => {
+        reader.readAsDataURL(blob)
+        reader.onloadend = () => {
+            this.dataURLtoFile(reader.result, 'cropped.jpg')
+        }
+    })
+}
+
   render() {
     if (this.state.isLoading) return <Loader />;
     else
@@ -307,10 +391,14 @@ class CreateProfile extends React.Component {
           <div className="buffer"></div>
           <h1 id="makeProfileHeading">Make Your Profile</h1>
           <div id="select-image-div">
+          <div id="profile-image-div">
             <img
               id="edit-profile-image"
               src="https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png"
             />
+            </div>
+             {this.state.src && <ReactCrop src={this.state.src} crop={this.state.crop} onImageLoaded={this.onImageLoaded} onComplete={this.onCropComplete}
+                  onChange={this.onCropChange}/>}
             <input
               type="file"
               id="chooseFile"
