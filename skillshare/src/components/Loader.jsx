@@ -1,14 +1,14 @@
 import React from "react";
 
-
-
 const Loader = () => {
   return (
     <section>
-      <img
-        src="../img/loader"
-        alt="loading symbol"
-      />
+      <div className="loadingGif">
+        <img
+          src="https://www.nwbrain.network/wp-content/themes/subsite/images/loading.gif"
+          alt="loading symbol"
+        />
+      </div>
     </section>
   );
 };

@@ -74,7 +74,9 @@ const SignUp = ({ history }) => {
           const isValid = regex.test(usernameChange);
           if (!isValid) {
             setClassUsername("bad");
-            setPassUsername("invalid");
+            setPassUsername(
+              "Usernames can include letters, numbers and dashes only"
+            );
           } else {
             setClassUsername("good");
             setUsername(usernameChange);
