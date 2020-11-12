@@ -38,6 +38,11 @@ const Header = (props) => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
               ).then((user) => {
+                console.log(props)
+                if(props.updateUser){
+                  props.updateUser(currentUser.uid, user.data)
+                }
+                
                 history.push(`/profile/${user.data.username}`);
               });
             }}
@@ -73,6 +78,7 @@ const Header = (props) => {
 
 Header.propTypes = {
   history: PropTypes.node,
+  updateUser:PropTypes.func,
 };
 
 export default Header;

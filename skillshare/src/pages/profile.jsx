@@ -143,6 +143,13 @@ class Profile extends React.Component {
       });
   }
 
+updateUser = (userUid, user) =>{
+  console.log(userUid +' '+"----------------userUid")
+  console.dir(user)
+  this.setState({user, userUid})
+}
+
+
   render() {
     console.dir(this.state)
 
@@ -156,7 +163,7 @@ class Profile extends React.Component {
     if (this.state.isLoading) return <p>loading...</p>;
     return (
       <div id="profile-page">
-        <Header />
+        <Header updateUser={this.updateUser}/>
         
         <div className="bufferProfile"></div>
         <div id="profile-add-friend-button-div">
