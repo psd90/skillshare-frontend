@@ -227,24 +227,25 @@ class CreateProfile extends React.Component {
                                       [user.context.currentUser.uid]: true,
                                     },
                                   }
-                                )
-                              );
-                            }
-                            Promise.all([newDesiredSkills]);
-                          })
-                          .then(() => {
-                            this.props.history.push("/");
+                                  )
+                                  );
+                                }
+                                Promise.all([newDesiredSkills]);
+                              })
+                              .then(() => {
+                                this.props.history.push("/");
+                              });
+                            });
                           });
-                      });
+                        });
+                      })
+                      );
                     });
-                });
-              })
-          );
-      });
-    }
-  };
-
-  handleChange = (event) => {
+                  }
+                };
+                
+                handleChange = (event) => {
+                  console.log(this.state.profile.location)
     console.log(this.state.profile);
     this.setState((prevState) => {
       const newProfile = { ...prevState.profile };
@@ -371,17 +372,17 @@ getCroppedImg(image, crop) {
         0,
         crop.width,
         crop.height,
-     )
-    console.log(canvas);
-    const reader = new FileReader()
-    canvas.toBlob(blob => {
-        reader.readAsDataURL(blob)
-        reader.onloadend = () => {
+        )
+        console.log(canvas);
+        const reader = new FileReader()
+        canvas.toBlob(blob => {
+          reader.readAsDataURL(blob)
+          reader.onloadend = () => {
             this.dataURLtoFile(reader.result, 'cropped.jpg')
-        }
-    })
-}
-
+          }
+        })
+      }
+  
   render() {
     if (this.state.isLoading) return <Loader />;
     else
@@ -527,5 +528,4 @@ getCroppedImg(image, crop) {
 CreateProfile.propTypes = {
   history: PropTypes.node,
 };
-
 export default CreateProfile;
