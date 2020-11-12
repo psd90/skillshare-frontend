@@ -5,6 +5,7 @@ import SkillCard from "../components/skill-cards";
 import Header from "../components/header";
 import Talk from "talkjs";
 import { AuthContext } from "../Auth";
+import Loader from "../components/Loader";
 
 class Home extends React.Component {
   state = {
@@ -262,8 +263,28 @@ class Home extends React.Component {
               )
             );
             Promise.all(userPromises).then((resArr) => {
+              const unfilteredResults = resArr.map((res) => res.data);
+              //filter out current user
+              const filteredResults = unfilteredResults.filter(
+                (result) =>
+                  Object.keys(result)[0] !== this.context.currentUser.uid
+              );
+              const distancedResults = filteredResults.map((result) => {
+                const uid = Object.keys(result)[0];
+                const distanceFrom = this.calculateDistance(
+                  this.state.userLoc.lat,
+                  this.state.userLoc.long,
+                  result[uid].location.latitude,
+                  result[uid].location.longitude
+                );
+                result.distanceFromUser = distanceFrom;
+                return result;
+              });
+              distancedResults.sort(
+                (a, b) => a.distanceFromUser - b.distanceFromUser
+              );
               this.setState({
-                results: resArr.map((res) => res.data),
+                results: distancedResults,
                 isLoading: false,
               });
             });
@@ -399,24 +420,26 @@ class Home extends React.Component {
   };
 
   render() {
-    return (
-      <>
-        <Header />
-        <div className="buffer"></div>
-        <form className="searchTeachers" id="home-search-form" action="">
-          <button
-            className="searchByButton"
-            onClick={this.toggleSearchType}
-          >{`Search by ${this.state.searchButtonText}`}</button>
-          {this.renderSearchFields()}
-          <button className="searchButton" onClick={this.renderResults}>
-            Search
-          </button>
-        </form>
-        {this.renderResultsTitle()}
-        {this.renderCards()}
-      </>
-    );
+    if (this.state.isLoading) return <Loader />;
+    else
+      return (
+        <>
+          <Header />
+          <div className="buffer"></div>
+          <form className="searchTeachers" id="home-search-form" action="">
+            <button
+              className="searchByButton"
+              onClick={this.toggleSearchType}
+            >{`Search by ${this.state.searchButtonText}`}</button>
+            {this.renderSearchFields()}
+            <button className="searchButton" onClick={this.renderResults}>
+              Search
+            </button>
+          </form>
+          {this.renderResultsTitle()}
+          {this.renderCards()}
+        </>
+      );
   }
 }
 

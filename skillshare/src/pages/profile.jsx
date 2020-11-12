@@ -17,6 +17,7 @@ import { AuthContext } from "../Auth";
 import Header from "../components/header";
 import AddRating from "../components/AddRating";
 import Stars from "../components/stars";
+import Loader from "../components/Loader";
 
 class Profile extends React.Component {
   state = {
@@ -140,8 +141,14 @@ class Profile extends React.Component {
                 this.setState(
                   { currentUser: res.data, userUid: userId },
                   () => {
-                    console.log(this.state.userUid);
-                    console.log(this.state.user);
+                    console.log(
+                      "this profile belongs to this user: ",
+                      this.state.user
+                    );
+                    console.log(
+                      "currently logged on user is: ",
+                      this.state.currentUser
+                    );
                   }
                 );
               });
@@ -175,7 +182,55 @@ class Profile extends React.Component {
     })
   }
 
+  renderAddFriendButton = () => {
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return (
+        <div id="profile-add-friend-button-div">
+          <button className="profile-add-friend-button">Add Friend</button>
+        </div>
+      );
+    }
+  };
+
+  renderSendMessageButton = () => {
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return (
+        <div id="profile-send-message-button-div">
+          <Link
+            to={{
+              pathname: `/${this.state.currentUser.username}/messages`,
+              state: {
+                currentUserUid: this.context.currentUser.uid,
+                messagedUser: this.state.user,
+                messagedUid: this.state.userUid,
+                directedFromMessage: true,
+              },
+            }}
+          >
+            <button className="profile-send-message-button">
+              Send Message
+            </button>
+          </Link>
+        </div>
+      );
+    }
+  };
+
+updateUser = (userUid, user) =>{
+  console.log(userUid +' '+"----------------userUid")
+  console.dir(user)
+  this.setState({user, userUid})
+}
+
   render() {
+    console.dir(this.state)
+
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -183,16 +238,12 @@ class Profile extends React.Component {
       Crafting: faHammer,
       Music: faMusic,
     };
-    if (this.state.isLoading) return <p>loading...</p>;
+    if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
-        <Header />
-        
+        <Header updateUser={this.updateUser}/>
         <div className="bufferProfile"></div>
-
-        <div id="profile-add-friend-button-div">
-          <button className="profile-add-friend-button">Add Friend</button>
-        </div>
+        {this.renderAddFriendButton()}
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img
@@ -201,7 +252,7 @@ class Profile extends React.Component {
               alt={`${this.state.user.name}'s Profile Picture`}
             />
           </div>
-          <h3 className='username-profile'>
+          <h3 className="username-profile">
             {this.state.user.name} (@{this.state.user.username}),{" "}
             {this.state.user.age}
           </h3>
@@ -211,12 +262,12 @@ class Profile extends React.Component {
           <div id="about-me-div">
             {/* <h2 className='aboutprofile'>About Me</h2> */}
             <p>{this.state.user.info}</p>
-            <div className='line2'></div>
+            <div className="line2"></div>
           </div>
         </div>
-        <div  id="profile-ratings">
+        <div id="profile-ratings">
           <div id="profile-teacher-ratings">
-            <h3 className='aboutprofile'>TEACHER</h3>
+            <h3 className="aboutprofile">TEACHER</h3>
             <div id="profile-teacher-stars">
               <Stars ratings={this.state.user.teacher_ratings.average}/>
             </div>
@@ -225,7 +276,7 @@ class Profile extends React.Component {
             {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
           </div>
           <div id="profile-student-ratings">
-            <h3 className='aboutprofile'>STUDENT</h3>
+            <h3 className="aboutprofile">STUDENT</h3>
             <div id="profile-student-stars">
             <Stars ratings={this.state.user.student_ratings.average}/>
             </div>
@@ -248,7 +299,7 @@ class Profile extends React.Component {
         </div>
         <div id="skills-list">
           <div id="teaching-skills">
-            <h3 className='aboutprofile'>My Skills</h3>
+            <h3 className="aboutprofile">My Skills</h3>
             <ul id="teaching-skills-list">
               {Object.keys(this.state.teachingSkills).map((skill) => {
                 return <p key={skill}>{skill}</p>;
@@ -256,7 +307,7 @@ class Profile extends React.Component {
             </ul>
           </div>
           <div id="desired-skills">
-            <h3 className='aboutprofile'>Desired Skills</h3>
+            <h3 className="aboutprofile">Desired Skills</h3>
             <ul id="desired-skills-list">
               {Object.keys(this.state.desiredSkills).map((skill) => {
                 return <p key={skill}>{skill}</p>;
@@ -264,23 +315,7 @@ class Profile extends React.Component {
             </ul>
           </div>
         </div>
-        <div id="profile-send-message-button-div">
-          <Link
-            to={{
-              pathname: `/${this.state.currentUser.username}/messages`,
-              state: {
-                currentUserUid: this.context.currentUser.uid,
-                messagedUser: this.state.user,
-                messagedUid: this.state.userUid,
-                directedFromMessage: true,
-              },
-            }}
-          >
-            <button className="profile-send-message-button">
-              Send Message
-            </button>
-          </Link>
-        </div>
+        {this.renderSendMessageButton()}
       </div>
     );
   }
