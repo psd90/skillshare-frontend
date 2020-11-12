@@ -144,6 +144,8 @@ class Profile extends React.Component {
   }
 
   render() {
+    console.dir(this.state)
+
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -157,10 +159,10 @@ class Profile extends React.Component {
         <Header />
         
         <div className="bufferProfile"></div>
-
         <div id="profile-add-friend-button-div">
           <button className="profile-add-friend-button">Add Friend</button>
         </div>
+
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img
@@ -169,6 +171,7 @@ class Profile extends React.Component {
               alt={`${this.state.user.name}'s Profile Picture`}
             />
           </div>
+        
           <h3 className='username-profile'>
             {this.state.user.name} (@{this.state.user.username}),{" "}
             {this.state.user.age}

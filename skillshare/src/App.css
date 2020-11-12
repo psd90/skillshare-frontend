@@ -175,6 +175,10 @@ h1 {
 
 /* ----------------------Profile page---------------------------------------- */
 
+#editlink {
+  padding: 10px;
+}
+
 #profile-add-friend-button-div {
   text-align: left;
   position: absolute;
@@ -190,7 +194,6 @@ h1 {
   width: 80px;
   font-family: poppins;
 }
-
 
 #profile-image-div {
   height: 150px;
@@ -520,7 +523,7 @@ h1 {
   overflow: hidden;
 }
 
-#profile-image-div img{
+#profile-image-div img {
   max-width: 110%;
   max-height: 110%;
   border-radius: 100%;

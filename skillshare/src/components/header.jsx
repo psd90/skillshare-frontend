@@ -16,6 +16,8 @@ import { contextType } from "react-image-crop";
 import Axios from "axios";
 import PropTypes from "prop-types";
 
+
+
 const Header = (props) => {
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -31,6 +33,7 @@ const Header = (props) => {
       <nav>
         <ul>
           <li
+        
             onClick={() => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
