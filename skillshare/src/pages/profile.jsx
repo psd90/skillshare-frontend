@@ -39,122 +39,94 @@ class Profile extends React.Component {
   componentDidMount() {
     const { username } = this.props.match.params;
     let userId;
-    axios
-      .get(
-        `https://firebasing-testing.firebaseio.com/usernames/${username}.json`
-      )
-      .then((uid) => {
-        userId = uid.data;
-        axios
-          .get(`https://firebasing-testing.firebaseio.com/users/${userId}.json`)
-          .then((res) => {
-            let studentAverage;
-            let teacherAverage;
-            let studentVoteCounts;
-            let teacherVoteCounts;
-            if (!res.data.student_ratings) {
-              studentAverage = 0;
-              studentVoteCounts = 0;
-            } else {
-              studentAverage =
-                res.data.student_ratings.reduce((a, b) => a + b, 0) /
-                res.data.student_ratings.length;
-              studentVoteCounts = res.data.student_ratings.length;
+    axios.get(`https://firebasing-testing.firebaseio.com/usernames/${username}.json`)
+    .then((uid) => {
+      userId = uid.data;
+      return axios.get(`https://firebasing-testing.firebaseio.com/users/${userId}.json`)
+    })
+    .then((res) => {
+      let studentAverage;
+      let teacherAverage;
+      let studentVoteCounts;
+      let teacherVoteCounts;
+      if (!res.data.student_ratings) {
+        studentAverage = 0;
+        studentVoteCounts = 0;
+      } else {
+        studentAverage =
+          res.data.student_ratings.reduce((a, b) => a + b, 0) /
+          res.data.student_ratings.length;
+          studentVoteCounts = res.data.student_ratings.length;
+      }
+      if (!res.data.teacher_ratings) {
+        teacherAverage = 0;
+        teacherVoteCounts = 0;
+      } else {
+        teacherAverage =
+          res.data.teacher_ratings.reduce((a, b) => a + b, 0) /
+          res.data.teacher_ratings.length;
+        teacherVoteCounts = res.data.teacher_ratings.length;
+      }
+      res.data.student_ratings = {
+        average: studentAverage,
+        total: studentVoteCounts,
+      };
+      res.data.teacher_ratings = {
+        average: teacherAverage,
+        total: teacherVoteCounts,
+      };
+      return res.data;
+    })
+    .then((user) => {
+      const desiredSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_desired_skills/${userId}.json`);
+      return Promise.all([user, desiredSkills]);
+    })
+    .then(([user, desiredSkills]) => {
+      const teachingSkills = axios.get(`https://firebasing-testing.firebaseio.com/users_teaching_skills/${userId}.json`);
+      return Promise.all([user, desiredSkills.data, teachingSkills]);
+    })
+    .then(([user, desiredSkills, teachingSkills]) => {
+      const skillCats = axios.get(`https://firebasing-testing.firebaseio.com/skills.json`);
+      return Promise.all([user, desiredSkills, teachingSkills, skillCats]);
+    })
+    .then(([user, desiredSkills, teachingSkills, skillCats]) => {
+      const userSkillCats = [];
+      Object.keys(teachingSkills.data).forEach((skill) => {
+        Object.keys(skillCats.data).forEach((skillCat) => {
+          if (Object.keys(skillCats.data[skillCat]).includes(skill)) {
+            if (!userSkillCats.includes(skillCat)) {
+              userSkillCats.push(skillCat);
             }
-            if (!res.data.teacher_ratings) {
-              teacherAverage = 0;
-              teacherVoteCounts = 0;
-            } else {
-              teacherAverage =
-                res.data.teacher_ratings.reduce((a, b) => a + b, 0) /
-                res.data.teacher_ratings.length;
-              teacherVoteCounts = res.data.teacher_ratings.length;
-            }
-            res.data.student_ratings = {
-              average: studentAverage,
-              total: studentVoteCounts,
-            };
-            res.data.teacher_ratings = {
-              average: teacherAverage,
-              total: teacherVoteCounts,
-            };
-            return res.data;
-          })
-          .then((user) => {
-            const desiredSkills = axios.get(
-              `https://firebasing-testing.firebaseio.com/users_desired_skills/${userId}.json`
-            );
-            return Promise.all([user, desiredSkills]);
-          })
-          .then(([user, desiredSkills]) => {
-            const teachingSkills = axios.get(
-              `https://firebasing-testing.firebaseio.com/users_teaching_skills/${userId}.json`
-            );
-            return Promise.all([user, desiredSkills.data, teachingSkills]);
-          })
-          .then(([user, desiredSkills, teachingSkills]) => {
-            const skillCats = axios.get(
-              `https://firebasing-testing.firebaseio.com/skills.json`
-            );
-            return Promise.all([
-              user,
-              desiredSkills,
-              teachingSkills,
-              skillCats,
-            ]);
-          })
-          .then(([user, desiredSkills, teachingSkills, skillCats]) => {
-            const userSkillCats = [];
-
-            Object.keys(teachingSkills.data).forEach((skill) => {
-              Object.keys(skillCats.data).forEach((skillCat) => {
-                if (Object.keys(skillCats.data[skillCat]).includes(skill)) {
-                  if (!userSkillCats.includes(skillCat)) {
-                    userSkillCats.push(skillCat);
-                  }
-                }
-              });
-            });
-
-            user.uid = userId
-            this.setState({
-              user,
-              desiredSkills,
-              teachingSkills: teachingSkills.data,
-              isLoading: false,
-              userSkillCats,
-            });
-            firebase
-              .storage()
-              .ref(`users/${userId}/profile.jpg`)
-              .getDownloadURL()
-              .then((imgUrl) => {
-                this.setState({ image: imgUrl });
-              });
-          })
-          .then(() => {
-            axios
-              .get(
-                `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
-              )
-              .then((res) => {
-                this.setState(
-                  { currentUser: res.data, userUid: userId },
-                  () => {
-                    console.log(
-                      "this profile belongs to this user: ",
-                      this.state.user
-                    );
-                    console.log(
-                      "currently logged on user is: ",
-                      this.state.currentUser
-                    );
-                  }
-                );
-              });
-          });
+          }
+        });
       });
-  }
+      user.uid = userId
+      this.setState({
+        user,
+        desiredSkills,
+        teachingSkills: teachingSkills.data,
+        isLoading: false,
+        userSkillCats,
+      });
+      firebase
+        .storage()
+        .ref(`users/${userId}/profile.jpg`)
+        .getDownloadURL()
+        .then((imgUrl) => {
+          this.setState({ image: imgUrl });
+      });
+    })
+    .then(() => {
+      return axios.get(`https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`)
+    })
+    .then((res) => {
+      this.setState({ currentUser: res.data, userUid: userId },() => {
+        console.log("this profile belongs to this user: ", this.state.user);
+        console.log("currently logged on user is: ", this.state.currentUser);
+      });
+    });
+  };
+
 
   toggleAddTeacherRating = () => {
     this.setState({addTeacherRating : !this.state.addTeacherRating})
@@ -238,6 +210,7 @@ updateUser = (userUid, user) =>{
       Crafting: faHammer,
       Music: faMusic,
     };
+    console.log(this.state.user.teacher_ratings);
     if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
@@ -245,13 +218,11 @@ updateUser = (userUid, user) =>{
         <div className="bufferProfile"></div>
         {this.renderAddFriendButton()}
         <div id="brief-user-data">
-          <div id="profile-image-div">
             <img
-              id="profile-image"
+              className="profile-image-profile-page"
               src={this.state.image}
               alt={`${this.state.user.name}'s Profile Picture`}
             />
-          </div>
           <h3 className="username-profile">
             {this.state.user.name} (@{this.state.user.username}),{" "}
             {this.state.user.age}

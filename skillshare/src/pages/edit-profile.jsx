@@ -38,60 +38,48 @@ class EditProfile extends React.Component {
   static contextType = AuthContext;
 
   componentDidMount() {
-    Axios.get("https://firebasing-testing.firebaseio.com/skills.json").then(
-      (skillList) => {
-        const userInfo = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
-        );
-        const userImage = firebase
-          .storage()
-          .ref(`users/${this.context.currentUser.uid}/profile.jpg`)
-          .getDownloadURL();
-        const teachingSkills = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
-        );
-        const learningSkills = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`
-        );
-        Promise.all([
-          userInfo,
-          skillList,
-          userImage,
-          teachingSkills,
-          learningSkills,
-        ]).then(
-          ([
-            userInfo,
-            skillList,
-            userImage,
-            teachingSkills,
-            learningSkills,
-          ]) => {
-            this.setState({
-              isLoading: false,
-              skills: skillList.data,
-              user: userInfo.data,
-              userImage,
-              teachingSkills: teachingSkills.data,
-              learningSkills: learningSkills.data,
-              profile: {
-                image: userImage,
-                name: userInfo.data.name,
-                location: userInfo.data.location,
-                info: userInfo.data.info,
-                friends: userInfo.data.friends ? userInfo.data.friends : [],
-                teacher_ratings: userInfo.data.teacher_ratings
-                  ? userInfo.data.teacher_ratings
-                  : [],
-                student_ratings: userInfo.data.student_ratings
-                  ? userInfo.data.student_ratings
-                  : [],
-              },
-            });
-          }
-        );
-      }
-    );
+    Axios.get("https://firebasing-testing.firebaseio.com/skills.json")
+    .then((skillList) => {
+      const userInfo = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
+      );
+      const userImage = firebase
+        .storage()
+        .ref(`users/${this.context.currentUser.uid}/profile.jpg`)
+        .getDownloadURL();
+      const teachingSkills = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
+      );
+      const learningSkills = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`
+      );
+      return Promise.all([
+        userInfo,
+        skillList,
+        userImage,
+        teachingSkills,
+        learningSkills,
+      ])
+    })
+    .then(([userInfo, skillList, userImage, teachingSkills, learningSkills]) => {
+      this.setState({
+        isLoading: false,
+        skills: skillList.data,
+        user: userInfo.data,
+        userImage,
+        teachingSkills: teachingSkills.data,
+        learningSkills: learningSkills.data,
+        profile: {
+          image: userImage,
+          name: userInfo.data.name,
+          location: userInfo.data.location,
+          info: userInfo.data.info,
+          friends: userInfo.data.friends ? userInfo.data.friends : [],
+          teacher_ratings: userInfo.data.teacher_ratings ? userInfo.data.teacher_ratings : [],
+          student_ratings: userInfo.data.student_ratings ? userInfo.data.student_ratings : [],
+        },
+      });
+    });
   }
 
   handleSubmit = () => {
@@ -444,9 +432,7 @@ class EditProfile extends React.Component {
           <div className="buffer"></div>
           <h1 id="makeProfileHeading">Edit Your Profile</h1>
           <div id="select-image-div">
-            <div id="profile-image-div">
-              <img id="edit-profile-image" src={this.state.userImage} />
-            </div>
+              <img className="profile-image-profile-page" src={this.state.userImage} />
             {this.state.src && (
               <ReactCrop
                 src={this.state.src}
