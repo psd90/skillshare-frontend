@@ -206,7 +206,7 @@ h1 {
   font-family: poppins;
 }
 
-#profile-image-div {
+.profile-image-profile-page {
   height: 150px;
   width: 150px;
   border-radius: 100%;
@@ -218,10 +218,6 @@ h1 {
   background-size: cover;
   background-color: #ffb498;
   margin-bottom: 10px;
-}
-
-#profile-image {
-  max-height: 150px;
 }
 
 .username-profile {
@@ -569,31 +565,6 @@ h1 {
   border: 0px solid black;
   width: 180px;
   margin-bottom: 20px;
-}
-
-#profile-image-div {
-  height: 150px;
-  width: 150px;
-  border-radius: 100%;
-  border: 2px solid black;
-  margin: auto;
-  background-color: #ffb498;
-  position: relative;
-  overflow: hidden;
-  border: 2px solid #ffb498;
-  margin-bottom: 10px;
-}
-
-#profile-image-div img {
-  max-width: 110%;
-  max-height: 110%;
-  border-radius: 100%;
-  position: absolute;
-  margin: auto;
-  top: -9999px;
-  bottom: -9999px;
-  left: -9999px;
-  right: -9999px;
 }
 
 .edit-profile-inputs {

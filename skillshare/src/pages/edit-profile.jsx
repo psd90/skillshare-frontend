@@ -39,60 +39,48 @@ class EditProfile extends React.Component {
   static contextType = AuthContext;
 
   componentDidMount() {
-    Axios.get("https://firebasing-testing.firebaseio.com/skills.json").then(
-      (skillList) => {
-        const userInfo = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
-        );
-        const userImage = firebase
-          .storage()
-          .ref(`users/${this.context.currentUser.uid}/profile.jpg`)
-          .getDownloadURL();
-        const teachingSkills = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
-        );
-        const learningSkills = Axios.get(
-          `https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`
-        );
-        Promise.all([
-          userInfo,
-          skillList,
-          userImage,
-          teachingSkills,
-          learningSkills,
-        ]).then(
-          ([
-            userInfo,
-            skillList,
-            userImage,
-            teachingSkills,
-            learningSkills,
-          ]) => {
-            this.setState({
-              isLoading: false,
-              skills: skillList.data,
-              user: userInfo.data,
-              userImage,
-              teachingSkills: teachingSkills.data,
-              learningSkills: learningSkills.data,
-              profile: {
-                image: userImage,
-                name: userInfo.data.name,
-                location: userInfo.data.location,
-                info: userInfo.data.info,
-                friends: userInfo.data.friends ? userInfo.data.friends : [],
-                teacher_ratings: userInfo.data.teacher_ratings
-                  ? userInfo.data.teacher_ratings
-                  : [],
-                student_ratings: userInfo.data.student_ratings
-                  ? userInfo.data.student_ratings
-                  : [],
-              },
-            });
-          }
-        );
-      }
-    );
+    Axios.get("https://firebasing-testing.firebaseio.com/skills.json")
+    .then((skillList) => {
+      const userInfo = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
+      );
+      const userImage = firebase
+        .storage()
+        .ref(`users/${this.context.currentUser.uid}/profile.jpg`)
+        .getDownloadURL();
+      const teachingSkills = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
+      );
+      const learningSkills = Axios.get(
+        `https://firebasing-testing.firebaseio.com/users_desired_skills/${this.context.currentUser.uid}.json`
+      );
+      return Promise.all([
+        userInfo,
+        skillList,
+        userImage,
+        teachingSkills,
+        learningSkills,
+      ])
+    })
+    .then(([userInfo, skillList, userImage, teachingSkills, learningSkills]) => {
+      this.setState({
+        isLoading: false,
+        skills: skillList.data,
+        user: userInfo.data,
+        userImage,
+        teachingSkills: teachingSkills.data,
+        learningSkills: learningSkills.data,
+        profile: {
+          image: userImage,
+          name: userInfo.data.name,
+          location: userInfo.data.location,
+          info: userInfo.data.info,
+          friends: userInfo.data.friends ? userInfo.data.friends : [],
+          teacher_ratings: userInfo.data.teacher_ratings ? userInfo.data.teacher_ratings : [],
+          student_ratings: userInfo.data.student_ratings ? userInfo.data.student_ratings : [],
+        },
+      });
+    });
   }
 
   handleSubmit = () => {
@@ -144,152 +132,145 @@ class EditProfile extends React.Component {
           )
         );
       }
-      Promise.all([newLearningSkillsPatch, newTeachingSkillsPatch]).then(() => {
-        Axios.get(
-          `https://api.postcodes.io/postcodes/${this.state.profile.location}`
-        ) //get location from entered postcode
-          .then((res) => {
-            this.setState((prevState) => {
-              const newProfile = { ...prevState.profile };
-              newProfile.location = {
-                //set location data to state
-                latitude: res.data.result.latitude,
-                longitude: res.data.result.longitude,
-                nuts: res.data.result.nuts,
-                postcode: res.data.result.postcode,
-              };
-              return { profile: newProfile };
-            });
-          })
-          .catch((err) => {
-            //if error from postcode api set state to error
-            this.setState({ error: err.response.data.error });
-          })
-          .then(() => {
-            Axios.patch(
-              `https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, //patch existing user with new data
-              {
-                name: this.state.profile.name,
-                location: this.state.profile.location,
-                info: this.state.profile.info,
-                role: "Member",
-                welcomeMessage: `Hi this is ${this.state.profile.name}!`,
-                friends: this.state.profile.friends,
-                teacher_ratings: this.state.profile.teacher_ratings,
-                student_ratings: this.state.profile.student_ratings,
-              }
-            );
-          })
-          .then(() => {
-            if (this.state.croppedImage) {
-              firebase
-                .storage()
-                .ref(`/users/${user.context.currentUser.uid}/profile.jpg`)
-                .put(this.state.croppedImage); //add image to cloud storage
-            }
-          })
-          .then(() => {
-            Axios.put(
-              `https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //update user teaching skills
-              this.state.teachingSkills
-            );
-          })
-          .then(() => {
-            let newTeachingPromises;
-            if (Object.keys(this.state.newTeachingSkills).length) {
-              newTeachingPromises = Object.keys(
-                this.state.newTeachingSkills
-              ).map((category) => {
-                Axios.patch(
-                  `https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //add new teaching skill to user teching skills if one has been entered
-                  this.state.newTeachingSkills[category]
-                );
-              });
-            }
-            Promise.all([newTeachingPromises]).then(() => {
-              const teachingPromises = Object.keys(
-                this.state.teachingSkills
-              ).map((skill) => {
-                Axios.patch(
-                  `https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`, //update teaching skills
-                  { [user.context.currentUser.uid]: true }
-                );
-              });
-              Promise.all(teachingPromises)
-                .then(() => {
-                  let newTeachingSkills;
-                  if (Object.keys(this.state.newTeachingSkills).length) {
-                    newTeachingSkills = Object.keys(
-                      this.state.newTeachingSkills
-                    ).map((category) => {
-                      Axios.patch(
-                        `https://firebasing-testing.firebaseio.com/teaching_skills.json`,
-                        {
-                          [Object.keys(
-                            this.state.newTeachingSkills[category]
-                          )[0]]: { [user.context.currentUser.uid]: true },
-                        }
-                      ); //update teaching sills with new skill if one has been entered
-                    });
-                  }
-                  Promise.all([newTeachingSkills]);
-                })
-                .then(() => {
-                  Axios.put(
-                    `https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, //update user desired skills
-                    this.state.learningSkills
-                  );
-                })
-                .then(() => {
-                  let newDesiredPromises;
-                  if (Object.keys(this.state.newLearningSkills).length) {
-                    newDesiredPromises = Object.keys(
-                      this.state.newLearningSkills
-                    ).map((category) => {
-                      Axios.patch(
-                        `https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, //update user desired skills if one has been entered
-                        this.state.newLearningSkills[category]
-                      );
-                    });
-                  }
-                  Promise.all([newDesiredPromises]).then(() => {
-                    const learningPromises = Object.keys(
-                      this.state.learningSkills
-                    ).map((skill) => {
-                      Axios.patch(
-                        `https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`, //update desired skills
-                        { [user.context.currentUser.uid]: true }
-                      );
-                    });
-                    Promise.all(learningPromises)
-                      .then(() => {
-                        let newDesiredSkills;
-                        if (Object.keys(this.state.newLearningSkills).length) {
-                          newDesiredSkills = Object.keys(
-                            this.state.newLearningSkills
-                          ).map((category) =>
-                            Axios.patch(
-                              `https://firebasing-testing.firebaseio.com/desired_skills.json`, //update desired skills with new skill if one has been entered
-                              {
-                                [Object.keys(
-                                  this.state.newLearningSkills[category]
-                                )[0]]: { [user.context.currentUser.uid]: true },
-                              }
-                            )
-                          );
-                        }
-                        Promise.all([newDesiredSkills]);
-                      })
-                      .then(() => {
-                        this.props.history.push("/");
-                      });
-                  });
-                });
-            });
+      Promise.all([newLearningSkillsPatch, newTeachingSkillsPatch])
+      .then(() => {
+        Axios.get(`https://api.postcodes.io/postcodes/${this.state.profile.location}`) //get location from entered postcode
+        .then((res) => {
+          this.setState((prevState) => {
+            const newProfile = { ...prevState.profile };
+            newProfile.location = {
+            //set location data to state
+            latitude: res.data.result.latitude,
+            longitude: res.data.result.longitude,
+            nuts: res.data.result.nuts,
+            postcode: res.data.result.postcode,
+            };
+            return { profile: newProfile };
           });
+        })
+        .catch((err) => {
+          //if error from postcode api set state to error
+          this.setState({ error: err.response.data.error });
+        })
+        .then(() => {
+          Axios.patch(
+            `https://firebasing-testing.firebaseio.com/users/${user.context.currentUser.uid}.json`, //patch existing user with new data
+            {
+              name: this.state.profile.name,
+              location: this.state.profile.location,
+              info: this.state.profile.info,
+              role: "Member",
+              welcomeMessage: `Hi this is ${this.state.profile.name}!`,
+              friends: this.state.profile.friends,
+              teacher_ratings: this.state.profile.teacher_ratings,
+              student_ratings: this.state.profile.student_ratings,
+            }
+          );
+        })
+        .then(() => {
+          if (this.state.croppedImage) {
+            firebase
+              .storage()
+              .ref(`/users/${user.context.currentUser.uid}/profile.jpg`)
+              .put(this.state.croppedImage); //add image to cloud storage
+          }
+        })
+        .then(() => {
+          Axios.put(
+            `https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //update user teaching skills
+            this.state.teachingSkills
+          );
+        })
+        .then(() => {
+          let newTeachingPromises;
+          if (Object.keys(this.state.newTeachingSkills).length) {
+            newTeachingPromises = Object.keys(
+              this.state.newTeachingSkills
+            ).map((category) => {
+              Axios.patch(
+                `https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`, //add new teaching skill to user teching skills if one has been entered
+                this.state.newTeachingSkills[category]
+              );
+            });
+          }
+          Promise.all([newTeachingPromises])
+        })
+        .then(() => {
+          const teachingPromises = Object.keys(
+            this.state.teachingSkills).map((skill) => {
+              Axios.patch(
+                `https://firebasing-testing.firebaseio.com/teaching_skills/${skill}.json`, //update teaching skills
+                { [user.context.currentUser.uid]: true }
+              );
+            });
+          Promise.all(teachingPromises)
+        })
+        .then(() => {
+          let newTeachingSkills;
+          if (Object.keys(this.state.newTeachingSkills).length) {
+            newTeachingSkills = Object.keys(
+            this.state.newTeachingSkills).map((category) => {
+              Axios.patch(
+                `https://firebasing-testing.firebaseio.com/teaching_skills.json`,
+                {[Object.keys(this.state.newTeachingSkills[category])[0]]: { [user.context.currentUser.uid]: true }}
+              ); //update teaching sills with new skill if one has been entered
+            });
+          }
+          Promise.all([newTeachingSkills]);
+        })
+        .then(() => {
+          Axios.put(
+            `https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, //update user desired skills
+            this.state.learningSkills
+          );
+        })
+        .then(() => {
+          let newDesiredPromises;
+          if (Object.keys(this.state.newLearningSkills).length) {
+            newDesiredPromises = Object.keys(
+              this.state.newLearningSkills
+            ).map((category) => {
+              Axios.patch(
+                `https://firebasing-testing.firebaseio.com/users_desired_skills/${user.context.currentUser.uid}.json`, //update user desired skills if one has been entered
+                this.state.newLearningSkills[category]
+              );
+            });
+          }
+          Promise.all([newDesiredPromises])
+        })  
+        .then(() => {
+          const learningPromises = Object.keys(
+            this.state.learningSkills
+          ).map((skill) => {
+            Axios.patch(
+              `https://firebasing-testing.firebaseio.com/desired_skills/${skill}.json`, //update desired skills
+              { [user.context.currentUser.uid]: true }
+            );
+          });
+          Promise.all(learningPromises)
+        })
+        .then(() => {
+          let newDesiredSkills;
+          if (Object.keys(this.state.newLearningSkills).length) {
+            newDesiredSkills = Object.keys(
+              this.state.newLearningSkills
+            ).map((category) =>
+              Axios.patch(
+                `https://firebasing-testing.firebaseio.com/desired_skills.json`, //update desired skills with new skill if one has been entered
+                {
+                  [Object.keys(this.state.newLearningSkills[category])[0]]: { [user.context.currentUser.uid]: true }
+                }
+              )
+            );
+          }
+          Promise.all([newDesiredSkills]);
+        })
+        .then(() => {
+          this.props.history.push("/");
+        });
       });
-    }
-  };
+    };
+  }
 
   handleChange = (event) => {
     if (event.target.id === "location") {
@@ -437,9 +418,7 @@ class EditProfile extends React.Component {
           <div className="buffer"></div>
           <h1 id="makeProfileHeading">Edit Your Profile</h1>
           <div id="select-image-div">
-            <div id="profile-image-div">
-              <img id="edit-profile-image" src={this.state.userImage} />
-            </div>
+              <img className="profile-image-profile-page" src={this.state.userImage} />
             {this.state.src && (
               <ReactCrop
                 src={this.state.src}

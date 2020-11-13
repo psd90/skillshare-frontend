@@ -412,12 +412,10 @@ class CreateProfile extends React.Component {
           <div className="buffer"></div>
           <h1 id="makeProfileHeading">Make Your Profile</h1>
           <div id="select-image-div">
-            <div id="profile-image-div">
               <img
-                id="edit-profile-image"
+                className="profile-image-profile-page"
                 src="https://www.scrgrowthhub.co.uk/wp-content/uploads/placeholder-user-400x400-1.png"
               />
-            </div>
             {this.state.src && (
               <ReactCrop
                 src={this.state.src}
