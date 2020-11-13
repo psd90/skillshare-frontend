@@ -27,8 +27,4 @@ const FontSize = () => {
   );
 };
 
-// $("#resettext").click(function () {
-//   if (curSize != 18) $("#content").css("font-size", 18);
-// });
-
 export default FontSize;

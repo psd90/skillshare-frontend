@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Header from "../components/header";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import Loader from "../components/Loader";
 
 class EditProfile extends React.Component {
   state = {
@@ -272,7 +273,6 @@ class EditProfile extends React.Component {
   }
 
   handleChange = (event) => {
-    console.log(this.state.profile);
     if (event.target.id === "location") {
       Axios.get(`https://api.postcodes.io/postcodes/${event.target.value}`)
         .then((response) => {
@@ -307,12 +307,10 @@ class EditProfile extends React.Component {
         return { teachingSkills: newTeachingSkills };
       }
     });
-    console.log(this.state.teachingSkills);
   };
 
   addLearningSkill = (event) => {
     const element = document.getElementById(event.target.value);
-    console.log(element);
     this.setState((prevState) => {
       const newLearningSkills = { ...prevState.learningSkills };
       if (prevState.learningSkills[event.target.value]) {
@@ -326,7 +324,6 @@ class EditProfile extends React.Component {
   };
 
   addNewTeachingSkill = (event) => {
-    console.log(this.state.newTeachingSkills);
     this.setState((prevState) => {
       const newTeachingSkills = { ...prevState.newTeachingSkills };
       newTeachingSkills[event.target.id] = { [event.target.value]: true };
@@ -335,7 +332,6 @@ class EditProfile extends React.Component {
   };
 
   addNewLearningSkill = (event) => {
-    console.log(this.state.newLearningSkills);
     this.setState((prevState) => {
       const newLearningSkills = { ...prevState.newLearningSkills };
       newLearningSkills[event.target.id] = { [event.target.value]: true };
@@ -345,7 +341,6 @@ class EditProfile extends React.Component {
 
   changeImageFile = (event) => {
     const file = event.target.files[0];
-    console.log(event.target.files);
     const fileReader = new FileReader();
 
     fileReader.readAsDataURL(file);
@@ -354,7 +349,6 @@ class EditProfile extends React.Component {
       this.setState((prevState) => {
         const newProfile = { ...prevState.profile };
         newProfile.image = file;
-        console.log(fileReader.result);
         return { profile: newProfile, src: fileReader.result };
       });
     };
@@ -406,7 +400,6 @@ class EditProfile extends React.Component {
       crop.width,
       crop.height
     );
-    console.log(canvas);
     const reader = new FileReader();
     canvas.toBlob((blob) => {
       reader.readAsDataURL(blob);
@@ -417,7 +410,7 @@ class EditProfile extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) return <p>loading...</p>;
+    if (this.state.isLoading) return <Loader />;
     else
       return (
         <div id="create-profile-page">

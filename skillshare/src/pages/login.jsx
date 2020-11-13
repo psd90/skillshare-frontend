@@ -3,7 +3,6 @@ import app from "../base";
 import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import PropTypes from "prop-types";
-import Header from "../components/header";
 
 const Login = ({ history }) => {
   const [password, setPassword] = useState("");
@@ -11,11 +10,8 @@ const Login = ({ history }) => {
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
-      console.log(email)
       try {
-        await app
-          .auth()
-          .signInWithEmailAndPassword(email, password);
+        await app.auth().signInWithEmailAndPassword(email, password);
         history.push("/");
       } catch (error) {
         alert(error);
@@ -40,7 +36,7 @@ const Login = ({ history }) => {
 
   const enteredEmail = (event) => {
     setEmail(event.target.value);
-  }
+  };
 
   return (
     <>
@@ -55,13 +51,14 @@ const Login = ({ history }) => {
           <form onSubmit={handleLogin}>
             <div id="inputboxs">
               <input
-              onChange={enteredEmail}
+                onChange={enteredEmail}
                 className="signUpInput"
                 type="email"
                 placeholder="Email:"
               ></input>
+
               <input
-              onChange={enteredPassword}
+                onChange={enteredPassword}
                 className="signUpInput"
                 type="password"
                 placeholder="Password:"

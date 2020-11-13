@@ -151,7 +151,6 @@ const SignUp = ({ history }) => {
 
   const dateChange = (event) => {
     const value = event.target.value;
-    console.log(event.target.value);
     const inputDate = Date.parse(value);
     const dateNow = Date.now();
     const difference = dateNow - inputDate;
@@ -186,7 +185,7 @@ const SignUp = ({ history }) => {
           <form className="signUpForm" id="form" onSubmit={handleSignUp}>
             <input
               onChange={usernameChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="username"
               id="username"
               type="text"
@@ -195,7 +194,7 @@ const SignUp = ({ history }) => {
             <p className={classUsername}>{passUsername}</p>
             <input
               onChange={emailChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="email"
               type="call"
               placeholder="Email"
@@ -203,7 +202,7 @@ const SignUp = ({ history }) => {
             <p className={classEmail}>{passEmail}</p>
             <input
               onChange={passwordChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="password"
               type="password"
               placeholder="Password"
@@ -212,7 +211,7 @@ const SignUp = ({ history }) => {
             <p className="dob">Date of Birth</p>
             <input
               onChange={dateChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="date"
               type="date"
               id="date"
@@ -221,7 +220,7 @@ const SignUp = ({ history }) => {
             <div className="buttonGroup">
               <button
                 disabled={passSubmit}
-                className="signUpButton"
+                className="signUpPageButton"
                 type="submit"
               >
                 Sign Up
@@ -240,26 +239,5 @@ const SignUp = ({ history }) => {
 SignUp.propTypes = {
   history: PropTypes.node,
 };
+
 export default withRouter(SignUp);
-
-// const formElements = document.getElementById("form");
-// console.log(formElements);
-// let usernamePass = false;
-// let emailPass = false;
-// let passwordPass = false;
-// let datePass = false;
-
-// // for (let i = 0; i < formElements.length; i++) {
-// //   const obj = {
-// //     username: "change",
-// //     email: "change",
-// //     password: "keyup",
-// //     date: "change",
-// //     submit: "click",
-// //   };
-// //   const eventToUse = obj[formElements[i].name];
-// //   formElements[i].addEventListener(eventToUse, (event) => {
-// //     const value = event.target.value;
-// //     const name = event.target.name;
-// //   });
-// // }

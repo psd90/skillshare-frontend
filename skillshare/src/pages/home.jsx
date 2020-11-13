@@ -67,16 +67,13 @@ class Home extends React.Component {
     if (this.state.searchType === "skill") {
       return (
         <div id="searchInForm">
-          <p id="or" className="searchInForm">
-            OR
-          </p>
           <label id="skill-input" className="searchInForm" htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
               name="searchBar"
               type="text"
-              placeholder="Enter Specific Skill"
+              placeholder="  Search Specific Skill"
             />
           </label>
           <p id="i-want-to">I want to...</p>
@@ -172,6 +169,7 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
+    //possiblew to do a loop that loops axios calls until data is returned so that fi stateent on line 211 is executed
     Promise.all([
       axios.get("https://firebasing-testing.firebaseio.com/skills.json"), // Call to get current categories
       axios.get(
@@ -184,22 +182,16 @@ class Home extends React.Component {
         `https://firebasing-testing.firebaseio.com/users_teaching_skills/${this.context.currentUser.uid}.json`
       ),
     ]).then((resArr) => {
-      console.log(resArr[1].data);
-      this.setState(
-        {
-          categories: resArr[0].data,
-          currentUser: resArr[1].data,
-          userLoc: {
-            lat: resArr[1].data.location.latitude,
-            long: resArr[1].data.location.longitude,
-          },
-          currentUserDesiredSkills: resArr[2].data,
-          currentUserTeachingSkills: resArr[3].data,
+      this.setState({
+        categories: resArr[0].data,
+        currentUser: resArr[1].data,
+        userLoc: {
+          lat: resArr[1].data.location.latitude,
+          long: resArr[1].data.location.longitude,
         },
-        () => {
-          console.log("User location: ", this.state.userLoc);
-        }
-      );
+        currentUserDesiredSkills: resArr[2].data,
+        currentUserTeachingSkills: resArr[3].data,
+      });
       if (
         this.state.currentUserDesiredSkills &&
         this.state.currentUserTeachingSkills
@@ -376,11 +368,17 @@ class Home extends React.Component {
   };
 
   renderResultsTitle = () => {
-    const { hasSearched, results, isLoading } = this.state;
+    const {
+      hasSearched,
+      results,
+      isLoading,
+      currentUserDesiredSkills,
+      currentUserTeachingSkills,
+    } = this.state;
     if (!hasSearched && results.length) {
       return (
         <>
-          <h2 id="results-title">Your top matches</h2>
+          <h2 id="results-title">Your Top Matches</h2>
         </>
       );
     } else if (hasSearched && results.length) {
@@ -390,12 +388,25 @@ class Home extends React.Component {
           <h4 id="results-sub-title">Sorted by those closest to you:</h4>
         </>
       );
-    } else if (!hasSearched && !results.length && !isLoading) {
+    } else if (
+      !hasSearched &&
+      (!currentUserDesiredSkills || !currentUserTeachingSkills)
+    ) {
       return (
         <h3 id="results-title">
           Update your profile with skills you want to teach and learn to see
           automatic matches here!
         </h3>
+      );
+    } else if (!hasSearched && !results.length) {
+      return (
+        <>
+          <h2 id="results-title">Your top matches</h2>
+          <h4 id="results-sub-title">
+            No top matches yet - keep updating your skills for more hits, or try
+            searching above!
+          </h4>
+        </>
       );
     }
   };

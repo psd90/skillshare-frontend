@@ -69,58 +69,63 @@ class SkillCard extends React.Component {
     const { name, location, username } = this.props.person;
     const { desiredSkills, teachingSkills, image } = this.state;
     return (
-      <div id="cardBackground">
-        <div className="search-result-card">
-          <img className="profile-image" src={image} alt={name} />
-          <div className="search-card-header">
-            <h5 className="search-result-name">{name}</h5>
-            <h6 className="search-result-location">{location.nuts}</h6>
-            {this.addDistance()}
-            <br />
+      <Link
+        className="search-view-more-button-link"
+        to={`/profile/${username}`}
+      >
+        <div id="cardBackground">
+          <div className="search-result-card">
+            <img className="profile-image" src={image} alt={name} />
+            <div className="search-card-header">
+              <h5 className="search-result-name">{name}</h5>
+              <h6 className="search-result-location">{location.nuts}</h6>
+              {this.addDistance()}
+              <br />
+            </div>
           </div>
-        </div>
 
-        <div id="toTeachSkills">
-          <h6 className="search-result-teaching-skills-header">Skills</h6>
-          <div className="search-result-teaching-skills">
-            {teachingSkills.join(", ")}
+          <div id="toTeachSkills">
+            <h6 className="search-result-teaching-skills-header">Skills</h6>
+            <div className="search-result-teaching-skills">
+              {teachingSkills.join(", ")}
+            </div>
           </div>
-        </div>
 
-        <div id="toLearnSkills">
-          <h6 className="search-result-desired-skills-header">
-            Wants to Learn
-          </h6>
-          <div className="search-result-desired-skills">
-            {desiredSkills.join(", ")}
+          <div id="toLearnSkills">
+            <h6 className="search-result-desired-skills-header">
+              Wants to Learn
+            </h6>
+            <div className="search-result-desired-skills">
+              {desiredSkills.join(", ")}
+            </div>
           </div>
-        </div>
 
-        <div id="homePageButtons">
-          <Link
-            className="search-message-button-link"
-            to={{
-              pathname: `/${this.props.currentUserUsername}/messages`,
-              state: {
-                currentUserUid: this.props.currentUserUid,
-                messagedUser: this.props.person,
-                messagedUid: this.props.uid,
-                directedFromMessage: true,
-              },
-            }}
-          >
-            <button className="search-message-button" id={this.props.uid}>
-              Message
-            </button>
-          </Link>
-          <Link
+          <div id="homePageButtons">
+            <Link
+              className="search-message-button-link"
+              to={{
+                pathname: `/${this.props.currentUserUsername}/messages`,
+                state: {
+                  currentUserUid: this.props.currentUserUid,
+                  messagedUser: this.props.person,
+                  messagedUid: this.props.uid,
+                  directedFromMessage: true,
+                },
+              }}
+            >
+              <button className="search-message-button" id={this.props.uid}>
+                Message
+              </button>
+            </Link>
+            {/* <Link
             className="search-view-more-button-link"
             to={`/profile/${username}`}
           >
             <button className="search-view-more-button">View more...</button>
-          </Link>
+          </Link> */}
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
 }

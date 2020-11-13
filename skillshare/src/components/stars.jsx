@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import ReactStars from "react-rating-stars-component";
 import PropTypes from "prop-types";
 
@@ -16,7 +16,7 @@ const Stars = (props) => {
 }
 
 Stars.propTypes = {
-    ratings: PropTypes.node
-  };
+  ratings: PropTypes.node,
+};
 
-export default Stars
+export default Stars;

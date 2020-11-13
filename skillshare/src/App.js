@@ -6,7 +6,6 @@ import SignUp from "./pages/signup";
 import CreateProfile from "./pages/create-profile";
 import Home from "./pages/home";
 import Messages from "./pages/messages";
-import Review from "./pages/review";
 import Profile from "./pages/profile";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute";
@@ -29,7 +28,6 @@ function App() {
               path="/createprofile"
               component={CreateProfile}
             />
-            <PrivateRoute exact path="/:username/review" component={Review} />
             <PrivateRoute exact path="/profile/:username" component={Profile} />
             <PrivateRoute exact path="/editprofile" component={EditProfile} />
             <Route exact path="/login" component={Login} />
