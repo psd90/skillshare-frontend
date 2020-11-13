@@ -194,6 +194,34 @@ class Profile extends React.Component {
     }
   };
 
+  renderTeachingSkillRates = () => {
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return (
+        <>
+          <button className="addRatingToggle" onClick={this.toggleAddTeacherRating}>{this.state.addTeacherRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
+            {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
+        </>
+      );
+    }
+  };
+
+  renderLearningSkillRates = () => {  
+    if (
+      this.state.user.username !== this.state.currentUser.username &&
+      this.state.currentUser.username
+    ) {
+      return ( 
+        <>
+          <button className="addRatingToggle" onClick={this.toggleAddStudentRating}>{this.state.addStudentRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
+            {this.state.addStudentRating ? <AddRating userId={this.state.user.uid} ratingType="student_ratings" addRatings={this.addRatings}/> : null}
+        </>
+      )
+    }
+  }
+
 updateUser = (userUid, user) =>{
   console.log(userUid +' '+"----------------userUid")
   console.dir(user)
@@ -243,8 +271,7 @@ updateUser = (userUid, user) =>{
               <Stars ratings={this.state.user.teacher_ratings.average}/>
             </div>
             <p>({this.state.user.teacher_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddTeacherRating}>{this.state.addTeacherRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
+            {this.renderTeachingSkillRates()}
           </div>
           <div id="profile-student-ratings">
             <h3 className="aboutprofile">STUDENT</h3>
@@ -252,8 +279,7 @@ updateUser = (userUid, user) =>{
             <Stars ratings={this.state.user.student_ratings.average}/>
             </div>
             <p>({this.state.user.student_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddStudentRating}>{this.state.addStudentRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addStudentRating ? <AddRating userId={this.state.user.uid} ratingType="student_ratings" addRatings={this.addRatings}/> : null}
+            {this.renderLearningSkillRates()}
           </div>
         </div>
         <h2 id="myskillset">My Skillset</h2>
