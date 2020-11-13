@@ -67,16 +67,13 @@ class Home extends React.Component {
     if (this.state.searchType === "skill") {
       return (
         <div id="searchInForm">
-          <p id="or" className="searchInForm">
-            OR
-          </p>
           <label id="skill-input" className="searchInForm" htmlFor="searchBar">
             <input
               onChange={this.handleChange}
               id="searchBySkillText"
               name="searchBar"
               type="text"
-              placeholder="Enter Specific Skill"
+              placeholder="  Search Specific Skill"
             />
           </label>
           <p id="i-want-to">I want to...</p>
@@ -380,7 +377,7 @@ class Home extends React.Component {
     if (!hasSearched && results.length) {
       return (
         <>
-          <h2 id="results-title">Your top matches</h2>
+          <h2 id="results-title">Your Top Matches</h2>
         </>
       );
     } else if (hasSearched && results.length) {

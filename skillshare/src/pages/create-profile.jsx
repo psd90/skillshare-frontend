@@ -228,25 +228,25 @@ class CreateProfile extends React.Component {
                                       [user.context.currentUser.uid]: true,
                                     },
                                   }
-                                  )
-                                  );
-                                }
-                                Promise.all([newDesiredSkills]);
-                              })
-                              .then(() => {
-                                this.props.history.push("/");
-                              });
-                            });
+                                )
+                              );
+                            }
+                            Promise.all([newDesiredSkills]);
+                          })
+                          .then(() => {
+                            this.props.history.push("/");
                           });
-                        });
-                      })
-                      );
+                      });
                     });
-                  }
-                };
-                
-                handleChange = (event) => {
-                  console.log(this.state.profile.location)
+                });
+              })
+          );
+      });
+    }
+  };
+
+  handleChange = (event) => {
+    console.log(this.state.profile.location);
     console.log(this.state.profile);
     if (event.target.id === "location") {
       Axios.get(`https://api.postcodes.io/postcodes/${event.target.value}`)
@@ -398,7 +398,6 @@ class CreateProfile extends React.Component {
     }
   };
 
-
   render() {
     if (this.state.isLoading) return <Loader />;
     else
@@ -459,7 +458,7 @@ class CreateProfile extends React.Component {
           <div className="edit-skills">
             <h2 className="centreItems">What are your skills?</h2>
             <br />
-            {/* <h3 className="centreItems">Categories</h3> */}
+
             <div className="edit-skills-buttons">
               {Object.keys(this.state.skills).map((category) => {
                 return (
@@ -526,6 +525,7 @@ class CreateProfile extends React.Component {
                       <label>
                         Other:{" "}
                         <input
+                          placeholder="Other"
                           id={category}
                           onChange={this.addNewLearningSkill}
                           className="edit-profile-inputs specific-skill-other"

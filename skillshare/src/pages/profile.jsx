@@ -116,7 +116,7 @@ class Profile extends React.Component {
               });
             });
 
-            user.uid = userId
+            user.uid = userId;
             this.setState({
               user,
               desiredSkills,
@@ -157,43 +157,43 @@ class Profile extends React.Component {
   }
 
   toggleAddTeacherRating = () => {
-    this.setState({addTeacherRating : !this.state.addTeacherRating})
-  }
+    this.setState({ addTeacherRating: !this.state.addTeacherRating });
+  };
 
   toggleAddStudentRating = () => {
-    this.setState({addStudentRating : !this.state.addStudentRating})
-  }
+    this.setState({ addStudentRating: !this.state.addStudentRating });
+  };
 
   addRatings = (teacherOrStudent, value) => {
-    this.setState(prevState => {
-      const userCopy = {...prevState.user}
-      const ratingsCopy = {...userCopy[teacherOrStudent]};
+    this.setState((prevState) => {
+      const userCopy = { ...prevState.user };
+      const ratingsCopy = { ...userCopy[teacherOrStudent] };
       userCopy[teacherOrStudent] = ratingsCopy;
       let newAmountofVotes = prevState.user[teacherOrStudent].total;
       let newAverage = prevState.user[teacherOrStudent].average;
       newAverage = newAverage * newAmountofVotes;
       newAmountofVotes += 1;
       newAverage += value;
-      newAverage = newAverage / newAmountofVotes
+      newAverage = newAverage / newAmountofVotes;
       userCopy[teacherOrStudent].total = newAmountofVotes;
       userCopy[teacherOrStudent].average = newAverage;
-      console.log(userCopy)
-      return {user: userCopy};
-    })
-  }
-
-  renderAddFriendButton = () => {
-    if (
-      this.state.user.username !== this.state.currentUser.username &&
-      this.state.currentUser.username
-    ) {
-      return (
-        <div id="profile-add-friend-button-div">
-          <button className="profile-add-friend-button">Add Friend</button>
-        </div>
-      );
-    }
+      console.log(userCopy);
+      return { user: userCopy };
+    });
   };
+
+  // renderAddFriendButton = () => {
+  //   if (
+  //     this.state.user.username !== this.state.currentUser.username &&
+  //     this.state.currentUser.username
+  //   ) {
+  //     return (
+  //       <div id="profile-add-friend-button-div">
+  //         <button className="profile-add-friend-button">Add Friend</button>
+  //       </div>
+  //     );
+  //   }
+  // };
 
   renderSendMessageButton = () => {
     if (
@@ -222,14 +222,14 @@ class Profile extends React.Component {
     }
   };
 
-updateUser = (userUid, user) =>{
-  console.log(userUid +' '+"----------------userUid")
-  console.dir(user)
-  this.setState({user, userUid})
-}
+  updateUser = (userUid, user) => {
+    console.log(userUid + " " + "----------------userUid");
+    console.dir(user);
+    this.setState({ user, userUid });
+  };
 
   render() {
-    console.dir(this.state)
+    console.dir(this.state);
 
     const skillsetIcons = {
       Arts: faPalette,
@@ -241,9 +241,9 @@ updateUser = (userUid, user) =>{
     if (this.state.isLoading) return <Loader />;
     return (
       <div id="profile-page">
-        <Header updateUser={this.updateUser}/>
+        <Header updateUser={this.updateUser} />
         <div className="bufferProfile"></div>
-        {this.renderAddFriendButton()}
+        {/* {this.renderAddFriendButton()} */}
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img
@@ -260,7 +260,6 @@ updateUser = (userUid, user) =>{
             <p id="profile-user-location">{this.state.user.location.nuts}</p>
           </div>
           <div id="about-me-div">
-            {/* <h2 className='aboutprofile'>About Me</h2> */}
             <p>{this.state.user.info}</p>
             <div className="line2"></div>
           </div>
@@ -269,20 +268,42 @@ updateUser = (userUid, user) =>{
           <div id="profile-teacher-ratings">
             <h3 className="aboutprofile">TEACHER</h3>
             <div id="profile-teacher-stars">
-              <Stars ratings={this.state.user.teacher_ratings.average}/>
+              <Stars ratings={this.state.user.teacher_ratings.average} />
             </div>
             <p>({this.state.user.teacher_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddTeacherRating}>{this.state.addTeacherRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addTeacherRating ? <AddRating userId={this.state.user.uid} ratingType="teacher_ratings" addRatings={this.addRatings}/> : null}
+            <button
+              className="addRatingToggle"
+              onClick={this.toggleAddTeacherRating}
+            >
+              {this.state.addTeacherRating ? "▼ Add Rating" : "▶ Add Rating"}
+            </button>
+            {this.state.addTeacherRating ? (
+              <AddRating
+                userId={this.state.user.uid}
+                ratingType="teacher_ratings"
+                addRatings={this.addRatings}
+              />
+            ) : null}
           </div>
           <div id="profile-student-ratings">
             <h3 className="aboutprofile">STUDENT</h3>
             <div id="profile-student-stars">
-            <Stars ratings={this.state.user.student_ratings.average}/>
+              <Stars ratings={this.state.user.student_ratings.average} />
             </div>
             <p>({this.state.user.student_ratings.total} reviews)</p>
-            <button className="addRatingToggle" onClick={this.toggleAddStudentRating}>{this.state.addStudentRating ?  "▼ Add Rating" : "▶ Add Rating"}</button>
-            {this.state.addStudentRating ? <AddRating userId={this.state.user.uid} ratingType="student_ratings" addRatings={this.addRatings}/> : null}
+            <button
+              className="addRatingToggle"
+              onClick={this.toggleAddStudentRating}
+            >
+              {this.state.addStudentRating ? "▼ Add Rating" : "▶ Add Rating"}
+            </button>
+            {this.state.addStudentRating ? (
+              <AddRating
+                userId={this.state.user.uid}
+                ratingType="student_ratings"
+                addRatings={this.addRatings}
+              />
+            ) : null}
           </div>
         </div>
         <h2 id="myskillset">My Skillset</h2>
