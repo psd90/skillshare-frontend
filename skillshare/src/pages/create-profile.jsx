@@ -235,10 +235,17 @@ class CreateProfile extends React.Component {
           return Promise.all([newDesiredSkills]);
         })
         .then(() => {
+          return Axios.get(
+            `https://firebasing-testing.firebaseio.com/users_teaching_skills/${user.context.currentUser.uid}.json`
+          );
+        })
+        .then(() => {
           this.props.history.push("/");
         })
         .catch((err) => {
-          this.setState({ error: err.response.data.error });
+          this.setState({ error: err.response.data.error }, () => {
+            console.log(err);
+          });
         });
     }
   };

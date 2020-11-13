@@ -138,19 +138,7 @@ class Profile extends React.Component {
                 `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
               )
               .then((res) => {
-                this.setState(
-                  { currentUser: res.data, userUid: userId },
-                  () => {
-                    console.log(
-                      "this profile belongs to this user: ",
-                      this.state.user
-                    );
-                    console.log(
-                      "currently logged on user is: ",
-                      this.state.currentUser
-                    );
-                  }
-                );
+                this.setState({ currentUser: res.data, userUid: userId });
               });
           });
       });
@@ -177,20 +165,18 @@ class Profile extends React.Component {
       newAverage = newAverage / newAmountofVotes;
       userCopy[teacherOrStudent].total = newAmountofVotes;
       userCopy[teacherOrStudent].average = newAverage;
-      console.log(userCopy);
       return { user: userCopy };
     });
   };
 
-  renderAddFriendButton = () => {
-    if (
-      this.state.user.username !== this.state.currentUser.username &&
-      this.state.currentUser.username
-    ) {
+  renderEditProfileButton = () => {
+    if (this.state.user.username === this.state.currentUser.username) {
       return (
-        <div id="profile-add-friend-button-div">
-          <button className="profile-add-friend-button">Add Friend</button>
-        </div>
+        <Link to="/editprofile">
+          <div id="profile-add-friend-button-div">
+            <button className="profile-add-friend-button">Edit Profile</button>
+          </div>
+        </Link>
       );
     }
   };
@@ -299,8 +285,6 @@ class Profile extends React.Component {
   };
 
   render() {
-    console.dir(this.state);
-
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -313,7 +297,7 @@ class Profile extends React.Component {
       <div id="profile-page">
         <Header updateUser={this.updateUser} />
         <div className="bufferProfile"></div>
-        {this.renderAddFriendButton()}
+        {this.renderEditProfileButton()}
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img

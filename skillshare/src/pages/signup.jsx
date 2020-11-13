@@ -151,7 +151,6 @@ const SignUp = ({ history }) => {
 
   const dateChange = (event) => {
     const value = event.target.value;
-    console.log(event.target.value);
     const inputDate = Date.parse(value);
     const dateNow = Date.now();
     const difference = dateNow - inputDate;

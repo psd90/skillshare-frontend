@@ -35,7 +35,6 @@ const Header = (props) => {
               Axios.get(
                 `https://firebasing-testing.firebaseio.com/users/${currentUser.uid}.json`
               ).then((user) => {
-                console.log(props);
                 if (props.updateUser) {
                   history.push(`/profile/${user.data.username}`);
                   props.updateUser(currentUser.uid, user.data);
