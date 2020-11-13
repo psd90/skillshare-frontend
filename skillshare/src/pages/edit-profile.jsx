@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Header from "../components/header";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import Loader from "../components/Loader";
 
 class EditProfile extends React.Component {
   state = {
@@ -428,7 +429,7 @@ class EditProfile extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) return <p>loading...</p>;
+    if (this.state.isLoading) return <Loader />;
     else
       return (
         <div id="create-profile-page">

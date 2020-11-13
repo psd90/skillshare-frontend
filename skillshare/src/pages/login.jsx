@@ -56,6 +56,7 @@ const Login = ({ history }) => {
                 type="email"
                 placeholder="Email:"
               ></input>
+
               <input
                 onChange={enteredPassword}
                 className="signUpInput"

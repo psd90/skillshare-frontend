@@ -185,7 +185,7 @@ const SignUp = ({ history }) => {
           <form className="signUpForm" id="form" onSubmit={handleSignUp}>
             <input
               onChange={usernameChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="username"
               id="username"
               type="text"
@@ -194,7 +194,7 @@ const SignUp = ({ history }) => {
             <p className={classUsername}>{passUsername}</p>
             <input
               onChange={emailChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="email"
               type="call"
               placeholder="Email"
@@ -202,7 +202,7 @@ const SignUp = ({ history }) => {
             <p className={classEmail}>{passEmail}</p>
             <input
               onChange={passwordChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="password"
               type="password"
               placeholder="Password"
@@ -211,7 +211,7 @@ const SignUp = ({ history }) => {
             <p className="dob">Date of Birth</p>
             <input
               onChange={dateChange}
-              className="signUpInput"
+              className="signUpPageInput"
               name="date"
               type="date"
               id="date"
@@ -220,7 +220,7 @@ const SignUp = ({ history }) => {
             <div className="buttonGroup">
               <button
                 disabled={passSubmit}
-                className="signUpButton"
+                className="signUpPageButton"
                 type="submit"
               >
                 Sign Up

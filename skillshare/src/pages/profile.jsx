@@ -181,6 +181,7 @@ class Profile extends React.Component {
     }
   };
 
+
   renderSendMessageButton = () => {
     if (
       this.state.user.username !== this.state.currentUser.username &&
@@ -285,6 +286,7 @@ class Profile extends React.Component {
   };
 
   render() {
+
     const skillsetIcons = {
       Arts: faPalette,
       Coding: faLaptopCode,
@@ -298,6 +300,7 @@ class Profile extends React.Component {
         <Header updateUser={this.updateUser} />
         <div className="bufferProfile"></div>
         {this.renderEditProfileButton()}
+
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img
@@ -314,7 +317,6 @@ class Profile extends React.Component {
             <p id="profile-user-location">{this.state.user.location.nuts}</p>
           </div>
           <div id="about-me-div">
-            {/* <h2 className='aboutprofile'>About Me</h2> */}
             <p>{this.state.user.info}</p>
             <div className="line2"></div>
           </div>
