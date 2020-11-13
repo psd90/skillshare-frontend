@@ -3,7 +3,6 @@ import app from "../base";
 import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import PropTypes from "prop-types";
-import Header from "../components/header";
 
 const Login = ({ history }) => {
   const [password, setPassword] = useState("");
@@ -11,7 +10,6 @@ const Login = ({ history }) => {
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
-      console.log(email);
       try {
         await app.auth().signInWithEmailAndPassword(email, password);
         history.push("/");

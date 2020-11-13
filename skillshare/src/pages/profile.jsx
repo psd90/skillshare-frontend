@@ -138,19 +138,7 @@ class Profile extends React.Component {
                 `https://firebasing-testing.firebaseio.com/users/${this.context.currentUser.uid}.json`
               )
               .then((res) => {
-                this.setState(
-                  { currentUser: res.data, userUid: userId },
-                  () => {
-                    console.log(
-                      "this profile belongs to this user: ",
-                      this.state.user
-                    );
-                    console.log(
-                      "currently logged on user is: ",
-                      this.state.currentUser
-                    );
-                  }
-                );
+                this.setState({ currentUser: res.data, userUid: userId });
               });
           });
       });
@@ -177,23 +165,22 @@ class Profile extends React.Component {
       newAverage = newAverage / newAmountofVotes;
       userCopy[teacherOrStudent].total = newAmountofVotes;
       userCopy[teacherOrStudent].average = newAverage;
-      console.log(userCopy);
       return { user: userCopy };
     });
   };
 
-  // renderAddFriendButton = () => {
-  //   if (
-  //     this.state.user.username !== this.state.currentUser.username &&
-  //     this.state.currentUser.username
-  //   ) {
-  //     return (
-  //       <div id="profile-add-friend-button-div">
-  //         <button className="profile-add-friend-button">Add Friend</button>
-  //       </div>
-  //     );
-  //   }
-  // };
+  renderEditProfileButton = () => {
+    if (this.state.user.username === this.state.currentUser.username) {
+      return (
+        <Link to="/editprofile">
+          <div id="profile-add-friend-button-div">
+            <button className="profile-add-friend-button">Edit Profile</button>
+          </div>
+        </Link>
+      );
+    }
+  };
+
 
   renderSendMessageButton = () => {
     if (
@@ -223,13 +210,82 @@ class Profile extends React.Component {
   };
 
   updateUser = (userUid, user) => {
-    console.log(userUid + " " + "----------------userUid");
-    console.dir(user);
-    this.setState({ user, userUid });
+    let studentAverage;
+    let teacherAverage;
+    let studentVoteCounts;
+    let teacherVoteCounts;
+    if (!user.student_ratings) {
+      studentAverage = 0;
+      studentVoteCounts = 0;
+    } else {
+      studentAverage =
+        user.student_ratings.reduce((a, b) => a + b, 0) /
+        user.student_ratings.length;
+      studentVoteCounts = user.student_ratings.length;
+    }
+    if (!user.teacher_ratings) {
+      teacherAverage = 0;
+      teacherVoteCounts = 0;
+    } else {
+      teacherAverage =
+        user.teacher_ratings.reduce((a, b) => a + b, 0) /
+        user.teacher_ratings.length;
+      teacherVoteCounts = user.teacher_ratings.length;
+    }
+    user.student_ratings = {
+      average: studentAverage,
+      total: studentVoteCounts,
+    };
+    user.teacher_ratings = {
+      average: teacherAverage,
+      total: teacherVoteCounts,
+    };
+    const desiredSkills = axios.get(
+      `https://firebasing-testing.firebaseio.com/users_desired_skills/${userUid}.json`
+    );
+    return Promise.all([user, desiredSkills])
+      .then(([user, desiredSkills]) => {
+        const teachingSkills = axios.get(
+          `https://firebasing-testing.firebaseio.com/users_teaching_skills/${userUid}.json`
+        );
+        return Promise.all([user, desiredSkills.data, teachingSkills]);
+      })
+      .then(([user, desiredSkills, teachingSkills]) => {
+        const skillCats = axios.get(
+          `https://firebasing-testing.firebaseio.com/skills.json`
+        );
+        return Promise.all([user, desiredSkills, teachingSkills, skillCats]);
+      })
+      .then(([user, desiredSkills, teachingSkills, skillCats]) => {
+        const userSkillCats = [];
+        Object.keys(teachingSkills.data).forEach((skill) => {
+          Object.keys(skillCats.data).forEach((skillCat) => {
+            if (Object.keys(skillCats.data[skillCat]).includes(skill)) {
+              if (!userSkillCats.includes(skillCat)) {
+                userSkillCats.push(skillCat);
+              }
+            }
+          });
+        });
+        user.uid = userUid;
+        this.setState({
+          user,
+          desiredSkills,
+          teachingSkills: teachingSkills.data,
+          isLoading: false,
+          userSkillCats,
+        });
+        firebase
+          .storage()
+          .ref(`users/${userUid}/profile.jpg`)
+          .getDownloadURL()
+          .then((imgUrl) => {
+            this.setState({ image: imgUrl });
+          });
+      });
   };
 
   render() {
-    console.dir(this.state);
 
     const skillsetIcons = {
       Arts: faPalette,
@@ -243,7 +299,8 @@ class Profile extends React.Component {
       <div id="profile-page">
         <Header updateUser={this.updateUser} />
         <div className="bufferProfile"></div>
-        {/* {this.renderAddFriendButton()} */}
+        {this.renderEditProfileButton()}
+
         <div id="brief-user-data">
           <div id="profile-image-div">
             <img

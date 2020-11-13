@@ -36,7 +36,6 @@ export default class Messages extends Component {
       messagedUser,
       messagedUid,
     } = this.props.location.state;
-    console.log(this.props.location.state);
     axios
       .get(
         `https://firebasing-testing.firebaseio.com/users/${currentUserUid}.json`
@@ -65,7 +64,6 @@ export default class Messages extends Component {
       })
       .then((url) => {
         otherImageUrl = url;
-        console.log(otherImageUrl);
         return Talk.ready;
       })
       .then(() => {
