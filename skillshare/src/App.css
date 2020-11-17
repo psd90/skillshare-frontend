@@ -1,0 +1,1063 @@
+.locaApp {
+  max-width: 100%;
+}
+
+.loadingGif {
+  display: flex;
+  justify-content: center;
+}
+/* ---------------TEXT CONTROLS--------------- */
+
+.textcontrols {
+  padding: 0.625em 0;
+  margin: auto;
+}
+/* content */
+
+#content {
+  text-align: left;
+}
+
+@media all and (min-width: 700px) {
+  #container {
+    width: 700px;
+  }
+  button {
+    margin: 0 0.625em;
+    padding: 0 0.625em;
+  }
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+}
+/* ------------------------header---------------------------------------- */
+
+.header {
+  width: 100%;
+  top: 0px;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  font-family: Poppins;
+  box-shadow: 0px 1px 10px #6f99b1;
+  position: fixed;
+  background-image: url("./images/smallHeader.png");
+  height: 110px;
+  z-index: 99;
+}
+
+.skllshrTitle {
+  font-family: Poppins;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  font-size: 45px;
+}
+
+#link {
+  text-decoration: none;
+}
+
+.backgroundHeader {
+  height: 550px;
+  width: 100%;
+  /* top: 0px; */
+  /* display: flex;
+  justify-content: space-around; */
+  font-family: Poppins;
+  background-image: url("./images/fullBackground.png");
+  background-size: cover;
+}
+
+.headerTwo {
+  width: 100%;
+  height: 350px;
+}
+
+.buffer {
+  width: 100%;
+  height: 100px;
+}
+.buffer-messages {
+  width: 100%;
+  height: 120px;
+}
+
+.bufferProfile {
+  width: 100%;
+  height: 125px;
+}
+
+/* .signOut {
+  background-color: #ffb498;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 7px;
+  font-family: Poppins;
+} */
+
+.signOut:hover {
+  box-shadow: 1px 1px 4px;
+}
+
+/* --------------dropdown---------------- */
+
+/* ----------------------login page---------------------------------------- */
+
+#skillshare {
+  font-family: Poppins;
+  color: #ffa07d;
+  font-size: 60px;
+  margin: auto;
+  /* margin-bottom: 0; */
+  text-shadow: 2px 2px black;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+#bold {
+  font-weight: bold;
+  margin: auto;
+}
+
+#light {
+  font-weight: light;
+  margin: auto;
+}
+
+#loginsignup {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  margin: auto;
+  margin-top: 35px;
+  margin-bottom: 20px;
+  font-family: Poppins;
+}
+
+#inputboxs {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.inputbox {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #ffb498;
+  border: 1px solid #00000065;
+  margin-bottom: 2px;
+  border-radius: 5px;
+  height: 30px;
+  font-size: larger;
+}
+
+.signUpInput {
+  width: 95%;
+  margin-bottom: 3px;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  font-size: larger;
+  border-radius: 8px;
+  background-color: #ffb498;
+}
+
+.buttons {
+  display: flex;
+  width: 250px;
+  margin: auto;
+}
+
+.singlebutton {
+  margin: 5px;
+}
+
+/* ----------------------Profile page---------------------------------------- */
+
+#editlink {
+  padding: 10px;
+}
+
+#profile-add-friend-button-div {
+  text-align: left;
+  position: absolute;
+  z-index: 1;
+}
+
+.profile-add-friend-button {
+  margin-left: 10px;
+  border: none;
+  background-color: #ffb498;
+  border-radius: 20px;
+  height: 4.5vh;
+  width: 80px;
+  font-family: poppins;
+}
+
+.profile-image-profile-page {
+  height: 150px;
+  width: 150px;
+  border-radius: 100%;
+  border: 2px solid #e09377;
+  margin: auto;
+  object-fit: cover;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ffb498;
+  margin-bottom: 10px;
+}
+
+.username-profile {
+  width: fit-content;
+  font-family: poppins;
+  margin: auto;
+}
+
+#about-me-div {
+  margin-top: 15px;
+  font-family: poppins;
+  font-size: 15px;
+}
+
+.line2 {
+  width: 100%;
+  border-bottom: 0.5px solid rgb(105, 93, 93);
+  margin-bottom: 8px;
+}
+
+.aboutprofile {
+  font-family: poppins;
+}
+#profile-page {
+  text-align: center;
+}
+
+#brief-user-data {
+  max-width: 80%;
+  margin: auto;
+}
+
+#brief-user-data h3 {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+#profile-user-location {
+  margin-top: 0;
+  width: fit-content;
+  margin: auto;
+  font-size: 15px;
+}
+
+.profile-user-location-div {
+  text-align: left;
+}
+
+#profile-ratings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: poppins;
+}
+
+#profile-teacher-stars {
+  width: fit-content;
+  margin: auto;
+}
+
+#profile-student-stars {
+  width: fit-content;
+  margin: auto;
+}
+
+#myskillset {
+  font-family: poppins;
+}
+
+.skill-cat-icon {
+  padding: 0;
+  font-size: 45px;
+  margin: 0;
+}
+
+/* .profileIconContainer {
+  height: 100%;
+  display: flex;
+  padding-top: 15px; */
+/* border: 2px solid black;
+  border-radius: 50%;
+  box-shadow: 5px 5px 10px;
+} */
+
+.svg-inline--fa {
+  min-height: 40px;
+  min-width: 40px;
+  color: white;
+  font-size: 2rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  background-color: #ffb498;
+  padding: 6px;
+  border-radius: 100%;
+}
+
+.addRatingToggle {
+  border: none;
+  background-color: #ffb498;
+  border-radius: 15px;
+  height: 27px;
+  width: 120px;
+  font-family: Poppins;
+  font-size: 15px;
+}
+
+.add-rating-div {
+  text-align: center;
+  width: fit-content;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.add-rating-div-button {
+  border: none;
+  background-color: #ffb498;
+  margin-top: 10px;
+}
+
+#skills-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: poppins;
+  margin-top: 10px;
+}
+
+#teaching-skills {
+  border-right: 0.5px solid rgb(105, 93, 93);
+}
+
+#teaching-skills-list {
+  padding: 0;
+  font-size: 15px;
+}
+
+#desired-skills-list {
+  padding: 0;
+  font-size: 15px;
+}
+
+#profile-send-message-button-div {
+  margin-top: 15px;
+}
+
+.profile-send-message-button {
+  width: 70%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: poppins;
+  font-size: 18px;
+}
+
+/* ---------------Sign Up Page--------------- */
+.formcard {
+  flex-direction: column;
+  border: 0px solid black;
+  height: 230px;
+  width: 100%;
+  display: flex;
+  /* margin-bottom: 50px; */
+  margin: auto;
+  /* padding: 10px; */
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+  bottom: 5px;
+  background-color: white;
+}
+
+.innerForm {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 110%;
+}
+
+.signUpPageInput {
+  width: 95%;
+  margin-bottom: 3px;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  font-size: larger;
+  border-radius: 8px;
+  background-color: #ffb498;
+}
+
+.signUpHeading {
+  display: flex;
+  justify-content: center;
+  font-family: Poppins;
+  margin-bottom: 50px;
+  font-size: 50px;
+  margin-top: 50px;
+}
+
+.signUpForm {
+  height: 110%;
+  width: 90%;
+}
+
+.loginButton {
+  border-radius: 30px;
+  width: 40%;
+  margin: 3px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
+  flex-direction: column;
+  font-family: Poppins;
+  padding-left: 25px;
+}
+
+.dob {
+  font-family: Poppins;
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 501;
+}
+.signUpButton {
+  border-radius: 30px;
+  width: 40%;
+  margin-left: 39px;
+  margin-top: 3px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
+  flex-direction: column;
+  font-family: Poppins;
+  padding-left: 17px;
+}
+
+.signUpPageButton {
+  border-radius: 30px;
+  width: 40%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
+  flex-direction: column;
+  font-family: Poppins;
+  padding-left: 33px;
+}
+
+.backButton {
+  border-radius: 30px;
+  width: 40%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  font-size: medium;
+  background-color: #ffb498;
+  flex-direction: column;
+  font-family: Poppins;
+  padding-left: 40px;
+}
+/* ---------------Font Size Controls--------------- */
+.headerPositioning {
+  display: flex;
+  flex-direction: row;
+  width: 73%;
+  height: 100%;
+}
+
+.bigA {
+  /* font-weight: bold; */
+  font-size: 1.8em;
+  font-family: Poppins;
+}
+
+.smallA {
+  /* font-weight: regular; */
+  font-size: 1.5em;
+  font-family: Poppins;
+}
+
+.fontSize {
+  background-color: #ffb498;
+  /* margin: 5px; */
+  border-radius: 10px;
+  /* margin-top: 15px; */
+  box-shadow: 3px 3px 7px;
+  margin: 3px;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  /* border: 2px solid black; */
+  margin-left: 15px;
+}
+
+.bad {
+  color: red;
+  font-family: Poppins;
+}
+
+.good {
+  color: green;
+  font-family: Poppins;
+}
+
+/* ----------------------Edit Profile page---------------------------------------- */
+
+#create-profile-page {
+  text-align: center;
+}
+
+#makeProfileHeading {
+  font-family: Poppins;
+  margin-bottom: 20px;
+  /* font-size: 30px; */
+}
+
+#select-image-div {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  line-height: 100%;
+  font-family: Poppins;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+#chooseFile {
+  margin: auto;
+  margin-top: 10px;
+  font-family: Poppins;
+  display: flex;
+  flex-direction: column;
+  border: 0px solid black;
+  width: 180px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-inputs {
+  border: 2px solid #ffb498;
+  border-radius: 10px;
+  height: 25px;
+  padding: 5px;
+}
+
+.edit-profile-inputs:focus {
+  outline: rgb(119, 24, 24);
+}
+
+#select-photo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#name-location-bio-inputs {
+  margin-top: 50px;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.selectedSkillsButton {
+  background-color: #b9ffad;
+}
+
+.selectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
+/* #name-location-bio-inputs p {
+  display: table-row;
+} */
+
+/* #name-location-bio-inputs p input {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: table-cell;
+}
+
+#name-location-bio-inputs p textarea {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: table-cell;
+} */
+
+.centreItems {
+  margin: auto;
+  text-align: center;
+  font-family: Poppins;
+  color: black;
+}
+
+.categoryFont {
+  font-family: Poppins;
+}
+.edit-skills {
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-skills h2 {
+  margin-bottom: 0;
+}
+
+.edit-skills h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.edit-skills-buttons {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.line {
+  width: 80%;
+  border-bottom: 2px rgba(0, 0, 0, 0.297) solid;
+  margin: auto;
+}
+
+.unselectedSkillsButton {
+  background-color: #ffb498;
+}
+
+.unselectedSkillsButton:focus {
+  outline: rgb(119, 24, 24);
+}
+
+.edit-skills button {
+  width: 107px;
+  font-family: poppins;
+  margin: 1px;
+  height: 30px;
+  border: none;
+  border-radius: 20px;
+  margin-bottom: 5px;
+}
+
+#edit-complete-button {
+  width: 80%;
+  height: 5vh;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffb498;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.specific-skills-inputs {
+  margin-top: 10px;
+  text-align: left;
+  display: table;
+  width: 100%;
+}
+
+.profile-error-message {
+  color: red;
+}
+
+/* ----------------------Home page---------------------------------------- */
+#home-search-form {
+  margin-top: 8%;
+  display: grid;
+}
+
+#searchInForm {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  row-gap: 7%;
+  margin-top: 3%;
+}
+
+#i-want-to {
+  justify-self: center;
+  grid-row: 3;
+  grid-column: 1 / 3;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+#learn-skill-radio-label {
+  grid-row: 3;
+  grid-column: 3 / 5;
+  justify-self: flex-start;
+  margin-right: 3%;
+}
+
+#teach-skill-radio-label {
+  grid-row: 3;
+  grid-column: 5 / 7;
+  margin-left: 3%;
+  justify-self: flex-start;
+}
+
+.searchInForm {
+  margin: auto;
+}
+
+#skill-input {
+  grid-column: 2 / 6;
+}
+
+#searchBySkillText {
+  width: 100%;
+  grid-row: 1;
+  grid-column: 4 / 6;
+  height: 35px;
+  border-radius: 15px;
+  border-color: #ffb498;
+}
+
+#categories-container {
+  grid-row: 2;
+  grid-column: 1/2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 2%;
+}
+
+#categories-header {
+  margin: 2%;
+  margin-bottom: 1%;
+  grid-column: 1 / 4;
+  justify-self: center;
+}
+
+.categoryCheckboxLabel {
+  width: 100%;
+  text-align: center;
+}
+
+.selectedCategories {
+  margin-left: 5%;
+}
+
+#category-radio-flex {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 3%;
+  margin-bottom: 2%;
+}
+
+#category-i-want-to {
+  margin-bottom: 0px;
+}
+
+#category-learn-radio {
+  grid-row: 3;
+  grid-column: 2 / 3;
+}
+
+#category-teach-radio {
+  grid-row: 3;
+  grid-column: 3 / 4;
+}
+
+.searchByButton {
+  width: 175px;
+  height: 40px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
+}
+.searchButton {
+  width: 125px;
+  height: 30px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
+  grid-row: 4;
+}
+
+#results-title {
+  font-family: Poppins;
+  display: flex;
+  justify-content: center;
+}
+
+#results-sub-title {
+  margin-top: 2%;
+  margin-left: 2%;
+}
+
+.search-result-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.profile-image {
+  height: 95px;
+  width: 95px;
+  border-radius: 100%;
+  border: 2px solid #e09377;
+  margin: auto;
+  object-fit: cover;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-color: #ffb498;
+  margin-bottom: 10px;
+}
+
+.search-card-header {
+  grid-column: 2 / 4;
+}
+
+.search-result-name {
+  margin: 0px;
+  font-size: 25px;
+  font-family: Poppins;
+}
+
+.search-result-location {
+  margin: 0px;
+  font-size: 14px;
+}
+
+.search-result-distance-from-user {
+  font-size: 14px;
+}
+
+.search-result-teaching-skills-header {
+  margin: auto;
+  font-size: 20px;
+}
+
+#cardBackground {
+  background-color: #ffb39888;
+  font-family: poppins;
+  border: 1px solid black;
+  margin: 1%;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+#toTeachSkills {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+#toLearnSkills {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-result-teaching-skills {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
+  font-size: 16px;
+}
+
+.search-result-desired-skills-header {
+  margin: auto;
+  font-size: 20px;
+}
+
+.search-result-desired-skills {
+  margin: auto;
+  font-size: 16px;
+}
+
+#homePageButtons {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+.search-view-more-button-link {
+  text-decoration: none;
+  color: black;
+}
+
+/* .search-message-button-link {
+  grid-row: 6 / 7;
+  grid-column: 3 / 4;
+} */
+
+.search-message-button {
+  width: 105px;
+  height: 35px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
+  font-weight: bold;
+  font-size: 16px;
+}
+.search-view-more-button {
+  width: 105px;
+  height: 25px;
+  border: solid 1px black;
+  box-shadow: 2px 2px 5px;
+  background-color: #ffb498;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  margin: auto;
+  font-family: Poppins;
+}
+
+.specific-skills-inputs p {
+  display: table-row;
+}
+
+.specific-skills-inputs p label {
+  display: table-cell;
+}
+
+.specific-skills-inputs p .specific-skill-other {
+  width: 77%;
+}
+
+.specific-skills-inputs p input {
+  margin-bottom: 10px;
+  display: table-cell;
+  width: 57.5%;
+}
+
+.searchTeachers {
+  font-family: Poppins;
+  border: solid 2px black;
+  margin: auto;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----------------------Messages page---------------------------------------- */
+.chatbox-container {
+  margin: 10px;
+  height: 75vh;
+}
+
+/* -----------------------drop down -------------------------- */
+
+.nav-toggle {
+  display: none;
+}
+
+.nav-toggle-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 2em;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.profileIcon {
+  padding: 0;
+  font-size: 45px;
+  margin: 0;
+}
+
+.profileIconContainer {
+  /* height: 100%; */
+  display: flex;
+  /* padding-top: 15px; */
+  /* border: 2px solid black; */
+  border-radius: 50%;
+  box-shadow: 5px 5px 10px;
+}
+
+nav {
+  position: absolute;
+  text-align: right;
+  top: 100%;
+  right: 0;
+  background: rgb(194, 233, 255);
+  transform: scale(1, 0);
+  transform-origin: top;
+  transition: transform 400ms ease-in-out;
+  padding-left: 10px;
+  border-bottom-left-radius: 20px;
+  box-shadow: 0 5px 10px -3px #6f99b1;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  margin-bottom: 1em;
+  margin-right: 1em;
+}
+
+nav a {
+  color: black;
+  text-decoration: none;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+}
+
+.nav-toggle:checked ~ nav {
+  /* visibility: visible; */
+  transform: scale(1, 1);
+}
+
+.nav-toggle:checked ~ nav a {
+  opacity: 1;
+  transition: opacity 250ms ease-in-out 250ms;
+}
+
+/* ----------------------Edit Profile page---------------------------------------- */
+
+.edit-skills .selectedSkillsButton {
+  background-color: #b9ffad;
+}
